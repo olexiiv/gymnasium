@@ -1,0 +1,40 @@
+---
+layout: layouts/base.njk
+---
+{% from "macros/icon.njk" import icon %}
+{% set articleDate = post.date or page.date %}
+<article class="article">
+  <div class="container container--narrow">
+    <nav class="breadcrumbs" aria-label="Ви тут">
+      <a href="/">Головна</a>
+      <span aria-hidden="true">→</span>
+      <a href="/novyny/">Новини</a>
+      <span aria-hidden="true">→</span>
+      <span aria-current="page">{{ title }}</span>
+    </nav>
+
+    <header class="article__header">
+      <div class="card__meta">
+        <span class="badge">{{ category }}</span>
+        <time class="card__date" datetime="{{ articleDate | dateISO }}">{{ articleDate | dateUA }}</time>
+      </div>
+      <h1 class="article__title">{{ title }}</h1>
+    </header>
+
+    {% if cover %}
+      <img class="article__cover" src="{{ cover }}" alt="{{ coverAlt or title }}" width="960" height="540">
+    {% else %}
+      <div class="article__cover article__cover--placeholder" role="img" aria-label="Ілюстрація до новини відсутня">
+        {{ icon("leaf", 40) }}<span>[ФОТО: {{ title }}]</span>
+      </div>
+    {% endif %}
+
+    <div class="prose">
+      {{ content | safe }}
+    </div>
+
+    <footer class="article__footer">
+      <a class="btn btn--ghost" href="/novyny/">{{ icon("arrow-right", 18, "icon--flip") }} Усі новини</a>
+    </footer>
+  </div>
+</article>

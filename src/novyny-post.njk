@@ -1,0 +1,14 @@
+---
+pagination:
+  data: collections.news
+  size: 1
+  alias: post
+permalink: "/novyny/{{ post.fileSlug }}/"
+layout: layouts/article.njk
+eleventyComputed:
+  title: "{{ post.data.title }}"
+  category: "{{ post.data.category }}"
+  cover: "{{ post.data.cover }}"
+  description: "{{ post.data.excerpt }}"
+---
+{{ post.templateContent | safe }}

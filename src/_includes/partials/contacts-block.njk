@@ -1,0 +1,53 @@
+{% from "macros/icon.njk" import icon %}
+<div class="contacts">
+  <div class="contacts__info">
+    <div class="contacts__map" role="img" aria-label="Мапа розташування гімназії: {{ site.address.street }}, {{ site.address.settlement }}">
+      {{ icon("map-pin", 34) }}
+      <span>[МАПА: {{ site.address.settlement }}, {{ site.address.street }}]</span>
+      <small>Замініть на iframe Google Maps або статичне зображення мапи</small>
+    </div>
+    <ul class="contacts__list">
+      <li>{{ icon("map-pin", 20) }}<span>{{ site.address.street }}, {{ site.address.settlement }},<br>{{ site.address.region }}, {{ site.address.postal }}</span></li>
+      <li>{{ icon("phone", 20) }}<a href="tel:{{ site.phoneHref }}">{{ site.phone }}</a></li>
+      <li>{{ icon("mail", 20) }}<a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+      <li>{{ icon("clock", 20) }}<span>{{ site.hours }}</span></li>
+    </ul>
+  </div>
+
+  <form class="form" action="https://formspree.io/f/{{ site.formspreeId }}" method="POST" novalidate>
+    <h3 class="form__title">Напишіть нам</h3>
+    <p class="form__note">Відповідаємо протягом одного робочого дня.</p>
+
+    <div class="form__field">
+      <label for="cf-name">Ваше імʼя</label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required
+             aria-describedby="cf-name-err">
+      <p class="form__error" id="cf-name-err" hidden>Вкажіть, будь ласка, ваше імʼя.</p>
+    </div>
+
+    <div class="form__field">
+      <label for="cf-email">Електронна пошта</label>
+      <input id="cf-email" name="_replyto" type="email" autocomplete="email" required
+             aria-describedby="cf-email-err">
+      <p class="form__error" id="cf-email-err" hidden>Перевірте адресу пошти — вона виглядає неповною.</p>
+    </div>
+
+    <div class="form__field">
+      <label for="cf-message">Повідомлення</label>
+      <textarea id="cf-message" name="message" rows="5" required
+                aria-describedby="cf-message-err"></textarea>
+      <p class="form__error" id="cf-message-err" hidden>Напишіть кілька слів — з чим можемо допомогти?</p>
+    </div>
+
+    {# Honeypot проти спам-ботів: приховане поле, людина його не заповнить #}
+    <div class="form__hp" aria-hidden="true">
+      <label for="cf-website">Не заповнюйте це поле</label>
+      <input id="cf-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    <input type="hidden" name="_subject" value="Повідомлення з сайту гімназії">
+
+    <button class="btn btn--brand" type="submit">Надіслати {{ icon("arrow-right", 18) }}</button>
+    <p class="form__status" data-form-status role="status" aria-live="polite"></p>
+  </form>
+</div>

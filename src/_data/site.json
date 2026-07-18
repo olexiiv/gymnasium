@@ -1,0 +1,52 @@
+{
+  "name": "Андріївська різнопрофільна гімназія",
+  "shortName": "Андріївська гімназія",
+  "tagline": "Місце, де зростають. Разом.",
+  "url": "https://andriivska-gymnasium.ua",
+  "founded": 1936,
+  "language": "uk",
+  "address": {
+    "street": "вул. Шкільна, 12",
+    "settlement": "с. Андріївка",
+    "region": "Черкаська область",
+    "postal": "19000"
+  },
+  "phone": "+380 (4736) 2-45-17",
+  "phoneHref": "+380473624517",
+  "hotline": "+380 (4736) 2-45-18",
+  "hotlineHref": "+380473624518",
+  "email": "info@andriivska-gymnasium.ua",
+  "admissionEmail": "vstup@andriivska-gymnasium.ua",
+  "hours": "Пн–Пт, 08:00–17:00",
+  "director": "Коваленко Оксана Василівна",
+  "edrpou": "24352617",
+  "formspreeId": "XXXXXXX",
+  "metrics": [
+    { "value": "412", "label": "учнів навчається", "icon": "users" },
+    { "value": "34", "label": "педагоги, з них 12 — вищої категорії", "icon": "award" },
+    { "value": "4", "label": "профілі навчання у старшій школі", "icon": "compass" },
+    { "value": "89", "label": "років історії закладу", "icon": "landmark" }
+  ],
+  "social": [
+    { "name": "Facebook", "url": "https://facebook.com/andriivska.gymnasium", "icon": "facebook" },
+    { "name": "Instagram", "url": "https://instagram.com/andriivska_gymnasium", "icon": "instagram" },
+    { "name": "YouTube", "url": "https://youtube.com/@andriivska-gymnasium", "icon": "youtube" }
+  ],
+  "nav": [
+    { "label": "Про гімназію", "url": "/pro-gimnaziyu/" },
+    { "label": "Вступ", "url": "/vstup/" },
+    { "label": "Навчання", "url": "/navchannya/" },
+    { "label": "Новини", "url": "/novyny/" },
+    { "label": "Прозорість", "url": "/prozorist/" },
+    { "label": "Контакти", "url": "/kontakty/" }
+  ],
+  "bells": [
+    { "n": 1, "time": "08:30 – 09:15" },
+    { "n": 2, "time": "09:25 – 10:10" },
+    { "n": 3, "time": "10:30 – 11:15" },
+    { "n": 4, "time": "11:35 – 12:20" },
+    { "n": 5, "time": "12:30 – 13:15" },
+    { "n": 6, "time": "13:25 – 14:10" },
+    { "n": 7, "time": "14:20 – 15:05" }
+  ]
+}

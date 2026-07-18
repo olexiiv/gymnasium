@@ -1,0 +1,29 @@
+{% from "macros/icon.njk" import icon %}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__leaves" aria-hidden="true">
+    <span class="hero__leaf hero__leaf--1">{{ icon("leaf", 42) }}</span>
+    <span class="hero__leaf hero__leaf--2">{{ icon("leaf", 28) }}</span>
+    <span class="hero__leaf hero__leaf--3">{{ icon("leaf", 34) }}</span>
+  </div>
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <p class="hero__eyebrow">{{ site.address.settlement }} · з {{ site.founded }} року</p>
+      <h1 class="hero__title" id="hero-title">Місце, де зростають.<br><em>Разом.</em></h1>
+      <p class="hero__lead">Різнопрофільна гімназія для {{ site.metrics[0].value }} учнів: чотири профілі навчання, сильні вчителі та спільнота, яка підтримує кожну дитину.</p>
+      <div class="hero__actions">
+        <a class="btn btn--brand btn--lg" href="/vstup/">Вступ 2026 {{ icon("arrow-right", 20) }}</a>
+        <a class="btn btn--ghost btn--lg" href="/pro-gimnaziyu/">Про гімназію</a>
+      </div>
+    </div>
+    <div class="hero__media">
+      <figure class="hero__photo">
+        <picture>
+          <source type="image/webp" srcset="/assets/img/school-480.webp 480w, /assets/img/school.webp 960w"
+                  sizes="(min-width: 900px) 30rem, 92vw">
+          <img src="/assets/img/school.jpg" width="960" height="640" fetchpriority="high"
+               alt="Головний корпус Андріївської гімназії: двоповерхова будівля з розмальованим у кольори веселки ґанком і державним прапором">
+        </picture>
+      </figure>
+    </div>
+  </div>
+</section>

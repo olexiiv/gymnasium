@@ -1,0 +1,61 @@
+{% from "macros/icon.njk" import icon %}
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__about">
+        <a class="footer__brand" href="/">
+          <img src="/assets/img/emblema-320.png" alt="" width="56" height="56">
+          <span>{{ site.name }}</span>
+        </a>
+        <p class="footer__desc">Заклад загальної середньої освіти. {{ site.address.settlement }}, {{ site.address.region }}. Працюємо з {{ site.founded }} року.</p>
+        <ul class="footer__social" aria-label="Ми в соцмережах">
+          {% for s in site.social %}
+          <li><a href="{{ s.url }}" aria-label="{{ s.name }}" rel="noopener" target="_blank">{{ icon(s.icon, 20) }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <nav class="footer__col" aria-label="Про заклад">
+        <h2 class="footer__heading">Гімназія</h2>
+        <ul>
+          <li><a href="/pro-gimnaziyu/">Про гімназію</a></li>
+          <li><a href="/vchyteli/">Педагогічний склад</a></li>
+          <li><a href="/novyny/">Новини</a></li>
+          <li><a href="/prozorist/">Прозорість</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer__col" aria-label="Навчання">
+        <h2 class="footer__heading">Навчання</h2>
+        <ul>
+          <li><a href="/vstup/">Вступ 2026</a></li>
+          <li><a href="/navchannya/">Профілі навчання</a></li>
+          <li><a href="/rozklad/">Розклад уроків</a></li>
+          <li><a href="/rozklad/#dzvinky">Розклад дзвінків</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Контакти</h2>
+        <ul class="footer__contacts">
+          <li>{{ icon("map-pin", 18) }} {{ site.address.street }}, {{ site.address.settlement }}</li>
+          <li>{{ icon("phone", 18) }} <a href="tel:{{ site.phoneHref }}">{{ site.phone }}</a></li>
+          <li>{{ icon("mail", 18) }} <a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+          <li>{{ icon("clock", 18) }} {{ site.hours }}</li>
+        </ul>
+        <p class="footer__hotline">
+          {{ icon("shield", 18) }}
+          <span><strong>Гаряча лінія / протидія булінгу:</strong><br>
+          <a href="tel:{{ site.hotlineHref }}">{{ site.hotline }}</a></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© {{ site.founded }}–2026 {{ site.name }}. Код ЄДРПОУ {{ site.edrpou }}.</p>
+      <button class="footer__top" id="to-top" type="button" aria-label="Прокрутити нагору">
+        {{ icon("arrow-up", 18) }} Нагору
+      </button>
+    </div>
+  </div>
+</footer>

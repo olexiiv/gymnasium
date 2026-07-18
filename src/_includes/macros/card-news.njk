@@ -1,0 +1,23 @@
+{% from "macros/icon.njk" import icon %}
+{% macro cardNews(post) %}
+<article class="card card--news reveal">
+  <a class="card__link" href="{{ post.url }}">
+    <div class="card__media" aria-hidden="true">
+      {% if post.data.cover %}
+        <img src="{{ post.data.cover }}" alt="" width="640" height="360" loading="lazy">
+      {% else %}
+        <div class="card__placeholder">{{ icon("leaf", 32) }}<span class="card__placeholder-note">[ФОТО: {{ post.data.title }}]</span></div>
+      {% endif %}
+    </div>
+    <div class="card__body">
+      <div class="card__meta">
+        <span class="badge">{{ post.data.category }}</span>
+        <time class="card__date" datetime="{{ post.date | dateISO }}">{{ post.date | dateUA }}</time>
+      </div>
+      <h3 class="card__title">{{ post.data.title }}</h3>
+      <p class="card__excerpt">{{ post.data.excerpt }}</p>
+      <span class="card__more">Читати далі {{ icon("arrow-right", 16) }}</span>
+    </div>
+  </a>
+</article>
+{% endmacro %}

@@ -1,0 +1,44 @@
+---
+layout: layouts/page.njk
+title: Прозорість та інформаційна відкритість
+intro: Документи закладу згідно зі ст. 30 Закону України «Про освіту».
+permalink: /prozorist/
+---
+{% from "macros/icon.njk" import icon %}
+<section class="section">
+  <div class="container container--narrow">
+    {% set groups = collections.documents | groupByCategory %}
+    <div class="accordion">
+      {% for category, docs in groups %}
+      <details class="accordion__item" {% if loop.first %}open{% endif %}>
+        <summary class="accordion__summary">
+          <span class="accordion__cat">{{ icon("file-text", 20) }} {{ category | capitalize }}
+            <span class="badge badge--muted">{{ docs.length }}</span>
+          </span>
+          {{ icon("chevron-down", 20, "accordion__chev") }}
+        </summary>
+        <div class="accordion__body">
+          <ul class="doclist">
+            {% for doc in docs %}
+            <li class="doclist__item">
+              <div class="doclist__meta">
+                <p class="doclist__title">{{ doc.data.title }}</p>
+                <p class="doclist__date">Оновлено {{ doc.data.updatedAt | dateUA }}</p>
+              </div>
+              <a class="btn btn--ghost btn--sm" href="{{ doc.data.file }}" download>
+                {{ icon("download", 16) }} PDF
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+
+    <div class="notice reveal">
+      {{ icon("alert-circle", 22) }}
+      <p>Не знайшли потрібний документ? Надішліть запит на <a href="mailto:{{ site.email }}">{{ site.email }}</a> — надамо копію протягом п'яти робочих днів.</p>
+    </div>
+  </div>
+</section>

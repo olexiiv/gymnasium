@@ -1,0 +1,15 @@
+---
+layout: layouts/base.njk
+---
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Ви тут">
+      <a href="/">Головна</a>
+      <span aria-hidden="true">→</span>
+      <span aria-current="page">{{ title }}</span>
+    </nav>
+    <h1 class="page-head__title">{{ title }}</h1>
+    {% if intro %}<p class="page-head__intro">{{ intro }}</p>{% endif %}
+  </div>
+</div>
+{{ content | safe }}

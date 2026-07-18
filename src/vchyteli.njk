@@ -1,0 +1,16 @@
+---
+layout: layouts/page.njk
+title: Педагогічний склад
+intro: 34 педагоги, з них 12 — учителі вищої категорії. Знайомтеся з командою.
+permalink: /vchyteli/
+---
+{% from "macros/card-teacher.njk" import cardTeacher %}
+<section class="section">
+  <div class="container">
+    <div class="grid grid--4">
+      {% for t in collections.teachers %}
+        {{ cardTeacher(t) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>

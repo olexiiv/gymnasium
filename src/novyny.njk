@@ -1,0 +1,25 @@
+---
+layout: layouts/page.njk
+title: Новини
+intro: Оголошення, події та фотозвіти з життя гімназії.
+permalink: /novyny/
+---
+{% from "macros/card-news.njk" import cardNews %}
+<section class="section">
+  <div class="container">
+    <div class="filter" role="group" aria-label="Фільтр новин за категорією">
+      <button class="filter__btn is-active" type="button" data-filter="all" aria-pressed="true">Усі</button>
+      {% for cat in collections.news | newsCategories %}
+      <button class="filter__btn" type="button" data-filter="{{ cat }}" aria-pressed="false">{{ cat }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="grid grid--3" data-news-grid>
+      {% for post in collections.news %}
+      <div data-category="{{ post.data.category }}">{{ cardNews(post) }}</div>
+      {% endfor %}
+    </div>
+
+    <p class="filter__empty" data-filter-empty hidden>У цій категорії поки немає новин.</p>
+  </div>
+</section>

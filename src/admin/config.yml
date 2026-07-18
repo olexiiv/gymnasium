@@ -1,0 +1,102 @@
+# Decap CMS — конфігурація адмінпанелі.
+# Редагує ті самі markdown-файли, що й розробник у git.
+#
+# Для GitHub Pages потрібен зовнішній OAuth-провайдер (GitHub OAuth App +
+# проксі, напр. https://github.com/sterlingwes/decap-proxy або Netlify OAuth).
+# Заповніть base_url/auth_endpoint після налаштування.
+
+backend:
+  name: github
+  repo: LOGIN/andriivska-gymnasium   # ← замініть на свій репозиторій
+  branch: main
+  # base_url: https://your-oauth-proxy.example.com
+  # auth_endpoint: /auth
+
+locale: uk
+site_url: https://andriivska-gymnasium.ua
+logo_url: /assets/img/emblema-320.png
+
+media_folder: "src/assets/img/uploads"
+public_folder: "/assets/img/uploads"
+
+collections:
+  - name: news
+    label: "Новини"
+    label_singular: "новина"
+    folder: "src/content/news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: "Заголовок", widget: string }
+      - { name: date, label: "Дата", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+      - name: category
+        label: "Категорія"
+        widget: select
+        options: ["Оголошення", "Вступ", "Досягнення", "Життя гімназії"]
+      - { name: cover, label: "Обкладинка (необовʼязково)", widget: image, required: false }
+      - { name: excerpt, label: "Короткий опис (1–2 речення)", widget: text }
+      - { name: body, label: "Текст новини", widget: markdown }
+
+  - name: teachers
+    label: "Педагоги"
+    label_singular: "педагог"
+    folder: "src/content/teachers"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { name: name, label: "ПІБ", widget: string }
+      - { name: position, label: "Посада", widget: string }
+      - { name: subject, label: "Предмети / класне керівництво", widget: string }
+      - { name: email, label: "Email", widget: string, required: false }
+      - { name: avatarInitials, label: "Ініціали для аватара (2 літери)", widget: string }
+      - { name: order, label: "Порядок у списку", widget: number, default: 50 }
+      - { name: body, label: "Коротко про педагога", widget: markdown, required: false }
+
+  - name: profiles
+    label: "Профілі навчання"
+    label_singular: "профіль"
+    folder: "src/content/profiles"
+    create: true
+    fields:
+      - { name: title, label: "Назва профілю", widget: string }
+      - { name: subjects, label: "Поглиблені предмети (через кому)", widget: string }
+      - name: icon
+        label: "Іконка"
+        widget: select
+        options: [compass, book-open, leaf, landmark, users, award]
+        default: book-open
+      - { name: order, label: "Порядок", widget: number, default: 50 }
+      - { name: body, label: "Опис профілю", widget: markdown }
+
+  - name: documents
+    label: "Документи (Прозорість)"
+    label_singular: "документ"
+    folder: "src/content/documents"
+    create: true
+    media_folder: "/src/assets/docs"
+    public_folder: "/assets/docs"
+    fields:
+      - { name: title, label: "Назва документа", widget: string }
+      - name: category
+        label: "Категорія"
+        widget: select
+        options: ["статут", "ліцензія", "кошторис", "звіти", "вакансії"]
+      - { name: file, label: "Файл (PDF)", widget: file }
+      - { name: updatedAt, label: "Дата оновлення", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+
+  - name: gallery
+    label: "Галерея"
+    label_singular: "фото"
+    folder: "src/content/gallery"
+    create: true
+    fields:
+      - { name: caption, label: "Підпис до фото", widget: string }
+      - { name: image, label: "Зображення", widget: image, required: false }
+      - { name: tags, label: "Теги", widget: list, required: false }
+      - name: ratio
+        label: "Пропорції (для плейсхолдера)"
+        widget: select
+        options: ["4 / 3", "3 / 4", "1 / 1", "16 / 9"]
+        default: "4 / 3"
+        required: false

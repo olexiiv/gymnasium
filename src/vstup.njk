@@ -1,0 +1,87 @@
+---
+layout: layouts/page.njk
+title: Вступ 2026
+intro: Як зарахувати дитину до гімназії — покроково, без черг і зайвих папірців.
+permalink: /vstup/
+description: "Вступ до Андріївської різнопрофільної гімназії у 2026 році: перелік документів, терміни подачі, відповіді на поширені запитання."
+---
+{% from "macros/icon.njk" import icon %}
+
+<section class="section">
+  <div class="container container--narrow">
+
+    <div class="notice notice--warm reveal">
+      {{ icon("alert-circle", 22) }}
+      <p><strong>Прийом заяв до 1-го класу:</strong> з 1&nbsp;березня до 31&nbsp;травня 2026&nbsp;року. До 10-го профільного класу — з 1&nbsp;червня.</p>
+    </div>
+
+    <h2 class="section__title">Чотири кроки до зарахування</h2>
+    <ol class="steps">
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">1</span>
+        <div>
+          <h3>Оберіть клас і профіль</h3>
+          <p>Для 1–9 класів профіль не обирається. Для 10-го класу доступні профілі: математичний, філологічний, біолого-хімічний та історичний. Якщо вагаєтесь — зателефонуйте, допоможемо визначитися.</p>
+        </div>
+      </li>
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">2</span>
+        <div>
+          <h3>Підготуйте документи</h3>
+          <p>Заява одного з батьків, копія свідоцтва про народження, медична довідка форми 086-1/о. Для 10-го класу — додатково свідоцтво про базову середню освіту.</p>
+        </div>
+      </li>
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">3</span>
+        <div>
+          <h3>Подайте заяву</h3>
+          <p>Особисто в канцелярії ({{ site.hours }}) або скановані копії на <a href="mailto:{{ site.admissionEmail }}">{{ site.admissionEmail }}</a>. Оригінали донесете при зарахуванні.</p>
+        </div>
+      </li>
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">4</span>
+        <div>
+          <h3>Отримайте підтвердження</h3>
+          <p>Протягом трьох робочих днів зателефонуємо й повідомимо про зарахування. Наказ про зарахування публікуємо в розділі «<a href="/prozorist/">Прозорість</a>».</p>
+        </div>
+      </li>
+    </ol>
+
+    <h2 class="section__title">Поширені запитання</h2>
+    <div class="accordion">
+      <details class="accordion__item">
+        <summary class="accordion__summary">Чи є конкурс при вступі до 1-го класу? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
+        <div class="accordion__body">
+          <p>Ні. Згідно із законодавством, до 1-го класу зараховуються всі діти, які проживають на території обслуговування, без конкурсу та співбесід. Діти з інших територій — за наявності вільних місць.</p>
+        </div>
+      </details>
+      <details class="accordion__item">
+        <summary class="accordion__summary">Як відбувається відбір до 10-го профільного класу? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
+        <div class="accordion__body">
+          <p>Враховуємо середній бал свідоцтва про базову освіту та оцінки з профільних предметів. Якщо заяв більше, ніж місць, проводимо співбесіду з профільного предмета. Розклад співбесід оголошуємо на сайті.</p>
+        </div>
+      </details>
+      <details class="accordion__item">
+        <summary class="accordion__summary">Чи є підвезення для дітей із сусідніх сіл? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
+        <div class="accordion__body">
+          <p>Так, шкільний автобус щодня курсує за маршрутом Степанці — Пшеничники — Андріївка. Графік руху уточнюйте за телефоном {{ site.phone }}.</p>
+        </div>
+      </details>
+      <details class="accordion__item">
+        <summary class="accordion__summary">Чи можна перевестися до гімназії посеред навчального року? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
+        <div class="accordion__body">
+          <p>Можна, за наявності вільних місць у відповідному класі. Потрібні особова справа учня та витяг з оцінками з попереднього закладу. Зателефонуйте — підкажемо, чи є місця.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="cta-box reveal">
+      <h2>Залишилися питання?</h2>
+      <p>Зателефонуйте у приймальну комісію або напишіть — відповімо того ж дня.</p>
+      <div class="hero__actions">
+        <a class="btn btn--brand" href="tel:{{ site.phoneHref }}">{{ icon("phone", 18) }} {{ site.phone }}</a>
+        <a class="btn btn--ghost" href="/kontakty/">Написати нам</a>
+      </div>
+    </div>
+  </div>
+</section>

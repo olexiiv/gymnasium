@@ -1,0 +1,116 @@
+---
+layout: layouts/base.njk
+permalink: /
+description: "Андріївська різнопрофільна гімназія — офіційний сайт. Вступ 2026, розклад уроків, новини, педагогічний склад, документи закладу."
+---
+{% from "macros/icon.njk" import icon %}
+{% from "macros/card-news.njk" import cardNews %}
+{% from "macros/card-teacher.njk" import cardTeacher %}
+
+{% include "partials/hero.njk" %}
+{% include "partials/quick-actions.njk" %}
+
+{# ---------- Про гімназію ---------- #}
+<section class="section" aria-labelledby="about-title">
+  <div class="container">
+    <div class="about">
+      <div class="about__text reveal">
+        <p class="section__eyebrow">Про нас</p>
+        <h2 class="section__title" id="about-title">Гімназія, у якої є коріння</h2>
+        <p>Андріївська різнопрофільна гімназія працює з {{ site.founded }} року. Ми — сільська школа з характером обласного ліцею: у старших класах учні обирають один із чотирьох профілів і навчаються за програмою, що готує до НМТ та вступу в університет.</p>
+        <p>Але головне в нас — не профілі, а люди. Ми знаємо кожну дитину на імʼя, тримаємо звʼязок із батьками без формальностей і віримо, що школа має бути місцем, куди хочеться приходити.</p>
+        <a class="btn btn--ghost" href="/pro-gimnaziyu/">Дізнатися більше {{ icon("arrow-right", 18) }}</a>
+      </div>
+      <ul class="metrics" aria-label="Гімназія в цифрах">
+        {% for m in site.metrics %}
+        <li class="metrics__item reveal">
+          <span class="metrics__icon">{{ icon(m.icon, 22) }}</span>
+          <span class="metrics__value">{{ m.value }}</span>
+          <span class="metrics__label">{{ m.label }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{# ---------- Новини ---------- #}
+<section class="section section--alt" aria-labelledby="news-title">
+  <div class="container">
+    <div class="section__head">
+      <div>
+        <p class="section__eyebrow">Що нового</p>
+        <h2 class="section__title" id="news-title">Новини та анонси</h2>
+      </div>
+      <a class="btn btn--ghost" href="/novyny/">Усі новини {{ icon("arrow-right", 18) }}</a>
+    </div>
+    <div class="grid grid--3">
+      {% for post in collections.news | limit(3) %}
+        {{ cardNews(post) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ---------- Вчителі ---------- #}
+<section class="section" aria-labelledby="teachers-title">
+  <div class="container">
+    <div class="section__head">
+      <div>
+        <p class="section__eyebrow">Команда</p>
+        <h2 class="section__title" id="teachers-title">Наші вчителі</h2>
+      </div>
+      <a class="btn btn--ghost" href="/vchyteli/">Увесь склад {{ icon("arrow-right", 18) }}</a>
+    </div>
+    <div class="grid grid--4">
+      {% for t in collections.teachers | limit(4) %}
+        {{ cardTeacher(t) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ---------- Життя гімназії ---------- #}
+<section class="section section--alt" aria-labelledby="gallery-title">
+  <div class="container">
+    <div class="section__head">
+      <div>
+        <p class="section__eyebrow">Фотозвіти</p>
+        <h2 class="section__title" id="gallery-title">Життя гімназії</h2>
+      </div>
+    </div>
+    <div class="masonry">
+      {% for item in collections.gallery %}
+      <figure class="masonry__item reveal">
+        <button class="masonry__btn" type="button" data-lightbox
+                data-caption="{{ item.data.caption }}"
+                {% if item.data.image %}data-image="{{ item.data.image }}"{% endif %}
+                aria-label="Відкрити фото: {{ item.data.caption }}">
+          {% if item.data.image %}
+            <img src="{{ item.data.image }}" alt="{{ item.data.caption }}" width="480" height="{{ item.data.ratio or 360 }}" loading="lazy">
+          {% else %}
+            <span class="masonry__placeholder" style="--ratio: {{ item.data.ratio or '4 / 3' }}">
+              {{ icon("image", 28) }}
+              <span>[ФОТО: {{ item.data.caption }}]</span>
+            </span>
+          {% endif %}
+        </button>
+        <figcaption class="masonry__caption">{{ item.data.caption }}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ---------- Контакти ---------- #}
+<section class="section" aria-labelledby="contacts-title">
+  <div class="container">
+    <div class="section__head">
+      <div>
+        <p class="section__eyebrow">Ми на звʼязку</p>
+        <h2 class="section__title" id="contacts-title">Контакти</h2>
+      </div>
+    </div>
+    {% include "partials/contacts-block.njk" %}
+  </div>
+</section>

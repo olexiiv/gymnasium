@@ -1,0 +1,26 @@
+{
+  "name": "andriivska-gymnasium",
+  "version": "1.0.0",
+  "description": "Сайт Андріївської різнопрофільної гімназії — статичний сайт на Eleventy (11ty)",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf _site",
+    "build:css": "postcss src/assets/css/main.css -o _site/assets/css/main.css",
+    "build:11ty": "eleventy",
+    "build": "npm run clean && npm run build:11ty && npm run build:css",
+    "dev:11ty": "eleventy --serve --quiet",
+    "dev:css": "postcss src/assets/css/main.css -o _site/assets/css/main.css --watch",
+    "dev": "npm-run-all --parallel dev:11ty dev:css",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "autoprefixer": "^10.4.20",
+    "cssnano": "^7.0.6",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.49",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.0",
+    "rimraf": "^6.0.1"
+  }
+}

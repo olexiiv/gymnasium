@@ -1,0 +1,27 @@
+---
+layout: layouts/page.njk
+title: Навчання
+intro: Профілі старшої школи та як побудоване навчання в гімназії.
+permalink: /navchannya/
+---
+{% from "macros/icon.njk" import icon %}
+<section class="section">
+  <div class="container">
+    <div class="grid grid--2">
+      {% for p in collections.profiles %}
+      <article class="card card--profile reveal">
+        <span class="quick__icon">{{ icon(p.data.icon or "book-open", 26) }}</span>
+        <h2 class="card__title">{{ p.data.title }}</h2>
+        <p class="card--profile__subjects"><strong>Поглиблено:</strong> {{ p.data.subjects }}</p>
+        <div class="prose prose--sm">{{ p.templateContent | safe }}</div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="cta-box reveal">
+      <h2>Не знаєте, який профіль обрати?</h2>
+      <p>Щороку в квітні проводимо день відкритих дверей для девʼятикласників та їхніх батьків. А ще можна просто зателефонувати класним керівникам 10-х класів.</p>
+      <a class="btn btn--brand" href="/vstup/">Умови вступу до 10-го класу {{ icon("arrow-right", 18) }}</a>
+    </div>
+  </div>
+</section>

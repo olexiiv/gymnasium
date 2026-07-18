@@ -1,0 +1,53 @@
+---
+layout: layouts/page.njk
+title: Розклад уроків
+intro: Актуальний розклад по класах і розклад дзвінків.
+permalink: /rozklad/
+---
+{% from "macros/icon.njk" import icon %}
+<section class="section">
+  <div class="container">
+    <p class="schedule__updated">{{ icon("calendar", 18) }} {{ schedule.semester }} · оновлено {{ schedule.updatedAt | dateUA }}</p>
+
+    {% for cls in schedule.classes %}
+    <section class="schedule reveal" aria-labelledby="cls-{{ loop.index }}">
+      <h2 class="schedule__class" id="cls-{{ loop.index }}">{{ cls.class }}</h2>
+
+      {# Десктоп: таблиця. Мобільний: та сама розмітка перетворюється на картки по днях через CSS #}
+      <div class="schedule__scroll">
+        <table class="schedule__table">
+          <caption class="visually-hidden">Розклад уроків для класу {{ cls.class }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">№</th>
+              {% for day in schedule.days %}<th scope="col">{{ day }}</th>{% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for lessonIdx in range(0, cls.week[0].length) %}
+            <tr>
+              <th scope="row">{{ loop.index }}</th>
+              {% for day in cls.week %}
+              <td data-day="{{ schedule.days[loop.index0] }}">{{ day[lessonIdx] }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {% endfor %}
+
+    <section class="section__sub" id="dzvinky" aria-labelledby="bells-title">
+      <h2 class="section__title" id="bells-title">Розклад дзвінків</h2>
+      <ul class="bells">
+        {% for b in site.bells %}
+        <li class="bells__item">
+          <span class="bells__num">{{ b.n }} урок</span>
+          <span class="bells__time">{{ b.time }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</section>

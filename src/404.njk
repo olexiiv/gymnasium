@@ -1,0 +1,14 @@
+---
+layout: layouts/base.njk
+title: Сторінку не знайдено
+permalink: /404.html
+---
+{% from "macros/icon.njk" import icon %}
+<section class="section">
+  <div class="container container--narrow" style="text-align: center">
+    <p class="section__eyebrow">Помилка 404</p>
+    <h1 class="section__title">Такої сторінки немає</h1>
+    <p>Можливо, її перенесли або в адресі є одрук. Спробуйте почати з головної.</p>
+    <p><a class="btn btn--brand" href="/">На головну {{ icon("arrow-right", 18) }}</a></p>
+  </div>
+</section>

@@ -1,0 +1,11 @@
+{% macro cardTeacher(t) %}
+<article class="card card--teacher reveal">
+  <div class="avatar" aria-hidden="true">{{ t.data.avatarInitials }}</div>
+  <h3 class="card--teacher__name">{{ t.data.name }}</h3>
+  <p class="card--teacher__position">{{ t.data.position }}</p>
+  <p class="card--teacher__subject">{{ t.data.subject }}</p>
+  {% if t.data.email %}
+  <a class="card--teacher__email" href="mailto:{{ t.data.email }}">{{ t.data.email }}</a>
+  {% endif %}
+</article>
+{% endmacro %}
