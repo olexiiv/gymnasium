@@ -2,7 +2,6 @@
 name: Малієнко Олександр Миколайович
 position: Директор гімназії
 subject: Керівництво закладом · координація дистанційного навчання
-email: andreevka.school@meta.ua
 avatarInitials: МО
 order: 1
 ---
