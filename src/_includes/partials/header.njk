@@ -18,18 +18,17 @@
         <li class="header__cta-item">
           <a class="btn btn--brand btn--sm" href="/rozklad/">{{ icon("calendar", 18) }} Розклад</a>
         </li>
-        <li class="header__old-item">
-          <a class="btn btn--ghost btn--sm header__old" href="{{ site.oldSiteUrl }}" rel="noopener">
-            {{ icon("external-link", 18) }} Стара версія сайту
-          </a>
-        </li>
       </ul>
     </nav>
 
     <div class="header__actions">
-      <button class="header__a11y" id="a11y-toggle" type="button" aria-pressed="false"
-              aria-label="Версія для слабозорих">
-        {{ icon("eye", 20) }}<span class="header__a11y-label">Для слабозорих</span>
+      <a class="header__iconbtn tip" href="{{ site.oldSiteUrl }}" rel="noopener"
+         data-tip="Стара версія сайту" aria-label="Стара версія сайту">
+        {{ icon("external-link", 20) }}
+      </a>
+      <button class="header__iconbtn header__a11y tip" id="a11y-toggle" type="button"
+              aria-pressed="false" data-tip="Для слабозорих" aria-label="Версія для слабозорих">
+        {{ icon("eye", 20) }}
       </button>
       <button class="header__burger" id="nav-toggle" type="button"
               aria-expanded="false" aria-controls="site-nav" aria-label="Відкрити меню">

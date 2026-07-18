@@ -91,6 +91,7 @@
   font-weight: 500;
   font-size: 0.9375rem;
   text-decoration: none;
+  white-space: nowrap;
   transition: background var(--t-fast);
 }
 .header__link:hover { background: var(--brand-soft); color: var(--ink); }
@@ -100,22 +101,57 @@
 
 .header__actions { display: flex; align-items: center; gap: var(--space-2); }
 
-.header__a11y {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 44px;
-  min-width: 44px;
-  padding: 0.35rem 0.75rem;
+/* Значкові кнопки праворуч у шапці (стара версія + для слабозорих) */
+.header__iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-round);
   color: var(--ink-muted);
-  font-size: 0.875rem;
+  text-decoration: none;
   transition: background var(--t-fast), color var(--t-fast);
 }
-.header__a11y:hover { background: var(--surface-alt); color: var(--ink); }
+.header__iconbtn:hover { background: var(--surface-alt); color: var(--ink); }
 .header__a11y[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
-.header__a11y-label { display: none; }
-@media (min-width: 1200px) { .header__a11y-label { display: inline; } }
+
+/* Підказка при наведенні / фокусі */
+.tip { position: relative; }
+.tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 0;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--surface);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-fast);
+  z-index: 60;
+}
+.tip::before {
+  content: "";
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  translate: -50% 0;
+  border: 6px solid transparent;
+  border-bottom-color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-fast);
+  z-index: 60;
+}
+.tip:hover::after, .tip:focus-visible::after,
+.tip:hover::before, .tip:focus-visible::before { opacity: 1; }
 
 .header__burger {
   display: none;
@@ -150,13 +186,7 @@
   .header__link { width: 100%; padding: 0.6rem 1rem; font-size: 1rem; }
   .header__cta-item { margin: var(--space-3) 0 0; }
   .header__cta-item .btn { width: 100%; justify-content: center; }
-  .header__old-item { margin: var(--space-2) 0 0; }
-  .header__old-item .btn { width: 100%; justify-content: center; }
 }
-
-/* Кнопка «Стара версія сайту» у шапці */
-.header__old { white-space: nowrap; }
-.header__old-item { margin-left: var(--space-1); }
 
 /* ================= Психологічна підтримка ================= */
 .support {
