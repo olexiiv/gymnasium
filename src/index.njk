@@ -1,7 +1,7 @@
 ---
 layout: layouts/base.njk
 permalink: /
-description: "Андріївська різнопрофільна гімназія — офіційний сайт. Вступ 2026, розклад уроків, новини, педагогічний склад, документи закладу."
+description: "Андріївська різнопрофільна гімназія (Запорізька область) — офіційний сайт. Релокований заклад працює дистанційно. Вступ, розклад, новини, психологічна підтримка, документи."
 ---
 {% from "macros/icon.njk" import icon %}
 {% from "macros/card-news.njk" import cardNews %}
@@ -16,9 +16,9 @@ description: "Андріївська різнопрофільна гімназі
     <div class="about">
       <div class="about__text reveal">
         <p class="section__eyebrow">Про нас</p>
-        <h2 class="section__title" id="about-title">Гімназія, у якої є коріння</h2>
-        <p>Андріївська різнопрофільна гімназія працює з {{ site.founded }} року. Ми — сільська школа з характером обласного ліцею: у старших класах учні обирають один із чотирьох профілів і навчаються за програмою, що готує до НМТ та вступу в університет.</p>
-        <p>Але головне в нас — не профілі, а люди. Ми знаємо кожну дитину на імʼя, тримаємо звʼязок із батьками без формальностей і віримо, що школа має бути місцем, куди хочеться приходити.</p>
+        <h2 class="section__title" id="about-title">Школа, яку не зупинила війна</h2>
+        <p>Андріївська гімназія — заклад із Бердянського району Запорізької області. Після окупації громади ми не припинили роботу: перейшли в дистанційний формат і продовжуємо вчити дітей, де б вони зараз не були — в Україні чи на тимчасово окупованій території.</p>
+        <p>Наші класи невеликі, тож учителі встигають помітити кожного. Ми готуємо старшокласників до НМТ, підтримуємо звʼязок із родинами й дбаємо не лише про оцінки, а й про те, як почувається дитина.</p>
         <a class="btn btn--ghost" href="/pro-gimnaziyu/">Дізнатися більше {{ icon("arrow-right", 18) }}</a>
       </div>
       <ul class="metrics" aria-label="Гімназія в цифрах">
@@ -52,8 +52,30 @@ description: "Андріївська різнопрофільна гімназі
   </div>
 </section>
 
+{# ---------- Психологічна підтримка ---------- #}
+<section class="section" aria-labelledby="support-title">
+  <div class="container">
+    <div class="support">
+      <div class="support__intro reveal">
+        <p class="section__eyebrow">Ти не сам</p>
+        <h2 class="section__title" id="support-title">Психологічна підтримка</h2>
+        <p>Війна б'є не тільки по стінах. Якщо тобі тривожно, важко чи просто хочеться поговорити — це нормально звернутися по допомогу. Наш психолог поруч, а ці лінії працюють безкоштовно й анонімно.</p>
+      </div>
+      <ul class="support__list">
+        {% for s in site.support %}
+        <li class="support__item reveal">
+          <span class="support__icon">{{ icon("phone", 20) }}</span>
+          <span class="support__name">{{ s.name }}</span>
+          <a class="support__contact" href="{{ s.href }}" rel="noopener">{{ s.contact }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
 {# ---------- Вчителі ---------- #}
-<section class="section" aria-labelledby="teachers-title">
+<section class="section section--alt" aria-labelledby="teachers-title">
   <div class="container">
     <div class="section__head">
       <div>
@@ -71,7 +93,7 @@ description: "Андріївська різнопрофільна гімназі
 </section>
 
 {# ---------- Життя гімназії ---------- #}
-<section class="section section--alt" aria-labelledby="gallery-title">
+<section class="section" aria-labelledby="gallery-title">
   <div class="container">
     <div class="section__head">
       <div>
@@ -103,7 +125,7 @@ description: "Андріївська різнопрофільна гімназі
 </section>
 
 {# ---------- Контакти ---------- #}
-<section class="section" aria-labelledby="contacts-title">
+<section class="section section--alt" aria-labelledby="contacts-title">
   <div class="container">
     <div class="section__head">
       <div>

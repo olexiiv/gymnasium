@@ -7,18 +7,21 @@
           <img src="/assets/img/emblema-320.png" alt="" width="56" height="56">
           <span>{{ site.name }}</span>
         </a>
-        <p class="footer__desc">Заклад загальної середньої освіти. {{ site.address.settlement }}, {{ site.address.region }}. Працюємо з {{ site.founded }} року.</p>
+        <p class="footer__desc">Заклад загальної середньої освіти {{ site.address.region }}. Релоковано з {{ site.address.origin }}; навчання відбувається дистанційно.</p>
         <ul class="footer__social" aria-label="Ми в соцмережах">
           {% for s in site.social %}
           <li><a href="{{ s.url }}" aria-label="{{ s.name }}" rel="noopener" target="_blank">{{ icon(s.icon, 20) }}</a></li>
           {% endfor %}
         </ul>
+        <a class="footer__old" href="{{ site.oldSiteUrl }}" rel="noopener">
+          {{ icon("external-link", 18) }} Стара версія сайту
+        </a>
       </div>
 
       <nav class="footer__col" aria-label="Про заклад">
         <h2 class="footer__heading">Гімназія</h2>
         <ul>
-          <li><a href="/pro-gimnaziyu/">Про гімназію</a></li>
+          <li><a href="/pro-gimnaziyu/">Про нас</a></li>
           <li><a href="/vchyteli/">Педагогічний склад</a></li>
           <li><a href="/novyny/">Новини</a></li>
           <li><a href="/prozorist/">Прозорість</a></li>
@@ -28,31 +31,30 @@
       <nav class="footer__col" aria-label="Навчання">
         <h2 class="footer__heading">Навчання</h2>
         <ul>
-          <li><a href="/vstup/">Вступ 2026</a></li>
-          <li><a href="/navchannya/">Профілі навчання</a></li>
+          <li><a href="/vstup/">Вступ</a></li>
           <li><a href="/rozklad/">Розклад уроків</a></li>
           <li><a href="/rozklad/#dzvinky">Розклад дзвінків</a></li>
+          <li><a href="/prozorist/">Документи закладу</a></li>
         </ul>
       </nav>
 
       <div class="footer__col">
         <h2 class="footer__heading">Контакти</h2>
         <ul class="footer__contacts">
-          <li>{{ icon("map-pin", 18) }} {{ site.address.street }}, {{ site.address.settlement }}</li>
-          <li>{{ icon("phone", 18) }} <a href="tel:{{ site.phoneHref }}">{{ site.phone }}</a></li>
+          <li>{{ icon("map-pin", 18) }} {{ site.address.region }} · дистанційно</li>
           <li>{{ icon("mail", 18) }} <a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
           <li>{{ icon("clock", 18) }} {{ site.hours }}</li>
         </ul>
         <p class="footer__hotline">
           {{ icon("shield", 18) }}
-          <span><strong>Гаряча лінія / протидія булінгу:</strong><br>
-          <a href="tel:{{ site.hotlineHref }}">{{ site.hotline }}</a></span>
+          <span><strong>Психологічна підтримка:</strong><br>
+          дитяча лінія <a href="tel:116111">116&nbsp;111</a> · La&nbsp;Strada <a href="tel:116123">116&nbsp;123</a></span>
         </p>
       </div>
     </div>
 
     <div class="footer__bottom">
-      <p>© {{ site.founded }}–2026 {{ site.name }}. Код ЄДРПОУ {{ site.edrpou }}.</p>
+      <p>© 2026 {{ site.name }}. Код ЄДРПОУ {{ site.edrpou }}.</p>
       <button class="footer__top" id="to-top" type="button" aria-label="Прокрутити нагору">
         {{ icon("arrow-up", 18) }} Нагору
       </button>

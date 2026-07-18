@@ -24,11 +24,6 @@ module.exports = function (eleventyConfig) {
       (a.data.order ?? 99) - (b.data.order ?? 99)
     )
   );
-  eleventyConfig.addCollection("profiles", (api) =>
-    api.getFilteredByGlob("src/content/profiles/*.md").sort((a, b) =>
-      (a.data.order ?? 99) - (b.data.order ?? 99)
-    )
-  );
   eleventyConfig.addCollection("documents", (api) =>
     api.getFilteredByGlob("src/content/documents/*.md")
   );

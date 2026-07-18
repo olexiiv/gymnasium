@@ -33,7 +33,7 @@ collections:
       - name: category
         label: "Категорія"
         widget: select
-        options: ["Оголошення", "Вступ", "Досягнення", "Життя гімназії"]
+        options: ["Оголошення", "Навчання", "Вступ", "Безпека", "Підтримка", "Життя гімназії"]
       - { name: cover, label: "Обкладинка (необовʼязково)", widget: image, required: false }
       - { name: excerpt, label: "Короткий опис (1–2 речення)", widget: text }
       - { name: body, label: "Текст новини", widget: markdown }
@@ -52,22 +52,6 @@ collections:
       - { name: avatarInitials, label: "Ініціали для аватара (2 літери)", widget: string }
       - { name: order, label: "Порядок у списку", widget: number, default: 50 }
       - { name: body, label: "Коротко про педагога", widget: markdown, required: false }
-
-  - name: profiles
-    label: "Профілі навчання"
-    label_singular: "профіль"
-    folder: "src/content/profiles"
-    create: true
-    fields:
-      - { name: title, label: "Назва профілю", widget: string }
-      - { name: subjects, label: "Поглиблені предмети (через кому)", widget: string }
-      - name: icon
-        label: "Іконка"
-        widget: select
-        options: [compass, book-open, leaf, landmark, users, award]
-        default: book-open
-      - { name: order, label: "Порядок", widget: number, default: 50 }
-      - { name: body, label: "Опис профілю", widget: markdown }
 
   - name: documents
     label: "Документи (Прозорість)"

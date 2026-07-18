@@ -1,15 +1,15 @@
 {% from "macros/icon.njk" import icon %}
 <div class="contacts">
   <div class="contacts__info">
-    <div class="contacts__map" role="img" aria-label="Мапа розташування гімназії: {{ site.address.street }}, {{ site.address.settlement }}">
-      {{ icon("map-pin", 34) }}
-      <span>[МАПА: {{ site.address.settlement }}, {{ site.address.street }}]</span>
-      <small>Замініть на iframe Google Maps або статичне зображення мапи</small>
+    <div class="contacts__map contacts__map--note" role="note">
+      {{ icon("shield", 34) }}
+      <span>Заклад релоковано з {{ site.address.origin }}, {{ site.address.region }}.</span>
+      <small>Навчання відбувається дистанційно, тож найшвидше звʼязатися з нами електронною поштою або через форму поруч.</small>
     </div>
     <ul class="contacts__list">
-      <li>{{ icon("map-pin", 20) }}<span>{{ site.address.street }}, {{ site.address.settlement }},<br>{{ site.address.region }}, {{ site.address.postal }}</span></li>
-      <li>{{ icon("phone", 20) }}<a href="tel:{{ site.phoneHref }}">{{ site.phone }}</a></li>
+      <li>{{ icon("map-pin", 20) }}<span>Місце реєстрації: {{ site.address.origin }},<br>{{ site.address.region }}</span></li>
       <li>{{ icon("mail", 20) }}<a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+      <li>{{ icon("book-open", 20) }}<a href="mailto:{{ site.admissionEmail }}">{{ site.admissionEmail }}</a> <span>— питання вступу</span></li>
       <li>{{ icon("clock", 20) }}<span>{{ site.hours }}</span></li>
     </ul>
   </div>

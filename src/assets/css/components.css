@@ -150,7 +150,80 @@
   .header__link { width: 100%; padding: 0.6rem 1rem; font-size: 1rem; }
   .header__cta-item { margin: var(--space-3) 0 0; }
   .header__cta-item .btn { width: 100%; justify-content: center; }
+  .header__old-item { margin: var(--space-2) 0 0; }
+  .header__old-item .btn { width: 100%; justify-content: center; }
 }
+
+/* Кнопка «Стара версія сайту» у шапці */
+.header__old { white-space: nowrap; }
+.header__old-item { margin-left: var(--space-1); }
+
+/* ================= Психологічна підтримка ================= */
+.support {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (min-width: 900px) { .support { grid-template-columns: 0.9fr 1.1fr; } }
+
+.support__intro p { color: var(--ink-muted); margin-top: var(--space-3); }
+
+.support__list { display: grid; gap: var(--space-3); }
+.support__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-m);
+  padding: var(--space-4) var(--space-5);
+}
+.support__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-round);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+.support__name { font-weight: 500; font-size: 0.9375rem; }
+.support__contact {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  white-space: nowrap;
+  color: var(--brand-strong);
+  text-decoration: none;
+}
+.support__contact:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+@media (max-width: 520px) {
+  .support__item { grid-template-columns: auto 1fr; }
+  .support__contact { grid-column: 2; justify-self: start; }
+}
+
+/* Контактна нотатка для релокованого закладу */
+.contacts__map--note { cursor: default; }
+
+/* Посилання «Стара версія сайту» у футері */
+.footer__old {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-round);
+  background: rgb(255 255 255 / 0.08);
+  color: #EFE9E3;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background var(--t-fast);
+}
+.footer__old:hover { background: var(--brand); color: var(--on-brand); }
 
 /* ================= Hero ================= */
 .hero {
