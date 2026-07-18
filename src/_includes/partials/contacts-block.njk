@@ -1,17 +1,49 @@
 {% from "macros/icon.njk" import icon %}
 <div class="contacts">
   <div class="contacts__info">
-    <div class="contacts__map contacts__map--note" role="note">
-      {{ icon("shield", 34) }}
-      <span>Заклад релоковано з {{ site.address.origin }}, {{ site.address.region }}.</span>
-      <small>Навчання відбувається дистанційно, тож найшвидше звʼязатися з нами електронною поштою або через форму поруч.</small>
+    <div class="contacts__note" role="note">
+      {{ icon("shield", 22) }}
+      <p>Заклад релоковано із {{ site.address.origin }}, {{ site.address.region }}. Навчання відбувається дистанційно, тож найшвидше звʼязатися з нами електронною поштою або через форму поруч.</p>
     </div>
-    <ul class="contacts__list">
-      <li>{{ icon("map-pin", 20) }}<span>Місце реєстрації: {{ site.address.origin }},<br>{{ site.address.region }}</span></li>
-      <li>{{ icon("mail", 20) }}<a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-      <li>{{ icon("book-open", 20) }}<a href="mailto:{{ site.admissionEmail }}">{{ site.admissionEmail }}</a> <span>— питання вступу</span></li>
-      <li>{{ icon("clock", 20) }}<span>{{ site.hours }}</span></li>
-    </ul>
+
+    <dl class="contacts__official">
+      <div class="contacts__row">
+        <dt>{{ icon("landmark", 18) }} Повна назва</dt>
+        <dd>{{ site.fullName }}</dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("book-open", 18) }} Тип закладу</dt>
+        <dd>{{ site.type }}</dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("users", 18) }} Директор</dt>
+        <dd>{{ site.director }}</dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("map-pin", 18) }} Поштова адреса</dt>
+        <dd>{{ site.address.postal }}</dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("phone", 18) }} Телефон</dt>
+        <dd><a href="tel:{{ site.phoneHref }}">{{ site.phone }}</a></dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("mail", 18) }} E-mail</dt>
+        <dd><a href="mailto:{{ site.email }}">{{ site.email }}</a></dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("clock", 18) }} Графік роботи</dt>
+        <dd>{{ site.hours }}</dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("file-text", 18) }} Засновник</dt>
+        <dd>{{ site.founder }}</dd>
+      </div>
+      <div class="contacts__row">
+        <dt>{{ icon("file-text", 18) }} Код ЄДРПОУ</dt>
+        <dd>{{ site.edrpou }}</dd>
+      </div>
+    </dl>
   </div>
 
   <form class="form" action="https://formspree.io/f/{{ site.formspreeId }}" method="POST" novalidate>
@@ -39,7 +71,6 @@
       <p class="form__error" id="cf-message-err" hidden>Напишіть кілька слів — з чим можемо допомогти?</p>
     </div>
 
-    {# Honeypot проти спам-ботів: приховане поле, людина його не заповнить #}
     <div class="form__hp" aria-hidden="true">
       <label for="cf-website">Не заповнюйте це поле</label>
       <input id="cf-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">

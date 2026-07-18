@@ -2,7 +2,6 @@
 name: Бондаренко Ніна Григорівна
 position: Учителька математики
 subject: Алгебра, геометрія · класна керівниця 11 класу
-email: bondarenko@andriivska-gymnasium.ua
 avatarInitials: НБ
 order: 2
 ---

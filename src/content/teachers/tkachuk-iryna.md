@@ -2,7 +2,6 @@
 name: Ткачук Ірина Миколаївна
 position: Учителька англійської мови
 subject: Англійська мова · класна керівниця 7-Б
-email: tkachuk@andriivska-gymnasium.ua
 avatarInitials: ІТ
 order: 4
 ---

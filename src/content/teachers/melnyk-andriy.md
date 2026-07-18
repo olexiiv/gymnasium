@@ -2,7 +2,6 @@
 name: Мельник Андрій Петрович
 position: Учитель історії
 subject: Історія України, всесвітня історія, правознавство
-email: melnyk@andriivska-gymnasium.ua
 avatarInitials: АМ
 order: 3
 ---

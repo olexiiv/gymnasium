@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://andriivska-gymnasium.ua/sitemap.xml
+Sitemap: https://new.andriivka-school.zp.ua/sitemap.xml

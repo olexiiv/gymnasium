@@ -2,7 +2,6 @@
 name: Шевченко Василь Іванович
 position: Учитель фізики та інформатики
 subject: Фізика, астрономія, інформатика
-email: shevchenko@andriivska-gymnasium.ua
 avatarInitials: ВШ
 order: 5
 ---

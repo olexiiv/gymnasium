@@ -7,13 +7,13 @@
 
 backend:
   name: github
-  repo: LOGIN/andriivska-gymnasium   # ← замініть на свій репозиторій
+  repo: olexiiv/gymnasium   # ← замініть на свій репозиторій
   branch: main
   # base_url: https://your-oauth-proxy.example.com
   # auth_endpoint: /auth
 
 locale: uk
-site_url: https://andriivska-gymnasium.ua
+site_url: https://new.andriivka-school.zp.ua
 logo_url: /assets/img/emblema-320.png
 
 media_folder: "src/assets/img/uploads"

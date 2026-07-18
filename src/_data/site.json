@@ -1,53 +1,125 @@
 {
   "name": "Андріївська різнопрофільна гімназія",
   "shortName": "Андріївська гімназія",
+  "fullName": "Андріївська різнопрофільна гімназія Андріївської селищної ради Бердянського району Запорізької області",
+  "type": "Гімназія з початковою школою · ступені I–III · комунальна форма власності",
   "tagline": "Продовжуємо навчати — попри все.",
   "url": "https://new.andriivka-school.zp.ua",
   "oldSiteUrl": "https://old.andriivka-school.zp.ua",
   "relocatedSince": 2022,
-  "language": "uk",
+  "language": "українська",
+  "founder": "Андріївська селищна територіальна громада",
   "address": {
-    "origin": "с. Андріївка, Бердянський район",
+    "origin": "селище Андріївка, Бердянський район",
     "region": "Запорізька область",
+    "postal": "69107, Запорізька область, м. Запоріжжя, просп. Соборний, 164",
     "mode": "Заклад релоковано. Навчання відбувається дистанційно."
   },
-  "phone": "+380 (00) 000-00-00",
-  "phoneHref": "+380000000000",
-  "email": "andriivka.school@ukr.net",
-  "admissionEmail": "vstup.andriivka@ukr.net",
+  "phone": "+38 (06153) 9-11-39",
+  "phoneHref": "+380615391139",
+  "email": "andreevka.school@meta.ua",
+  "admissionEmail": "andreevka.school@meta.ua",
   "hours": "Пн–Пт, 08:30–15:00 (онлайн)",
-  "director": "адміністрація гімназії",
-  "edrpou": "00000000",
+  "director": "Малієнко Олександр Миколайович",
+  "edrpou": "26292307",
   "formspreeId": "XXXXXXX",
   "metrics": [
-    { "value": "166", "label": "учнів навчається", "icon": "users" },
-    { "value": "з 2022", "label": "працюємо в дистанційному форматі", "icon": "book-open" },
-    { "value": "поруч", "label": "психологічна підтримка учнів і родин", "icon": "shield" },
-    { "value": "НМТ", "label": "готуємо старшокласників до вступу", "icon": "graduation-cap" }
+    {
+      "value": "177",
+      "label": "учнів навчається",
+      "icon": "users"
+    },
+    {
+      "value": "з 2022",
+      "label": "працюємо в дистанційному форматі",
+      "icon": "book-open"
+    },
+    {
+      "value": "поруч",
+      "label": "психологічна підтримка учнів і родин",
+      "icon": "shield"
+    },
+    {
+      "value": "НМТ",
+      "label": "готуємо старшокласників до вступу",
+      "icon": "graduation-cap"
+    }
   ],
   "support": [
-    { "name": "«Ти як?» — національна програма психічного здоровʼя", "contact": "howareu.com", "href": "https://howareu.com/" },
-    { "name": "Дитяча лінія La Strada (безкоштовно, анонімно)", "contact": "116 111", "href": "tel:116111" },
-    { "name": "Гаряча лінія La Strada для дорослих", "contact": "116 123", "href": "tel:116123" }
+    {
+      "name": "«Ти як?» — національна програма психічного здоровʼя",
+      "contact": "howareu.com",
+      "href": "https://howareu.com/"
+    },
+    {
+      "name": "Дитяча лінія La Strada (безкоштовно, анонімно)",
+      "contact": "116 111",
+      "href": "tel:116111"
+    },
+    {
+      "name": "Гаряча лінія La Strada для дорослих",
+      "contact": "116 123",
+      "href": "tel:116123"
+    }
   ],
   "social": [
-    { "name": "Facebook", "url": "https://facebook.com/andriivska.school", "icon": "facebook" },
-    { "name": "YouTube", "url": "https://youtube.com/@andriivka-school", "icon": "youtube" }
+    {
+      "name": "Facebook",
+      "url": "https://facebook.com/andriivska.school",
+      "icon": "facebook"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/@andriivka-school",
+      "icon": "youtube"
+    }
   ],
   "nav": [
-    { "label": "Про нас", "url": "/pro-gimnaziyu/" },
-    { "label": "Вступ", "url": "/vstup/" },
-    { "label": "Новини", "url": "/novyny/" },
-    { "label": "Прозорість", "url": "/prozorist/" },
-    { "label": "Контакти", "url": "/kontakty/" }
+    {
+      "label": "Про нас",
+      "url": "/pro-gimnaziyu/"
+    },
+    {
+      "label": "Вступ",
+      "url": "/vstup/"
+    },
+    {
+      "label": "Новини",
+      "url": "/novyny/"
+    },
+    {
+      "label": "Прозорість",
+      "url": "/prozorist/"
+    }
   ],
   "bells": [
-    { "n": 1, "time": "08:30 – 09:05" },
-    { "n": 2, "time": "09:20 – 09:55" },
-    { "n": 3, "time": "10:10 – 10:45" },
-    { "n": 4, "time": "11:00 – 11:35" },
-    { "n": 5, "time": "11:50 – 12:25" },
-    { "n": 6, "time": "12:40 – 13:15" },
-    { "n": 7, "time": "13:30 – 14:05" }
+    {
+      "n": 1,
+      "time": "08:30 – 09:05"
+    },
+    {
+      "n": 2,
+      "time": "09:20 – 09:55"
+    },
+    {
+      "n": 3,
+      "time": "10:10 – 10:45"
+    },
+    {
+      "n": 4,
+      "time": "11:00 – 11:35"
+    },
+    {
+      "n": 5,
+      "time": "11:50 – 12:25"
+    },
+    {
+      "n": 6,
+      "time": "12:40 – 13:15"
+    },
+    {
+      "n": 7,
+      "time": "13:30 – 14:05"
+    }
   ]
 }
