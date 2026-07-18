@@ -7,7 +7,7 @@
           <img src="/assets/img/emblema-320.png" alt="" width="56" height="56">
           <span>{{ site.name }}</span>
         </a>
-        <p class="footer__desc">Заклад загальної середньої освіти {{ site.address.region }}. Релоковано з {{ site.address.origin }}; навчання відбувається дистанційно.</p>
+        <p class="footer__desc">Заклад загальної середньої освіти. Релоковано з {{ site.address.origin }}; навчання відбувається дистанційно.</p>
         <ul class="footer__social" aria-label="Ми в соцмережах">
           {% for s in site.social %}
           <li><a href="{{ s.url }}" aria-label="{{ s.name }}" rel="noopener" target="_blank">{{ icon(s.icon, 20) }}</a></li>
