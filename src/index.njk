@@ -64,9 +64,9 @@ description: "Андріївська різнопрофільна гімназі
       <ul class="support__list">
         {% for s in site.support %}
         <li class="support__item reveal">
-          <span class="support__icon">{{ icon("phone", 20) }}</span>
+          <span class="support__icon">{{ icon(s.icon or "phone", 20) }}</span>
           <span class="support__name">{{ s.name }}</span>
-          <a class="support__contact" href="{{ s.href }}" rel="noopener">{{ s.contact }}</a>
+          <a class="support__contact" href="{{ s.href }}"{% if s.external %} target="_blank" rel="noopener noreferrer"{% else %} rel="noopener"{% endif %}>{{ s.contact }}</a>
         </li>
         {% endfor %}
       </ul>

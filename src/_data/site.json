@@ -47,30 +47,36 @@
   ],
   "support": [
     {
+      "icon": "heart",
       "name": "«Ти як?» — національна програма психічного здоровʼя",
       "contact": "howareu.com",
-      "href": "https://howareu.com/"
+      "href": "https://howareu.com/",
+      "external": true
     },
     {
+      "icon": "life-buoy",
       "name": "Дитяча лінія La Strada (безкоштовно, анонімно)",
-      "contact": "116 111",
-      "href": "tel:116111"
+      "contact": "la-strada.org.ua",
+      "href": "https://la-strada.org.ua/",
+      "external": true
     },
     {
-      "name": "Гаряча лінія La Strada для дорослих",
-      "contact": "116 123",
-      "href": "tel:116123"
+      "icon": "activity",
+      "name": "Психологічний тренажер",
+      "contact": "happymind.help/teen",
+      "href": "https://happymind.help/teen/",
+      "external": true
     }
   ],
   "social": [
     {
-      "name": "Facebook",
-      "url": "https://facebook.com/andriivska.school",
+      "name": "Facebook-група гімназії",
+      "url": "https://www.facebook.com/groups/andriivkaschool",
       "icon": "facebook"
     },
     {
-      "name": "YouTube",
-      "url": "https://youtube.com/@andriivka-school",
+      "name": "YouTube-канал гімназії",
+      "url": "https://www.youtube.com/channel/UCCvFaBAdYh6pJ5KaVHK_Y7w",
       "icon": "youtube"
     }
   ],
