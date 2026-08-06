@@ -9,12 +9,53 @@
     <nav class="header__nav" id="site-nav" aria-label="Основна навігація">
       <ul class="header__list">
         {% for item in site.nav %}
-        <li>
-          <a class="header__link{% if page.url and item.url != '/' and page.url.startsWith(item.url) %} is-active{% endif %}"
-             {% if page.url and item.url != '/' and page.url.startsWith(item.url) %}aria-current="page"{% endif %}
+        {% set isActive = page.url and item.url != '/' and page.url.startsWith(item.url) %}
+
+        {% if item.submenu == "transparency" %}
+        {# Пункт із підменю: розділи беруться з transparency.json — одне джерело істини #}
+        <li class="header__item header__item--group" data-nav-group>
+          <button class="header__link header__link--group{% if isActive %} is-active{% endif %}"
+                  type="button" aria-expanded="false" aria-controls="submenu-{{ loop.index }}"
+                  data-nav-trigger>
+            {{ item.label }}{{ icon("chevron-down", 16, "header__chev") }}
+          </button>
+
+          <ul class="header__sub" id="submenu-{{ loop.index }}" data-nav-panel>
+            <li>
+              <a class="header__sublink header__sublink--overview{% if page.url == item.url %} is-active{% endif %}"
+                 href="{{ item.url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>
+                {{ icon("compass", 18) }}
+                <span class="header__subtext">
+                  <span class="header__subname">{{ item.overviewLabel }}</span>
+                  <span class="header__subhint">Основні документи на одній сторінці</span>
+                </span>
+              </a>
+            </li>
+            {% for section in transparency.sections %}
+            {% set childUrl = item.url + section.slug + "/" %}
+            <li>
+              <a class="header__sublink{% if page.url == childUrl %} is-active{% endif %}"
+                 href="{{ childUrl }}"{% if page.url == childUrl %} aria-current="page"{% endif %}>
+                {{ icon(section.icon, 18) }}
+                <span class="header__subtext">
+                  <span class="header__subname">{{ section.label }}</span>
+                  <span class="header__subhint">{{ section.keywords }}</span>
+                </span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+
+        {% else %}
+        <li class="header__item">
+          <a class="header__link{% if isActive %} is-active{% endif %}"
+             {% if isActive %}aria-current="page"{% endif %}
              href="{{ item.url }}">{{ item.label }}</a>
         </li>
+        {% endif %}
         {% endfor %}
+
         <li class="header__cta-item">
           <a class="btn btn--brand btn--sm" href="/rozklad/">{{ icon("calendar", 18) }} Розклад</a>
         </li>

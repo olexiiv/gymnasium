@@ -60,14 +60,49 @@ collections:
     create: true
     media_folder: "/src/assets/docs"
     public_folder: "/assets/docs"
+    sortable_fields: [updatedAt, title]
     fields:
       - { name: title, label: "Назва документа", widget: string }
-      - name: category
-        label: "Категорія"
+      - name: section
+        label: "Розділ на сайті"
+        hint: "Визначає, на якій сторінці розділу «Прозорість» зʼявиться документ"
         widget: select
-        options: ["статут", "ліцензія", "кошторис", "звіти", "вакансії"]
+        options:
+          - { label: "Установчі документи", value: "ustanovchi" }
+          - { label: "Освітній процес", value: "osvitniy-protses" }
+          - { label: "Фінанси", value: "finansy" }
+          - { label: "Безпечне середовище", value: "bezpeka" }
+          - { label: "Кадри та звітність", value: "kadry" }
+      - name: category
+        label: "Категорія (підзаголовок у розділі)"
+        widget: select
+        options:
+          - "статут"
+          - "ліцензія"
+          - "структура управління"
+          - "стратегія розвитку"
+          - "освітні програми"
+          - "навчальні плани"
+          - "внутрішня система якості"
+          - "моніторинг якості"
+          - "кошторис"
+          - "фінансові звіти"
+          - "благодійна допомога"
+          - "закупівлі"
+          - "запобігання насильству"
+          - "протидія булінгу"
+          - "порядок подання заяв"
+          - "правила поведінки"
+          - "кадровий склад"
+          - "вакансії"
+          - "річні звіти"
       - { name: file, label: "Файл (PDF)", widget: file }
-      - { name: updatedAt, label: "Дата оновлення", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+      - { name: updatedAt, label: "Дата затвердження або оновлення", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+      - name: featured
+        label: "Показати в «Основних документах»"
+        hint: "Виводиться нагорі сторінки /prozorist/. Тримайте позначеними 4–6 документів."
+        widget: boolean
+        default: false
 
   - name: gallery
     label: "Галерея"

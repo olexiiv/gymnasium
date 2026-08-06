@@ -25,7 +25,9 @@ module.exports = function (eleventyConfig) {
     )
   );
   eleventyConfig.addCollection("documents", (api) =>
-    api.getFilteredByGlob("src/content/documents/*.md")
+    api.getFilteredByGlob("src/content/documents/*.md").sort((a, b) =>
+      new Date(b.data.updatedAt) - new Date(a.data.updatedAt)
+    )
   );
   eleventyConfig.addCollection("gallery", (api) =>
     api.getFilteredByGlob("src/content/gallery/*.md")
@@ -49,14 +51,38 @@ module.exports = function (eleventyConfig) {
     return d.toISOString().split("T")[0];
   });
 
-  // Групування документів за категорією: { "статут": [...], ... }
-  eleventyConfig.addFilter("groupByCategory", (items) => {
-    const groups = {};
+  // ---------- Прозорість / публічна інформація ----------
+
+  // Документи одного розділу: {{ collections.documents | inSection("finansy") }}
+  eleventyConfig.addFilter("inSection", (items, slug) =>
+    (items || []).filter((item) => item.data.section === slug)
+  );
+
+  // Позначені як основні — для добірки на хаб-сторінці
+  eleventyConfig.addFilter("featuredDocs", (items) =>
+    (items || []).filter((item) => item.data.featured)
+  );
+
+  // Групування за категорією зі стабільним порядком.
+  // Повертає масив [{ category, docs }] — порядок задає transparency.json,
+  // усе, чого немає в списку, потрапляє в кінець за алфавітом.
+  eleventyConfig.addFilter("groupByCategory", (items, order) => {
+    const groups = new Map();
     for (const item of items || []) {
       const cat = item.data.category || "інше";
-      (groups[cat] = groups[cat] || []).push(item);
+      if (!groups.has(cat)) groups.set(cat, []);
+      groups.get(cat).push(item);
     }
-    return groups;
+
+    const known = (order || []).filter((cat) => groups.has(cat));
+    const rest = [...groups.keys()]
+      .filter((cat) => !known.includes(cat))
+      .sort((a, b) => a.localeCompare(b, "uk"));
+
+    return [...known, ...rest].map((category) => ({
+      category,
+      docs: groups.get(category),
+    }));
   });
 
   // Обмеження масиву: {{ collections.news | limit(3) }}

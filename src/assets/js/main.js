@@ -42,6 +42,69 @@
     });
   }
 
+  /* ---------- 1b. Випадаюче підменю в шапці ---------- */
+  var navGroups = document.querySelectorAll("[data-nav-group]");
+
+  if (navGroups.length) {
+    var closeGroup = function (group) {
+      group.classList.remove("is-open");
+      var trigger = group.querySelector("[data-nav-trigger]");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    };
+
+    var closeAllGroups = function (except) {
+      navGroups.forEach(function (group) {
+        if (group !== except) closeGroup(group);
+      });
+    };
+
+    navGroups.forEach(function (group) {
+      var trigger = group.querySelector("[data-nav-trigger]");
+      var panel = group.querySelector("[data-nav-panel]");
+      if (!trigger || !panel) return;
+
+      trigger.addEventListener("click", function () {
+        var open = !group.classList.contains("is-open");
+        closeAllGroups(group);
+        group.classList.toggle("is-open", open);
+        trigger.setAttribute("aria-expanded", String(open));
+      });
+
+      // Стрілка вниз із кнопки — одразу на перший пункт підменю
+      trigger.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          group.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+          var first = panel.querySelector("a");
+          if (first) first.focus();
+        }
+      });
+
+      // Tab за межі підменю закриває його
+      group.addEventListener("focusout", function (e) {
+        if (!group.contains(e.relatedTarget)) closeGroup(group);
+      });
+    });
+
+    document.addEventListener("click", function (e) {
+      navGroups.forEach(function (group) {
+        if (group.classList.contains("is-open") && !group.contains(e.target)) closeGroup(group);
+      });
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      navGroups.forEach(function (group) {
+        if (!group.classList.contains("is-open")) return;
+        var trigger = group.querySelector("[data-nav-trigger]");
+        closeGroup(group);
+        // Якщо Esc закрив і бургер-меню, тригер уже прихований — фокус туди не повертаємо
+        if (trigger && trigger.offsetParent !== null) trigger.focus();
+      });
+    });
+  }
+
   /* ---------- 2. Версія для слабозорих ---------- */
   var a11yToggle = document.getElementById("a11y-toggle");
   if (a11yToggle) {

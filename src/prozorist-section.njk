@@ -1,0 +1,90 @@
+---
+layout: layouts/page.njk
+pagination:
+  data: transparency.sections
+  size: 1
+  alias: section
+permalink: "/prozorist/{{ section.slug }}/"
+eleventyComputed:
+  title: "{{ section.title }}"
+  intro: "{{ section.intro }}"
+  description: "{{ section.intro }} — Андріївська різнопрофільна гімназія."
+parent:
+  label: Прозорість
+  url: /prozorist/
+---
+{% from "macros/icon.njk" import icon %}
+{% set docs = collections.documents | inSection(section.slug) %}
+{% set groups = docs | groupByCategory(section.categories) %}
+
+<section class="section section--tight">
+  <div class="container">
+    <nav class="sectionnav" aria-label="Розділи публічної інформації">
+      <a class="sectionnav__link" href="/prozorist/">{{ icon("compass", 16) }} Огляд</a>
+      {% for s in transparency.sections %}
+      <a class="sectionnav__link{% if s.slug == section.slug %} is-active{% endif %}"
+         href="/prozorist/{{ s.slug }}/"
+         {% if s.slug == section.slug %}aria-current="page"{% endif %}>{{ s.label }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container container--narrow">
+
+    {% if section.facts %}
+    <dl class="facts reveal">
+      {% for fact in section.facts %}
+      <div class="facts__row">
+        <dt class="facts__term">{{ fact.term }}</dt>
+        <dd class="facts__value">{{ fact.value }}</dd>
+      </div>
+      {% endfor %}
+    </dl>
+    {% endif %}
+
+    {% if groups.length %}
+    <div class="docgroups">
+      {% for group in groups %}
+      <section class="docgroup reveal">
+        <h2 class="docgroup__title">
+          {{ group.category | capitalize }}
+          <span class="badge badge--muted">{{ group.docs.length }}</span>
+        </h2>
+        <ul class="doclist">
+          {% for doc in group.docs %}
+          <li class="doclist__item">
+            <div class="doclist__meta">
+              <p class="doclist__title">{{ doc.data.title }}</p>
+              <p class="doclist__date">Оновлено {{ doc.data.updatedAt | dateUA }}</p>
+            </div>
+            <a class="btn btn--ghost btn--sm" href="{{ doc.data.file }}" download
+               aria-label="Завантажити PDF: {{ doc.data.title }}">
+              {{ icon("download", 16) }} PDF
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty reveal">
+      <span class="empty__icon">{{ icon(section.icon, 26) }}</span>
+      <h2 class="empty__title">Документи цього розділу готуємо до публікації</h2>
+      <p class="empty__text">
+        Потрібен конкретний документ уже зараз? Напишіть нам — надішлемо копію протягом пʼяти робочих днів.
+      </p>
+      <a class="btn btn--brand" href="mailto:{{ site.email }}?subject=Запит документа: {{ section.title }}">
+        {{ icon("mail", 18) }} Запитати документ
+      </a>
+    </div>
+    {% endif %}
+
+    <div class="notice reveal">
+      {{ icon("clock", 22) }}
+      <p>Оновлюємо цей розділ протягом {{ transparency.deadlineDays }} робочих днів після затвердження документа або змін до нього.</p>
+    </div>
+  </div>
+</section>

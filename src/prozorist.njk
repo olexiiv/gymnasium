@@ -1,44 +1,76 @@
 ---
 layout: layouts/page.njk
 title: Прозорість та інформаційна відкритість
-intro: Документи закладу згідно зі ст. 30 Закону України «Про освіту».
+intro: Публічна інформація про гімназію згідно зі статтею 30 Закону України «Про освіту». Документи згруповані за розділами — оберіть потрібний або завантажте основні одразу тут.
 permalink: /prozorist/
+description: "Публічна інформація Андріївської різнопрофільної гімназії: статут, ліцензія, кошторис і фінансові звіти, освітні програми, безпечне середовище, кадри та звітність."
 ---
 {% from "macros/icon.njk" import icon %}
-<section class="section">
-  <div class="container container--narrow">
-    {% set groups = collections.documents | groupByCategory %}
-    <div class="accordion">
-      {% for category, docs in groups %}
-      <details class="accordion__item" {% if loop.first %}open{% endif %}>
-        <summary class="accordion__summary">
-          <span class="accordion__cat">{{ icon("file-text", 20) }} {{ category | capitalize }}
-            <span class="badge badge--muted">{{ docs.length }}</span>
+{% set featured = collections.documents | featuredDocs %}
+
+{% if featured.length %}
+<section class="section section--tight">
+  <div class="container">
+    <h2 class="section__title">Основні документи</h2>
+    <p class="section__lead">Ті, що запитують найчастіше. Решта — у розділах нижче.</p>
+
+    <ul class="doccards reveal">
+      {% for doc in featured %}
+      <li>
+        <a class="doccard" href="{{ doc.data.file }}" download>
+          <span class="doccard__icon">{{ icon("file-text", 20) }}</span>
+          <span class="doccard__body">
+            <span class="doccard__title">{{ doc.data.title }}</span>
+            <span class="doccard__meta">PDF · оновлено {{ doc.data.updatedAt | dateUA }}</span>
           </span>
-          {{ icon("chevron-down", 20, "accordion__chev") }}
-        </summary>
-        <div class="accordion__body">
-          <ul class="doclist">
-            {% for doc in docs %}
-            <li class="doclist__item">
-              <div class="doclist__meta">
-                <p class="doclist__title">{{ doc.data.title }}</p>
-                <p class="doclist__date">Оновлено {{ doc.data.updatedAt | dateUA }}</p>
-              </div>
-              <a class="btn btn--ghost btn--sm" href="{{ doc.data.file }}" download>
-                {{ icon("download", 16) }} PDF
-              </a>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </details>
+          <span class="doccard__action" aria-hidden="true">{{ icon("download", 18) }}</span>
+        </a>
+      </li>
       {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">Розділи</h2>
+    <p class="section__lead">У кожному розділі — документи та дані, які заклад зобовʼязаний оприлюднювати.</p>
+
+    <ul class="sections-grid">
+      {% for section in transparency.sections %}
+      {% set docs = collections.documents | inSection(section.slug) %}
+      <li class="reveal">
+        <a class="seccard" href="/prozorist/{{ section.slug }}/">
+          <span class="seccard__top">
+            <span class="seccard__icon">{{ icon(section.icon, 22) }}</span>
+            {% if docs.length %}
+            <span class="badge badge--muted">{{ docs.length }}
+              {%- if docs.length == 1 %} документ{% elif docs.length < 5 %} документи{% else %} документів{% endif %}</span>
+            {% else %}
+            <span class="badge badge--muted">готується</span>
+            {% endif %}
+          </span>
+          <span class="seccard__name">{{ section.label }}</span>
+          <span class="seccard__desc">{{ section.intro }}</span>
+          <span class="seccard__go">Відкрити розділ {{ icon("arrow-right", 16) }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container container--narrow">
+    <div class="notice reveal">
+      {{ icon("clock", 22) }}
+      <p>Документи публікуємо не пізніше ніж через {{ transparency.deadlineDays }} робочих днів після затвердження або внесення змін — так вимагає частина 4 статті 30 Закону України «Про освіту».</p>
     </div>
 
     <div class="notice reveal">
       {{ icon("alert-circle", 22) }}
-      <p>Не знайшли потрібний документ? Надішліть запит на <a href="mailto:{{ site.email }}">{{ site.email }}</a> — надамо копію протягом п'яти робочих днів.</p>
+      <p>Не знайшли потрібний документ? Надішліть запит на <a href="mailto:{{ site.email }}">{{ site.email }}</a> — надамо копію протягом пʼяти робочих днів.</p>
     </div>
   </div>
 </section>

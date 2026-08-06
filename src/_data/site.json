@@ -95,7 +95,9 @@
     },
     {
       "label": "Прозорість",
-      "url": "/prozorist/"
+      "url": "/prozorist/",
+      "submenu": "transparency",
+      "overviewLabel": "Огляд і основні документи"
     }
   ],
   "bells": [
