@@ -135,3 +135,25 @@ featured: false
 
 Версія для слабозорих: перемикач у хедері, клас `.a11y` на `<html>`, стан у `localStorage`,
 inline-скрипт у `<head>` запобігає миготінню (FOUC).
+
+## Версії
+
+Історія змін — у [CHANGELOG.md](CHANGELOG.md). Поточна версія: **v1.7**.
+
+## Фото на сторінці «Про нас»
+
+Фонове фото заголовка задається у front-matter `src/pro-gimnaziyu.njk`:
+
+```yaml
+headImage: /assets/img/school.webp
+headCaption: "Підпис під заголовком"
+```
+
+Фотосмуга внизу сторінки з'явиться автоматично, щойно у `src/_data/about.json`
+з'явиться хоча б один запис у масиві `photos`:
+
+```json
+"photos": [
+  { "src": "/assets/img/uploads/urok.jpg", "alt": "Онлайн-урок", "caption": "Урок біології" }
+]
+```

@@ -133,9 +133,20 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  /* ---------- 4. Кнопка «Нагору» ---------- */
+  /* ---------- 4. Плаваюча кнопка «Нагору» ---------- */
   var toTop = document.getElementById("to-top");
   if (toTop) {
+    var toTopThreshold = 640; // з'являється, коли прокрутили приблизно на екран вниз
+    var toTopVisible = false;
+    var onToTopScroll = function () {
+      var shouldShow = window.scrollY > toTopThreshold;
+      if (shouldShow !== toTopVisible) {
+        toTopVisible = shouldShow;
+        toTop.classList.toggle("is-visible", shouldShow);
+      }
+    };
+    onToTopScroll();
+    window.addEventListener("scroll", onToTopScroll, { passive: true });
     toTop.addEventListener("click", function () {
       window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
     });

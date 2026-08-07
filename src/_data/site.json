@@ -54,17 +54,17 @@
       "external": true
     },
     {
-      "icon": "life-buoy",
-      "name": "Дитяча лінія La Strada (безкоштовно, анонімно)",
-      "contact": "la-strada.org.ua",
-      "href": "https://la-strada.org.ua/",
-      "external": true
-    },
-    {
       "icon": "activity",
       "name": "Психологічний тренажер",
       "contact": "happymind.help/teen",
       "href": "https://happymind.help/teen/",
+      "external": true
+    },
+    {
+      "icon": "life-buoy",
+      "name": "Дитяча лінія La Strada (безкоштовно, анонімно)",
+      "contact": "la-strada.org.ua",
+      "href": "https://la-strada.org.ua/",
       "external": true
     }
   ],

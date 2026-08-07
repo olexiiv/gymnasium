@@ -119,3 +119,36 @@ collections:
         options: ["4 / 3", "3 / 4", "1 / 1", "16 / 9"]
         default: "4 / 3"
         required: false
+
+  - name: about
+    label: "Сторінка «Про нас»"
+    files:
+      - name: about_data
+        label: "Про нас — блоки"
+        file: "src/_data/about.json"
+        fields:
+          - name: timeline
+            label: "Наш шлях (хронологія)"
+            widget: list
+            fields:
+              - { name: year, label: "Період", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+              - { name: text, label: "Опис", widget: text }
+          - name: values
+            label: "Цінності"
+            widget: list
+            fields:
+              - name: icon
+                label: "Іконка"
+                widget: select
+                options: ["shield", "heart", "leaf", "users", "book-open", "award", "compass"]
+              - { name: title, label: "Заголовок", widget: string }
+              - { name: text, label: "Опис", widget: text }
+          - name: photos
+            label: "Фотосмуга (порожньо — блок не показується)"
+            widget: list
+            required: false
+            fields:
+              - { name: src, label: "Фото", widget: image }
+              - { name: alt, label: "Опис для незрячих", widget: string }
+              - { name: caption, label: "Підпис (необовʼязково)", widget: string, required: false }

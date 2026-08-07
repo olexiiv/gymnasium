@@ -38,6 +38,11 @@
 
   {% include "partials/footer.njk" %}
 
+  {% from "macros/icon.njk" import icon %}
+  <button class="to-top" id="to-top" type="button" aria-label="Прокрутити нагору">
+    {{ icon("arrow-up", 20) }}
+  </button>
+
   <script src="/assets/js/main.js" defer></script>
 </body>
 </html>

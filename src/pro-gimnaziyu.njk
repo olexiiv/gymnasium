@@ -3,41 +3,110 @@ layout: layouts/page.njk
 title: Про нас
 intro: Хто ми, як працюємо в умовах війни та у що віримо.
 permalink: /pro-gimnaziyu/
+headImage: /assets/img/school.webp
+headCaption: "Наш корпус у селищі Андріївка. Чекаємо на день, коли повернемось."
 ---
 {% from "macros/icon.njk" import icon %}
-<section class="section">
-  <div class="container container--narrow">
-    <div class="prose">
-      <h2>Хто ми</h2>
-      <p>{{ site.fullName }} — заклад загальної середньої освіти із селища Андріївка Бердянського району Запорізької області. Після початку повномасштабного вторгнення й тимчасової окупації громади заклад було релоковано, і з 2022 року ми працюємо в дистанційному форматі.</p>
-      <p>Сьогодні в гімназії навчається 177 учнів. Вони — у різних містах України, за кордоном і на тимчасово окупованій території. Нас обʼєднує не адреса, а спільнота: спільні уроки онлайн, класні години, свята та підтримка одне одного.</p>
 
-      <h2>Як ми працюємо</h2>
-      <p>Навчання відбувається дистанційно за розкладом, з використанням відеоуроків і освітніх платформ. Ми свідомі того, що в дитини вдома може не бути тиші, стабільного інтернету чи навіть світла, тож ставимося до обставин кожного з розумінням і гнучкістю. Матеріали уроків лишаються доступними, щоб надолужити пропущене.</p>
-      <p>Особлива увага — випускним класам: системно готуємо старшокласників до національного мультипредметного тесту (НМТ) та вступу до закладів вищої освіти.</p>
+{# ---------- Хто ми ---------- #}
+<section class="section" aria-labelledby="who-title">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-grid__main">
+        <p class="section__eyebrow">Хто ми</p>
+        <h2 class="section__title" id="who-title">Школа, яку не зупинила війна</h2>
+        <p class="lede reveal">{{ site.fullName }} — заклад загальної середньої освіти із селища Андріївка Бердянського району Запорізької області. З 2022 року ми працюємо дистанційно.</p>
+        <div class="prose">
+          <p>Після початку повномасштабного вторгнення й тимчасової окупації громади заклад було релоковано. Сьогодні в гімназії навчається 177 учнів — у різних містах України, за кордоном і на тимчасово окупованій території. Нас об'єднує не адреса, а спільнота: спільні уроки онлайн, класні години, свята та підтримка одне одного.</p>
+          <p>Навчання відбувається за розкладом, з використанням відеоуроків і освітніх платформ. Ми свідомі того, що в дитини вдома може не бути тиші, стабільного інтернету чи навіть світла, тож ставимося до обставин кожного з розумінням і гнучкістю. Матеріали уроків лишаються доступними, щоб надолужити пропущене.</p>
+          <p>Особлива увага — випускним класам: системно готуємо старшокласників до національного мультипредметного тесту (НМТ) та вступу до закладів вищої освіти.</p>
+        </div>
+      </div>
 
-      <h2>Наші цінності</h2>
-      <p><strong>Безпека понад усе.</strong> Під час повітряної тривоги уроки припиняються — жодна тема не важливіша за життя дитини. <strong>Людяність.</strong> Ми знаємо кожного учня й тримаємо звʼязок із родинами без формальностей. <strong>Стійкість.</strong> Ми продовжуємо вчити й вчитися, бо освіта — це те, що наближає нашу спільну перемогу й повернення додому.</p>
-
-      <h2>Підтримка для учнів і родин</h2>
-      <p>У гімназії працює психологічна служба. Якщо дитині чи батькам потрібно поговорити — звертайтеся до класного керівника або напишіть нам. Також завжди доступні безкоштовні національні лінії допомоги — їхні контакти є на <a href="/#support-title">головній сторінці</a> та в підвалі сайту.</p>
-
-      <h2>Коротко про заклад</h2>
-      <p><strong>Тип:</strong> {{ site.type }}.<br>
-      <strong>Директор:</strong> {{ site.director }}.<br>
-      <strong>Мова навчання:</strong> {{ site.language }}.<br>
-      <strong>Засновник:</strong> {{ site.founder }}.<br>
-      <strong>Код ЄДРПОУ:</strong> {{ site.edrpou }}.</p>
+      <aside class="about-aside" aria-label="Наше гасло">
+        <figure class="pullquote reveal">
+          <blockquote class="pullquote__text">{{ site.tagline }}</blockquote>
+        </figure>
+      </aside>
     </div>
+  </div>
+</section>
 
-    <ul class="metrics metrics--inline" aria-label="Гімназія в цифрах">
-      {% for m in site.metrics %}
-      <li class="metrics__item reveal">
-        <span class="metrics__icon">{{ icon(m.icon, 22) }}</span>
-        <span class="metrics__value">{{ m.value }}</span>
-        <span class="metrics__label">{{ m.label }}</span>
+{# ---------- Наш шлях ---------- #}
+<section class="section" aria-labelledby="path-title">
+  <div class="container container--narrow">
+    <div class="section__head">
+      <p class="section__eyebrow">Наш шлях</p>
+      <h2 class="section__title" id="path-title">Від корпусу в Андріївці — до спільноти без кордонів</h2>
+    </div>
+    <ol class="timeline">
+      {% for step in about.timeline %}
+      <li class="timeline__item reveal">
+        <p class="timeline__year">{{ step.year }}</p>
+        <h3 class="timeline__title">{{ step.title }}</h3>
+        <p class="timeline__text">{{ step.text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+{# ---------- Цінності ---------- #}
+<section class="values-band" aria-labelledby="values-title">
+  <div class="values-band__leaves" aria-hidden="true">
+    <span class="values-band__leaf values-band__leaf--1">{{ icon("leaf", 64) }}</span>
+    <span class="values-band__leaf values-band__leaf--2">{{ icon("leaf", 40) }}</span>
+    <span class="values-band__leaf values-band__leaf--3">{{ icon("leaf", 52) }}</span>
+  </div>
+  <div class="container">
+    <div class="section__head">
+      <p class="section__eyebrow section__eyebrow--onDark">Наші цінності</p>
+      <h2 class="section__title" id="values-title">У що ми віримо</h2>
+    </div>
+    <ul class="values">
+      {% for v in about.values %}
+      <li class="value-card reveal">
+        <span class="value-card__icon">{{ icon(v.icon, 24) }}</span>
+        <h3 class="value-card__title">{{ v.title }}</h3>
+        <p class="value-card__text">{{ v.text }}</p>
       </li>
       {% endfor %}
     </ul>
+  </div>
+</section>
+
+{# ---------- Фотосмуга (рендериться лише якщо у about.json є фото) ---------- #}
+{% if about.photos and about.photos.length %}
+<section class="section" aria-labelledby="photos-title">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__eyebrow">Наша гімназія</p>
+      <h2 class="section__title" id="photos-title">Кілька кадрів</h2>
+    </div>
+    <ul class="photostrip">
+      {% for p in about.photos %}
+      <li class="photostrip__item reveal">
+        <figure class="photostrip__figure">
+          <img src="{{ p.src }}" alt="{{ p.alt }}"{% if p.position %} style="object-position:{{ p.position }}"{% endif %} loading="lazy" decoding="async" {% if p.width %}width="{{ p.width }}" height="{{ p.height }}"{% endif %}>
+          {% if p.caption %}<figcaption class="photostrip__caption">{{ p.caption }}</figcaption>{% endif %}
+        </figure>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- Підтримка ---------- #}
+<section class="section section--tight" aria-labelledby="help-title">
+  <div class="container container--narrow">
+    <div class="notice notice--block">
+      {{ icon("life-buoy", 24) }}
+      <div>
+        <h2 class="notice__title" id="help-title">Підтримка для учнів і родин</h2>
+        <p>У гімназії працює психологічна служба. Якщо дитині чи батькам потрібно поговорити — зверніться до класного керівника або напишіть нам. Також завжди доступні безкоштовні національні лінії допомоги — їхні контакти є на <a href="/#support-title">головній сторінці</a> та в підвалі сайту.</p>
+        <a class="btn btn--brand" href="/#contacts-title">Написати нам {{ icon("arrow-right", 18) }}</a>
+      </div>
+    </div>
   </div>
 </section>

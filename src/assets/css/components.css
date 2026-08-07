@@ -988,18 +988,59 @@
   font-size: var(--fs-caption);
   color: rgb(239 233 227 / 0.7);
 }
-.footer__top {
-  display: inline-flex;
+/* ================= Плаваюча кнопка «Нагору» =================
+   Без JS кнопка лишається прихованою (progressive enhancement — без
+   обробника кліку показувати її немає сенсу). З JS зʼявляється після
+   прокрутки приблизно на екран вниз і ховається біля самого верху. */
+.to-top {
+  --to-top-size: 3rem;
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 80;
+  width: var(--to-top-size);
+  height: var(--to-top-size);
+  display: flex;
   align-items: center;
-  gap: var(--space-2);
-  min-height: 44px;
-  padding: 0.4rem 1rem;
+  justify-content: center;
   border-radius: var(--radius-round);
-  background: rgb(255 255 255 / 0.08);
-  color: #EFE9E3;
-  transition: background var(--t-fast);
+  background: var(--surface);
+  color: var(--ink);
+  /* Світле тло + тонкий контурний бордер тримають кнопку читабельною
+     і на кремовому фоні, і на темних секціях (смуга цінностей, фото-заголовок) —
+     на відміну від темного варіанта, який зливався з коричневим тлом. */
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-m);
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 12px;
+  transition: opacity var(--t-med), translate var(--t-med), background var(--t-fast), color var(--t-fast), visibility 0s linear var(--t-med);
 }
-.footer__top:hover { background: var(--brand); color: var(--on-brand); }
+.js .to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  translate: 0 0;
+  transition: opacity var(--t-med), translate var(--t-med), background var(--t-fast), color var(--t-fast);
+}
+.to-top:hover { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.to-top:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+@media (max-width: 640px) {
+  .to-top { right: var(--space-4); bottom: var(--space-4); }
+}
+
+/* Підвал: якщо в підвалі лишається якийсь відступ під колишню кнопку —
+   плаваюча кнопка може перекривати текст авторських прав на мобільних,
+   тож даємо підвалу трохи «дихання» знизу. */
+.footer__bottom { padding-bottom: var(--space-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .to-top { transition: opacity var(--t-fast); }
+  .js .to-top.is-visible { transition: opacity var(--t-fast); }
+}
 
 /* ============================================================
    Прозорість: підменю в шапці, картки розділів, документи
@@ -1283,3 +1324,257 @@ html:not(.js) .header__item--group:focus-within > .header__sub { display: block;
   .seccard, .seccard__go .icon { transition: none; }
   .seccard:hover { transform: none; }
 }
+
+/* ============================================================
+   Сторінка «Про нас» (v1.1)
+   ============================================================ */
+
+/* ---------- Заголовок сторінки з фоновим фото ---------- */
+.page-head--photo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #2E2223;
+  padding-block: calc(var(--space-8) * 0.85) var(--space-8);
+}
+.page-head__bg {
+  position: absolute;
+  inset: -2%;
+  z-index: -2;
+  background-size: cover;
+  background-position: center 60%;
+  filter: saturate(0.5) contrast(1.04);
+}
+/* Градієнт-вуаль: фото лишається впізнаваним, але текст читається впевнено */
+.page-head--photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgb(46 34 35 / 0.62) 0%, rgb(46 34 35 / 0.84) 55%, rgb(46 34 35 / 0.94) 100%),
+    radial-gradient(120% 90% at 88% 0%, rgb(116 190 92 / 0.30), transparent 62%);
+}
+.page-head--photo .breadcrumbs,
+.page-head--photo .breadcrumbs a { color: rgb(255 255 255 / 0.72); }
+.page-head--photo .breadcrumbs a:hover { color: #fff; }
+.page-head--photo .breadcrumbs [aria-current] { color: #fff; }
+.page-head--photo .page-head__title { color: #fff; }
+.page-head--photo .page-head__intro { color: rgb(255 255 255 / 0.85); }
+
+.page-head__caption {
+  margin-top: var(--space-6);
+  padding-top: var(--space-3);
+  border-top: 1px solid rgb(255 255 255 / 0.22);
+  max-width: 26rem;
+  font-size: var(--fs-caption);
+  font-style: italic;
+  color: rgb(255 255 255 / 0.78);
+}
+.page-head:not(.page-head--photo) .page-head__caption {
+  border-top-color: var(--line);
+  color: var(--ink-muted);
+}
+
+/* ---------- Вступний абзац ---------- */
+.lede {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.6rem);
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: var(--space-5);
+}
+.lede::first-letter { color: var(--brand-strong); }
+
+/* ---------- Сітка «Хто ми» ---------- */
+.about-grid { display: grid; gap: var(--space-6); }
+@media (min-width: 960px) {
+  .about-grid { grid-template-columns: minmax(0, 1fr) 21rem; gap: var(--space-7); align-items: start; }
+  .about-aside { position: sticky; top: 6.5rem; }
+}
+
+.pullquote::before {
+  content: "";
+  position: absolute;
+  top: var(--space-6);
+  left: var(--space-6);
+  width: 2.5rem;
+  height: 3px;
+  border-radius: var(--radius-round);
+  background: var(--brand);
+}
+.pullquote {
+  position: relative;
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-s);
+}
+.pullquote__text {
+  position: relative;
+  margin: 0;
+  padding-top: var(--space-4);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+/* ---------- Таймлайн «Наш шлях» ---------- */
+.timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0.7rem;
+  bottom: 0.7rem;
+  width: 2px;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--line) 100%);
+}
+.timeline__item { position: relative; padding-left: 2.75rem; }
+.timeline__item + .timeline__item { margin-top: var(--space-6); }
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.35rem;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-round);
+  background: var(--surface);
+  border: 3px solid var(--brand);
+}
+.timeline__item:last-child::before { background: var(--brand); }
+.timeline__year {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand-strong);
+}
+.timeline__title { font-size: var(--fs-h3); margin-top: 2px; }
+.timeline__text { margin-top: var(--space-2); color: var(--ink-muted); font-size: 0.9375rem; }
+
+/* ---------- Смуга цінностей ---------- */
+.values-band {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding-block: var(--space-8);
+  background:
+    radial-gradient(90% 120% at 10% 0%, #3A6A2E 0%, transparent 60%),
+    linear-gradient(160deg, #2F5626 0%, #26421F 100%);
+  color: #fff;
+}
+.values-band .section__title { color: #fff; }
+.section__eyebrow--onDark { color: rgb(255 255 255 / 0.72); }
+
+.values-band__leaves { position: absolute; inset: 0; z-index: -1; pointer-events: none; color: #fff; opacity: 0.10; }
+.values-band__leaf { position: absolute; }
+.values-band__leaf--1 { top: 8%; right: 6%; transform: rotate(-24deg); }
+.values-band__leaf--2 { bottom: 12%; left: 8%; transform: rotate(30deg); }
+.values-band__leaf--3 { top: 46%; right: 38%; transform: rotate(12deg); }
+
+.values {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+@media (min-width: 800px) { .values { grid-template-columns: repeat(3, 1fr); } }
+
+.value-card {
+  background: rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(255 255 255 / 0.20);
+  border-radius: var(--radius-m);
+  padding: var(--space-5);
+  transition: background var(--t-med), transform var(--t-med);
+}
+.value-card:hover { background: rgb(255 255 255 / 0.13); transform: translateY(-3px); }
+.value-card__icon { display: inline-flex; color: #BFE3AF; }
+.value-card__title { margin-top: var(--space-3); font-size: var(--fs-h3); color: #fff; }
+.value-card__text { margin-top: var(--space-2); color: rgb(255 255 255 / 0.84); font-size: 0.9375rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .value-card:hover { transform: none; }
+}
+
+/* ---------- Фотосмуга ---------- */
+.photostrip {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 900px) {
+  .photostrip { grid-template-columns: repeat(4, 1fr); }
+  .photostrip__item:first-child { grid-column: span 2; grid-row: span 2; }
+  .photostrip__item:first-child .photostrip__figure img { min-height: 24rem; }
+}
+.photostrip__figure {
+  position: relative;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  background: var(--surface-alt);
+}
+.photostrip__figure img {
+  width: 100%;
+  height: 100%;
+  min-height: 11rem;
+  object-fit: cover;
+  transition: scale var(--t-med);
+}
+.photostrip__figure:hover img { scale: 1.04; }
+.photostrip__caption {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: var(--space-5) var(--space-4) var(--space-3);
+  font-size: var(--fs-caption);
+  color: #fff;
+  background: linear-gradient(180deg, transparent, rgb(46 34 35 / 0.85));
+}
+@media (prefers-reduced-motion: reduce) {
+  .photostrip__figure:hover img { scale: 1; }
+}
+
+/* ---------- Дрібниці ---------- */
+.notice--block { display: block; }
+.notice--block .icon { color: var(--brand-strong); }
+.notice__title { font-size: var(--fs-h3); margin-block: var(--space-2) var(--space-3); }
+.notice--block .btn { margin-top: var(--space-4); }
+
+/* ============================================================
+   Версія для слабозорих: знімаємо фото й темні смуги
+   ============================================================ */
+html.a11y .page-head--photo { background: var(--surface-alt); }
+html.a11y .page-head__bg,
+html.a11y .page-head--photo::before,
+html.a11y .values-band__leaves,
+html.a11y .pullquote::before { display: none !important; }
+html.a11y .page-head--photo .page-head__title,
+html.a11y .page-head--photo .breadcrumbs,
+html.a11y .page-head--photo .breadcrumbs a,
+html.a11y .page-head--photo .breadcrumbs [aria-current] { color: var(--ink); }
+html.a11y .page-head--photo .page-head__intro,
+html.a11y .page-head--photo .page-head__caption { color: var(--ink-muted); }
+html.a11y .page-head--photo .page-head__caption { border-top-color: var(--line); }
+html.a11y .values-band { background: var(--surface-alt); color: var(--ink); }
+html.a11y .values-band .section__title,
+html.a11y .value-card__title { color: var(--ink); }
+html.a11y .section__eyebrow--onDark,
+html.a11y .value-card__text { color: var(--ink-muted); }
+html.a11y .value-card {
+  background: var(--surface);
+  border-color: var(--line);
+}
+html.a11y .value-card__icon { color: var(--brand-strong); }

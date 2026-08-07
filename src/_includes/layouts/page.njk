@@ -1,7 +1,13 @@
 ---
 layout: layouts/base.njk
 ---
-<div class="page-head">
+{# Якщо у front-matter сторінки задано headImage — заголовок отримує фонове фото.
+   Фото декоративне (атмосфера й текстура), тож без alt: змістовий опис лишається
+   у підписі headCaption або в тексті сторінки. #}
+<div class="page-head{% if headImage %} page-head--photo{% endif %}">
+  {% if headImage %}
+  <div class="page-head__bg" style="background-image:url('{{ headImage }}')" aria-hidden="true"></div>
+  {% endif %}
   <div class="container">
     <nav class="breadcrumbs" aria-label="Ви тут">
       <a href="/">Головна</a>
@@ -14,6 +20,7 @@ layout: layouts/base.njk
     </nav>
     <h1 class="page-head__title">{{ title }}</h1>
     {% if intro %}<p class="page-head__intro">{{ intro }}</p>{% endif %}
+    {% if headCaption %}<p class="page-head__caption">{{ headCaption }}</p>{% endif %}
   </div>
 </div>
 {{ content | safe }}
