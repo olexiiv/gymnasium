@@ -38,12 +38,19 @@ parent:
       {% for fact in section.facts %}
       <div class="facts__row">
         <dt class="facts__term">{{ fact.term }}</dt>
-        <dd class="facts__value">{{ fact.value }}</dd>
+        <dd class="facts__value">
+          {% if fact.term == "Педагогічний колектив" %}
+          Список педагогів із предметами — на сторінці «<a href="/vchyteli/">Педагоги</a>»
+          {% else %}
+          {{ fact.value }}
+          {% endif %}
+        </dd>
       </div>
       {% endfor %}
     </dl>
     {% endif %}
 
+    {% if section.slug != "kadry" %}
     {% if groups.length %}
     <div class="docgroups">
       {% for group in groups %}
@@ -80,6 +87,7 @@ parent:
         {{ icon("mail", 18) }} Запитати документ
       </a>
     </div>
+    {% endif %}
     {% endif %}
 
     <div class="notice reveal">
