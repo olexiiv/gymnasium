@@ -1,7 +1,7 @@
 ---
-caption: Учнівська подяка захисникам
-alt: Двоє чоловіків тримають плакат «Дякуємо за захист», зроблений учнями гімназії
-image: /assets/img/gallery/podyaka-zahysnykam.webp
+caption: "Учнівська подяка захисникам"
+alt: "Двоє чоловіків тримають плакат «Дякуємо за захист», зроблений учнями гімназії"
+image: "/assets/img/gallery/podyaka-zahysnykam.webp"
 width: 700
 height: 471
 order: 8
