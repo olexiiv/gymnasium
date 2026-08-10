@@ -103,13 +103,21 @@ description: "Андріївська різнопрофільна гімназі
     </div>
     <div class="masonry">
       {% for item in collections.gallery %}
+      {% set base = item.data.image | replace(".webp", "") %}
       <figure class="masonry__item reveal">
         <button class="masonry__btn" type="button" data-lightbox
                 data-caption="{{ item.data.caption }}"
+                data-alt="{{ item.data.alt or item.data.caption }}"
                 {% if item.data.image %}data-image="{{ item.data.image }}"{% endif %}
                 aria-label="Відкрити фото: {{ item.data.caption }}">
           {% if item.data.image %}
-            <img src="{{ item.data.image }}" alt="{{ item.data.caption }}" width="480" height="{{ item.data.ratio or 360 }}" loading="lazy">
+            <img src="{% if item.data.width > 800 %}{{ base }}-800.webp{% else %}{{ item.data.image }}{% endif %}"
+                 {% if item.data.width > 480 %}srcset="{{ base }}-480.webp 480w{% if item.data.width > 800 %}, {{ base }}-800.webp 800w{% endif %}, {{ item.data.image }} {{ item.data.width }}w"
+                 sizes="(min-width: 1024px) 22rem, (min-width: 640px) 44vw, 90vw"{% endif %}
+                 alt="{{ item.data.alt or item.data.caption }}"
+                 width="{{ item.data.width or 480 }}" height="{{ item.data.height or 360 }}"
+                 loading="lazy" decoding="async">
+            <span class="masonry__zoom" aria-hidden="true">{{ icon("eye", 18) }}</span>
           {% else %}
             <span class="masonry__placeholder" style="--ratio: {{ item.data.ratio or '4 / 3' }}">
               {{ icon("image", 28) }}

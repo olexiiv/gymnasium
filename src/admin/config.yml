@@ -110,11 +110,21 @@ collections:
     folder: "src/content/gallery"
     create: true
     fields:
-      - { name: caption, label: "Підпис до фото", widget: string }
+      - { name: caption, label: "Підпис під фото", widget: string }
+      - { name: alt, label: "Опис для незрячих (alt)", widget: string, required: false,
+          hint: "Що саме зображено. Якщо не заповнити — візьметься підпис." }
       - { name: image, label: "Зображення", widget: image, required: false }
+      - { name: width, label: "Ширина великої версії, px", widget: number,
+          value_type: int, required: false,
+          hint: "Потрібно, щоб сторінка не «стрибала» під час завантаження." }
+      - { name: height, label: "Висота великої версії, px", widget: number,
+          value_type: int, required: false }
+      - { name: order, label: "Порядок", widget: number, value_type: int,
+          default: 99, required: false,
+          hint: "Менше число — вище у стрічці." }
       - { name: tags, label: "Теги", widget: list, required: false }
       - name: ratio
-        label: "Пропорції (для плейсхолдера)"
+        label: "Пропорції (для плейсхолдера без фото)"
         widget: select
         options: ["4 / 3", "3 / 4", "1 / 1", "16 / 9"]
         default: "4 / 3"

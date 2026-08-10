@@ -200,61 +200,139 @@
   }
 
   /* ---------- 7. Lightbox галереї ---------- */
-  var lbTriggers = document.querySelectorAll("[data-lightbox]");
+  var lbTriggers = Array.prototype.slice.call(document.querySelectorAll("[data-lightbox]"));
   if (lbTriggers.length) {
     var lightbox = document.createElement("div");
     lightbox.className = "lightbox";
     lightbox.setAttribute("role", "dialog");
     lightbox.setAttribute("aria-modal", "true");
     lightbox.setAttribute("aria-label", "Перегляд фото");
+
+    var svg = function (path) {
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        path + "</svg>";
+    };
+
     lightbox.innerHTML =
-      '<button class="lightbox__close" type="button" aria-label="Закрити">' +
-      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
-      "</button>" +
-      '<div class="lightbox__inner"><div class="lightbox__content"></div><p class="lightbox__caption"></p></div>';
+      '<button class="lightbox__close" type="button" aria-label="Закрити (Esc)">' +
+      svg('<path d="M18 6 6 18M6 6l12 12"/>') + "</button>" +
+      '<button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Попереднє фото">' +
+      svg('<path d="m15 18-6-6 6-6"/>') + "</button>" +
+      '<button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Наступне фото">' +
+      svg('<path d="m9 18 6-6-6-6"/>') + "</button>" +
+      '<div class="lightbox__inner">' +
+      '<div class="lightbox__content"></div>' +
+      '<div class="lightbox__bar"><p class="lightbox__caption"></p>' +
+      '<span class="lightbox__counter"></span></div></div>';
     document.body.appendChild(lightbox);
 
     var lbContent = lightbox.querySelector(".lightbox__content");
     var lbCaption = lightbox.querySelector(".lightbox__caption");
+    var lbCounter = lightbox.querySelector(".lightbox__counter");
     var lbClose = lightbox.querySelector(".lightbox__close");
+    var lbPrev = lightbox.querySelector(".lightbox__nav--prev");
+    var lbNext = lightbox.querySelector(".lightbox__nav--next");
     var lastFocused = null;
+    var lbIndex = 0;
+    var multiple = lbTriggers.length > 1;
+
+    lbPrev.hidden = !multiple;
+    lbNext.hidden = !multiple;
+
+    var preload = function (i) {
+      var btn = lbTriggers[(i + lbTriggers.length) % lbTriggers.length];
+      var src = btn && btn.getAttribute("data-image");
+      if (src) { var p = new Image(); p.src = src; }
+    };
+
+    var paint = function (i) {
+      lbIndex = (i + lbTriggers.length) % lbTriggers.length;
+      var btn = lbTriggers[lbIndex];
+      var image = btn.getAttribute("data-image");
+      var caption = btn.getAttribute("data-caption") || "";
+      var alt = btn.getAttribute("data-alt") || caption;
+
+      lbContent.innerHTML = "";
+      if (image) {
+        var img = document.createElement("img");
+        img.src = image;
+        img.alt = alt;
+        lbContent.appendChild(img);
+      } else {
+        // Плейсхолдер без фото — показуємо збільшений підпис
+        var ph = document.createElement("p");
+        ph.textContent = "[ФОТО: " + caption + "]";
+        lbContent.appendChild(ph);
+      }
+      lbCaption.textContent = caption;
+      lbCounter.textContent = multiple ? lbIndex + 1 + " / " + lbTriggers.length : "";
+      lbContent.classList.remove("is-swapping");
+      preload(lbIndex + 1);
+      preload(lbIndex - 1);
+    };
+
+    var stepLightbox = function (delta) {
+      if (!multiple) return;
+      lbContent.classList.add("is-swapping");
+      window.setTimeout(function () { paint(lbIndex + delta); }, 150);
+    };
 
     var closeLightbox = function () {
       lightbox.classList.remove("is-open");
+      document.body.classList.remove("lightbox-open");
       lbContent.innerHTML = "";
       if (lastFocused) lastFocused.focus();
     };
 
-    lbTriggers.forEach(function (btn) {
+    lbTriggers.forEach(function (btn, i) {
       btn.addEventListener("click", function () {
         lastFocused = btn;
-        var image = btn.getAttribute("data-image");
-        var caption = btn.getAttribute("data-caption") || "";
-
-        if (image) {
-          var img = document.createElement("img");
-          img.src = image;
-          img.alt = caption;
-          lbContent.appendChild(img);
-        } else {
-          // Плейсхолдер без фото — показуємо збільшений підпис
-          var ph = document.createElement("p");
-          ph.textContent = "[ФОТО: " + caption + "]";
-          lbContent.appendChild(ph);
-        }
-        lbCaption.textContent = caption;
+        paint(i);
         lightbox.classList.add("is-open");
+        document.body.classList.add("lightbox-open");
         lbClose.focus();
       });
     });
 
     lbClose.addEventListener("click", closeLightbox);
+    lbPrev.addEventListener("click", function () { stepLightbox(-1); });
+    lbNext.addEventListener("click", function () { stepLightbox(1); });
+
     lightbox.addEventListener("click", function (e) {
       if (e.target === lightbox) closeLightbox();
     });
+
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && lightbox.classList.contains("is-open")) closeLightbox();
+      if (!lightbox.classList.contains("is-open")) return;
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") stepLightbox(-1);
+      else if (e.key === "ArrowRight") stepLightbox(1);
+      else if (e.key === "Tab") {
+        // Утримуємо фокус у межах діалогу
+        var focusable = [lbClose, lbPrev, lbNext].filter(function (b) { return !b.hidden; });
+        var pos = focusable.indexOf(document.activeElement);
+        var next = e.shiftKey ? pos - 1 : pos + 1;
+        if (next < 0) next = focusable.length - 1;
+        if (next >= focusable.length) next = 0;
+        e.preventDefault();
+        focusable[next].focus();
+      }
     });
+
+    // Свайп на сенсорних екранах
+    var touchX = null, touchY = null;
+    lightbox.addEventListener("touchstart", function (e) {
+      touchX = e.changedTouches[0].clientX;
+      touchY = e.changedTouches[0].clientY;
+    }, { passive: true });
+    lightbox.addEventListener("touchend", function (e) {
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      var dy = e.changedTouches[0].clientY - touchY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) stepLightbox(dx < 0 ? 1 : -1);
+      touchX = touchY = null;
+    }, { passive: true });
   }
 
   /* ---------- 8. Валідація форми + AJAX-відправлення на Formspree ---------- */

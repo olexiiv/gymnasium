@@ -30,7 +30,9 @@ module.exports = function (eleventyConfig) {
     )
   );
   eleventyConfig.addCollection("gallery", (api) =>
-    api.getFilteredByGlob("src/content/gallery/*.md")
+    api.getFilteredByGlob("src/content/gallery/*.md").sort((a, b) =>
+      (a.data.order ?? 99) - (b.data.order ?? 99)
+    )
   );
 
   // ---------- Фільтри ----------
