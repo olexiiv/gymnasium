@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Прев'ю v1.14 — Новини · Андріївська різнопрофільна гімназія</title>
+<title>Прев'ю v1.13 — Новини · Андріївська різнопрофільна гімназія</title>
 <style>/* ============================================================
    tokens.css — джерело істини дизайн-системи
    Organic minimalism: тепла база, м'які радіуси, природні акценти
@@ -506,6 +506,10 @@ table { border-collapse: collapse; }
 }
 
 /* Посилання «Стара версія сайту» у футері */
+/* Кнопка «Стара версія сайту» — ті самі кольори, що в .btn--brand.
+   Селектор навмисно з .footer: інакше загальне правило .footer a:hover
+   (специфічність вища за .footer__old:hover) перефарбовувало текст у
+   var(--brand) — тобто в колір власного фону, і напис зникав. */
 .footer__old {
   display: inline-flex;
   align-items: center;
@@ -514,15 +518,17 @@ table { border-collapse: collapse; }
   min-height: 44px;
   padding: 0.4rem 1rem;
   border-radius: var(--radius-round);
-  background: rgb(255 255 255 / 0.08);
-  color: #EFE9E3;
+  background: var(--brand);
+  color: var(--on-brand);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9375rem;
   text-decoration: none;
-  transition: background var(--t-fast);
+  transition: background var(--t-fast), color var(--t-fast);
 }
-.footer__old:hover { background: var(--brand); color: var(--on-brand); }
+.footer .footer__old { color: var(--on-brand); }
+.footer .footer__old:hover,
+.footer .footer__old:focus-visible { background: var(--brand-strong); color: var(--on-brand); }
 
 /* ================= Hero ================= */
 .hero {
@@ -2310,7 +2316,7 @@ html.a11y .value-card__icon { color: var(--brand-strong); }
 </style></head>
 <body>
 <div class="pv-bar">
-  <strong>Прев'ю v1.14</strong>
+  <strong>Прев'ю v1.13</strong>
   <button type="button" data-view="list" class="is-on">Сторінка «Новини»</button>
   <button type="button" data-view="article">Сторінка новини</button>
   <button type="button" id="pv-a11y">Версія для слабозорих</button>
@@ -2468,6 +2474,32 @@ html.a11y .value-card__icon { color: var(--brand-strong); }
 </article>
 </div>
 </main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__about">
+        <p class="footer__desc">Заклад загальної середньої освіти. Релоковано з селища Андріївка;
+        навчання відбувається дистанційно.</p>
+        <ul class="footer__social" aria-label="Ми в соцмережах">
+          <li><a href="#" aria-label="Facebook"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></a></li>
+          <li><a href="#" aria-label="YouTube"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></a></li>
+        </ul>
+        <a class="footer__old" href="#" rel="noopener"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> Стара версія сайту</a>
+      </div>
+      <nav class="footer__col" aria-label="Про заклад">
+        <h2 class="footer__heading">Гімназія</h2>
+        <ul>
+          <li><a href="#">Про нас</a></li>
+          <li><a href="#">Педагогічний склад</a></li>
+          <li><a href="#">Новини</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bottom"><p>© 2026 Андріївська різнопрофільна гімназія.</p></div>
+  </div>
+</footer>
+
 
 <script>
 (function(){
