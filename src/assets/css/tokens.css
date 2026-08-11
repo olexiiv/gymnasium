@@ -137,6 +137,7 @@ html.a11y .hero__leaves,
 html.a11y .hero__photo::after,
 html.a11y .card__placeholder .icon,
 html.a11y .masonry__zoom,
+html.a11y .photostrip__zoom,
 html.a11y .masonry__placeholder .icon {
   display: none !important;
 }

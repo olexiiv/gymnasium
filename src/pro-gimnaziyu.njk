@@ -87,7 +87,14 @@ headCaption: "Наш корпус у селищі Андріївка. Чекає
       {% for p in about.photos %}
       <li class="photostrip__item reveal">
         <figure class="photostrip__figure">
-          <img src="{{ p.src }}" alt="{{ p.alt }}"{% if p.position %} style="object-position:{{ p.position }}"{% endif %} loading="lazy" decoding="async" {% if p.width %}width="{{ p.width }}" height="{{ p.height }}"{% endif %}>
+          <button class="photostrip__btn" type="button" data-lightbox
+                  data-image="{{ p.src }}"
+                  data-caption="{{ p.caption or p.alt }}"
+                  data-alt="{{ p.alt }}"
+                  aria-label="Відкрити фото: {{ p.caption or p.alt }}">
+            <img src="{{ p.src }}" alt="{{ p.alt }}"{% if p.position %} style="object-position:{{ p.position }}"{% endif %} loading="lazy" decoding="async" {% if p.width %}width="{{ p.width }}" height="{{ p.height }}"{% endif %}>
+            <span class="photostrip__zoom" aria-hidden="true">{{ icon("eye", 18) }}</span>
+          </button>
           {% if p.caption %}<figcaption class="photostrip__caption">{{ p.caption }}</figcaption>{% endif %}
         </figure>
       </li>

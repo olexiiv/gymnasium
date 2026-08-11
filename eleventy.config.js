@@ -29,6 +29,13 @@ module.exports = function (eleventyConfig) {
       new Date(b.data.updatedAt) - new Date(a.data.updatedAt)
     )
   );
+  // Профілі навчання — без цієї колекції сторінка «Навчання» лишалася порожньою:
+  // Eleventy не створює колекцію з назви теки, лише з тегів або addCollection.
+  eleventyConfig.addCollection("profiles", (api) =>
+    api.getFilteredByGlob("src/content/profiles/*.md").sort((a, b) =>
+      (a.data.order ?? 99) - (b.data.order ?? 99)
+    )
+  );
   eleventyConfig.addCollection("gallery", (api) =>
     api.getFilteredByGlob("src/content/gallery/*.md").sort((a, b) =>
       (a.data.order ?? 99) - (b.data.order ?? 99)
@@ -51,6 +58,17 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("dateISO", (value) => {
     const d = new Date(value);
     return d.toISOString().split("T")[0];
+  });
+
+  // Час читання: рахуємо слова у вже зібраному HTML статті.
+  // 180 слів/хв — обережна оцінка для української мови.
+  eleventyConfig.addFilter("readTime", (html) => {
+    const words = String(html || "")
+      .replace(/<[^>]+>/g, " ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length;
+    return Math.max(1, Math.round(words / 180));
   });
 
   // ---------- Прозорість / публічна інформація ----------

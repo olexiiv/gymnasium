@@ -4,7 +4,9 @@
   <a class="card__link" href="{{ post.url }}">
     <div class="card__media" aria-hidden="true">
       {% if post.data.cover %}
-        <img src="{{ post.data.cover }}" alt="" width="640" height="360" loading="lazy">
+        <img src="{{ post.data.cover }}"
+             {% if post.data.coverSrcset %}srcset="{{ post.data.coverSrcset }}" sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 92vw"{% endif %}
+             alt="" width="640" height="360" loading="lazy">
       {% else %}
         <div class="card__placeholder">{{ icon("leaf", 32) }}<span class="card__placeholder-note">[ФОТО: {{ post.data.title }}]</span></div>
       {% endif %}

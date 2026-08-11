@@ -35,8 +35,15 @@ collections:
         widget: select
         options: ["Оголошення", "Навчання", "Вступ", "Безпека", "Підтримка", "Життя гімназії"]
       - { name: cover, label: "Обкладинка (необовʼязково)", widget: image, required: false }
+      - { name: coverSrcset, label: "Версії обкладинки (srcset)", hint: "Заповнює розробник: список «шлях 480w, шлях 800w, …». Без нього браузер вантажить велике фото навіть на телефоні.", widget: string, required: false }
+      - { name: coverWidth, label: "Ширина обкладинки, px", widget: number, required: false, value_type: int }
+      - { name: coverHeight, label: "Висота обкладинки, px", widget: number, required: false, value_type: int }
+      - { name: coverAlt, label: "Опис обкладинки для незрячих", hint: "Що зображено на фото — читає скрінрідер", widget: string, required: false }
+      - { name: coverCaption, label: "Підпис під обкладинкою", widget: string, required: false }
       - { name: excerpt, label: "Короткий опис (1–2 речення)", widget: text }
       - { name: body, label: "Текст новини", widget: markdown }
+      - { name: album, label: "Посилання на фотоальбом", hint: "Google Фото або інший альбом — під текстом зʼявиться картка-посилання", widget: string, required: false }
+      - { name: albumNote, label: "Підпис до альбому", hint: "Напр.: 22 світлини із заходу", widget: string, required: false }
 
   - name: teachers
     label: "Педагоги"

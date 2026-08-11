@@ -1,0 +1,27 @@
+{% from "macros/icon.njk" import icon %}
+{# Головна (найсвіжіша) новина — широка горизонтальна картка #}
+{% macro cardNewsLead(post) %}
+<article class="newslead reveal">
+  <a class="newslead__link" href="{{ post.url }}">
+    <div class="newslead__media" aria-hidden="true">
+      {% if post.data.cover %}
+        <img src="{{ post.data.cover }}"
+             {% if post.data.coverSrcset %}srcset="{{ post.data.coverSrcset }}" sizes="(min-width: 860px) 36rem, 92vw"{% endif %}
+             alt="" width="960" height="540">
+      {% else %}
+        <div class="card__placeholder">{{ icon("leaf", 36) }}<span class="card__placeholder-note">[ФОТО: {{ post.data.title }}]</span></div>
+      {% endif %}
+      <span class="newslead__flag">Свіже</span>
+    </div>
+    <div class="newslead__body">
+      <div class="card__meta">
+        <span class="badge">{{ post.data.category }}</span>
+        <time class="card__date" datetime="{{ post.date | dateISO }}">{{ post.date | dateUA }}</time>
+      </div>
+      <h2 class="newslead__title">{{ post.data.title }}</h2>
+      <p class="newslead__excerpt">{{ post.data.excerpt }}</p>
+      <span class="card__more">Читати далі {{ icon("arrow-right", 16) }}</span>
+    </div>
+  </a>
+</article>
+{% endmacro %}

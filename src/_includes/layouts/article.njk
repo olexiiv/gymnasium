@@ -2,9 +2,10 @@
 layout: layouts/base.njk
 ---
 {% from "macros/icon.njk" import icon %}
-{% set articleDate = post.date or page.date %}
+
 <article class="article">
   <div class="container container--narrow">
+
     <nav class="breadcrumbs" aria-label="Ви тут">
       <a href="/">Головна</a>
       <span aria-hidden="true">→</span>
@@ -14,26 +15,79 @@ layout: layouts/base.njk
     </nav>
 
     <header class="article__header">
-      <div class="card__meta">
+      <div class="article__meta">
         <span class="badge">{{ category }}</span>
-        <time class="card__date" datetime="{{ articleDate | dateISO }}">{{ articleDate | dateUA }}</time>
+        <time class="article__date" datetime="{{ page.date | dateISO }}">{{ page.date | dateUA }}</time>
+        <span class="article__dot" aria-hidden="true">·</span>
+        <span class="article__read">{{ content | readTime }} хв читання</span>
       </div>
+
       <h1 class="article__title">{{ title }}</h1>
+
+      {% if excerpt %}<p class="article__lead">{{ excerpt }}</p>{% endif %}
+
+      <span class="article__rule" aria-hidden="true">
+        {{ icon("leaf", 18) }}
+      </span>
     </header>
+  </div>
 
-    {% if cover %}
-      <img class="article__cover" src="{{ cover }}" alt="{{ coverAlt or title }}" width="960" height="540">
-    {% else %}
-      <div class="article__cover article__cover--placeholder" role="img" aria-label="Ілюстрація до новини відсутня">
-        {{ icon("leaf", 40) }}<span>[ФОТО: {{ title }}]</span>
-      </div>
-    {% endif %}
+  {% if cover %}
+  <figure class="article__figure">
+    <div class="container container--media">
+      <img class="article__cover" src="{{ cover }}"
+           {% if coverSrcset %}srcset="{{ coverSrcset }}" sizes="(min-width: 60rem) 56rem, 100vw"{% endif %}
+           alt="{{ coverAlt or '' }}"
+           {% if coverWidth %}width="{{ coverWidth }}" height="{{ coverHeight }}"{% endif %}
+           loading="eager" decoding="async">
+      {% if coverCaption %}
+      <figcaption class="article__caption">{{ coverCaption }}</figcaption>
+      {% endif %}
+    </div>
+  </figure>
+  {% endif %}
 
-    <div class="prose">
+  <div class="container container--narrow">
+    <div class="prose prose--article">
       {{ content | safe }}
     </div>
 
+    {% if album %}
+    <a class="albumcard" href="{{ album }}" target="_blank" rel="noopener noreferrer">
+      <span class="albumcard__icon">{{ icon("image", 24) }}</span>
+      <span class="albumcard__body">
+        <span class="albumcard__title">Фотоальбом заходу</span>
+        <span class="albumcard__note">{{ albumNote or "Більше світлин у Google Фото" }} · відкриється в новій вкладці</span>
+      </span>
+      <span class="albumcard__arrow" aria-hidden="true">{{ icon("external-link", 20) }}</span>
+    </a>
+    {% endif %}
+
     <footer class="article__footer">
+      {# Колекція відсортована новіші → старіші: попередній елемент масиву — свіжіша новина #}
+      {% if collections.news.length > 1 %}
+      <nav class="postnav" aria-label="Інші новини">
+        {% for p in collections.news %}
+          {% if p.url == page.url %}
+            {% if not loop.first %}
+              {% set newer = collections.news[loop.index0 - 1] %}
+              <a class="postnav__item postnav__item--prev" href="{{ newer.url }}">
+                <span class="postnav__label">{{ icon("arrow-right", 14, "icon--flip") }} Новіша новина</span>
+                <span class="postnav__title">{{ newer.data.title }}</span>
+              </a>
+            {% endif %}
+            {% if not loop.last %}
+              {% set older = collections.news[loop.index0 + 1] %}
+              <a class="postnav__item postnav__item--next" href="{{ older.url }}">
+                <span class="postnav__label">Попередня новина {{ icon("arrow-right", 14) }}</span>
+                <span class="postnav__title">{{ older.data.title }}</span>
+              </a>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </nav>
+      {% endif %}
+
       <a class="btn btn--ghost" href="/novyny/">{{ icon("arrow-right", 18, "icon--flip") }} Усі новини</a>
     </footer>
   </div>

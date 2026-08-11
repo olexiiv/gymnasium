@@ -5,6 +5,7 @@ intro: Оголошення, події та фотозвіти з життя г
 permalink: /novyny/
 ---
 {% from "macros/card-news.njk" import cardNews %}
+{% from "macros/card-news-lead.njk" import cardNewsLead %}
 <section class="section">
   <div class="container">
     <div class="filter" role="group" aria-label="Фільтр новин за категорією">
@@ -14,10 +15,23 @@ permalink: /novyny/
       {% endfor %}
     </div>
 
-    <div class="grid grid--3" data-news-grid>
+    {# Обгортка спільна для великої картки й сітки — щоб фільтр бачив усі новини #}
+    <div class="newsfeed" data-news-grid>
       {% for post in collections.news %}
-      <div data-category="{{ post.data.category }}">{{ cardNews(post) }}</div>
+        {% if loop.first %}
+        <div data-category="{{ post.data.category }}">{{ cardNewsLead(post) }}</div>
+        {% endif %}
       {% endfor %}
+
+      {% if collections.news.length > 1 %}
+      <div class="grid grid--3">
+        {% for post in collections.news %}
+          {% if not loop.first %}
+          <div data-category="{{ post.data.category }}">{{ cardNews(post) }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
 
     <p class="filter__empty" data-filter-empty hidden>У цій категорії поки немає новин.</p>
