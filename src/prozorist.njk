@@ -17,7 +17,7 @@ description: "Публічна інформація Андріївської р�
     <ul class="doccards reveal">
       {% for doc in featured %}
       <li>
-        <a class="doccard" href="{{ doc.data.file }}" download>
+        <a class="doccard" href="{{ doc.data.file }}" target="_blank">
           <span class="doccard__icon">{{ icon("file-text", 20) }}</span>
           <span class="doccard__body">
             <span class="doccard__title">{{ doc.data.title }}</span>
