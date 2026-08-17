@@ -3,6 +3,6 @@ title: Ліцензія на провадження освітньої діял�
 section: ustanovchi
 category: ліцензія
 file: /assets/docs/litsenziya.pdf
-updatedAt: 2023-08-15
+updatedAt: 2018-05-25
 featured: true
 ---
