@@ -1111,8 +1111,17 @@
 .bells {
   display: grid;
   gap: var(--space-3);
-  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  /* Було auto-fill: на широких екранах влазило по 6 карток у рядок,
+     і вісім уроків лягали 6+2 — нерівний, «недороблений» вигляд.
+     Фіксовані 4 колонки дають рівні 2 рядки під поточну кількість уроків. */
+  grid-template-columns: repeat(4, 1fr);
   margin-top: var(--space-5);
+}
+@media (max-width: 900px) {
+  .bells { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 420px) {
+  .bells { grid-template-columns: 1fr; }
 }
 .bells__item {
   background: var(--surface);
