@@ -296,7 +296,35 @@
         document.body.style.background = "";
       }
 
-      btn.addEventListener("click", openCMS);
+      /**
+       * Кнопка Decap на його власному екрані входу. Вона лежить під нашим
+       * шаром — Decap відмальовує її одразу, ще до того, як модератор
+       * щось натисне.
+       */
+      function findDecapLoginButton() {
+        var root = document.getElementById("nc-root") || document.body;
+        var buttons = root.querySelectorAll("button");
+        for (var i = 0; i < buttons.length; i++) {
+          if (buttons[i].closest("#gate")) continue;              // це наша ж кнопка
+          if (/github/i.test(buttons[i].textContent || "")) return buttons[i];
+        }
+        return null;
+      }
+
+      /**
+       * Один клік замість двох. Раніше кнопка лише ховала наш екран, і
+       * модератор бачив другий, службовий екран Decap — доводилося тиснути
+       * «Увійти через GitHub» ще раз. Тепер ми одразу натискаємо кнопку
+       * Decap за нього. Робимо це синхронно, всередині обробника кліку:
+       * інакше браузер вважатиме вікно GitHub непроханим і заблокує його.
+       * Якщо кнопку не знайдено (Decap ще не встиг відмалюватися або змінив
+       * розмітку) — просто відкриваємо його екран, як було.
+       */
+      btn.addEventListener("click", function () {
+        var decapBtn = findDecapLoginButton();
+        openCMS();
+        if (decapBtn) decapBtn.click();
+      });
 
       // Якщо сесія вже збережена, Decap заходить сам — тоді екран не потрібен.
       if (window.CMS && typeof window.CMS.registerEventListener === "function") {

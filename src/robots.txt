@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
+
+# Адресу адмінпанелі тут НЕ вказуємо: robots.txt відкритий для всіх,
+# і рядок Disallow сам би її й розголосив. Панель закрита інакше —
+# у її index.html стоїть <meta name="robots" content="noindex, nofollow">,
+# тож пошуковики її не індексують, а без доступу до репозиторію
+# зайти в неї однаково неможливо.
 
 Sitemap: https://new.andriivka-school.zp.ua/sitemap.xml

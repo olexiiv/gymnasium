@@ -12,7 +12,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets/img": "assets/img" });
   eleventyConfig.addPassthroughCopy({ "src/assets/fonts": "assets/fonts" });
   eleventyConfig.addPassthroughCopy({ "src/assets/docs": "assets/docs" });
-  eleventyConfig.addPassthroughCopy({ "src/admin": "admin" });
+  // Адмінпанель. Тека називається так само, як адреса, за якою вона
+  // відкривається. Щоб змінити адресу — перейменуйте теку src/panel-8f2k
+  // і виправте обидві назви в рядку нижче. Більше ніде шлях не згадується.
+  eleventyConfig.addPassthroughCopy({ "src/panel-8f2k": "panel-8f2k" });
   eleventyConfig.addPassthroughCopy({ "src/CNAME": "CNAME" });
   eleventyConfig.addPassthroughCopy({ "src/robots.txt": "robots.txt" });
 

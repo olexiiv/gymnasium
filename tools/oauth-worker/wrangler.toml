@@ -16,7 +16,7 @@ compatibility_date = "2026-01-01"
 
 [vars]
 # ← Client ID з GitHub OAuth App (Settings → Developer settings → OAuth Apps)
-GITHUB_CLIENT_ID = "ЗАМІНІТЬ_НА_СВІЙ_CLIENT_ID"
+GITHUB_CLIENT_ID = "Ov23liDaPCemrJaopFpp"
 
 # Кому воркер має право віддати токен. Зірочку тут ставити не можна:
 # будь-який сайт зміг би відкрити наш /auth і отримати доступ до репозиторію.
