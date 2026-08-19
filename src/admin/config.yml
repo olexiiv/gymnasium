@@ -33,11 +33,20 @@ collections:
       - name: category
         label: "Категорія"
         widget: select
-        options: ["Оголошення", "Навчання", "Вступ", "Безпека", "Підтримка", "Життя гімназії"]
+        options: ["Оголошення", "Навчання", "Вступ", "Безпека", "Підтримка", "Поради батькам", "Життя гімназії"]
       - { name: cover, label: "Обкладинка (необовʼязково)", widget: image, required: false }
       - { name: coverSrcset, label: "Версії обкладинки (srcset)", hint: "Заповнює розробник: список «шлях 480w, шлях 800w, …». Без нього браузер вантажить велике фото навіть на телефоні.", widget: string, required: false }
       - { name: coverWidth, label: "Ширина обкладинки, px", widget: number, required: false, value_type: int }
       - { name: coverHeight, label: "Висота обкладинки, px", widget: number, required: false, value_type: int }
+      - name: coverPosition
+        label: "Що показувати в кадрі 16:9"
+        hint: "Картка обрізає обкладинку до 16:9. Для вертикальних плакатів та інфографіки виберіть «верх», щоб у кадр потрапила шапка."
+        widget: select
+        required: false
+        options:
+          - { label: "Центр (за замовчуванням)", value: "50% 50%" }
+          - { label: "Верх", value: "50% 0%" }
+          - { label: "Низ", value: "50% 100%" }
       - { name: coverAlt, label: "Опис обкладинки для незрячих", hint: "Що зображено на фото — читає скрінрідер", widget: string, required: false }
       - { name: coverCaption, label: "Підпис під обкладинкою", widget: string, required: false }
       - { name: excerpt, label: "Короткий опис (1–2 речення)", widget: text }

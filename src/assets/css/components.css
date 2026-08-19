@@ -435,8 +435,33 @@
   text-decoration: none;
   cursor: pointer;
 }
-.card__media { aspect-ratio: 16 / 9; background: var(--surface-alt); }
-.card__media img { width: 100%; height: 100%; object-fit: cover; }
+/* Обкладинка картки завжди 16:9, незалежно від пропорцій самого файлу.
+   Вміст позиціонується абсолютно всередині співвідношення: відсоткова висота
+   (`height: 100%`) всередині `aspect-ratio`-блока в Chrome не розвʼязується,
+   і вертикальне фото розпирало картку на всю свою висоту (у Firefox — ні).
+   Абсолютне позиціонування знімає цю залежність в усіх браузерах.
+   `flex: none` + `min-height: 0` прибирають автоматичний мінімальний розмір
+   флекс-елемента, який теж дозволяв блоку вирости під розмір зображення. */
+.card__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  flex: none;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-alt);
+}
+.card__media > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Для вертикальних обкладинок (плакати, інфографіка) кадр можна зсунути
+     догори — задається полем `coverPosition` у front matter новини. */
+  object-position: var(--cover-pos, 50% 50%);
+}
+.card__media > .card__placeholder { position: absolute; inset: 0; }
 .card__placeholder {
   width: 100%; height: 100%;
   display: flex;
@@ -583,11 +608,24 @@
 .article__figure { margin: 0 0 var(--space-7); }
 .article__cover {
   width: 100%;
+  height: auto;
   border-radius: var(--radius-l);
   border: 1px solid var(--line);
   background: var(--surface-alt);
   box-shadow: var(--shadow-m);
 }
+
+/* Вертикальна обкладинка (плакат, інфографіка) на всю ширину 56 rem зайняла б
+   понад екран заввишки. Обмежуємо ширину й центруємо — пропорції не чіпаємо,
+   бо в інфографіці важливий саме повний кадр. */
+.article__figure--portrait .article__cover {
+  width: auto;
+  max-width: min(100%, 30rem);
+  max-height: 82svh;
+  margin-inline: auto;
+  display: block;
+}
+.article__figure--portrait .article__caption { margin-inline: auto; }
 .article__caption {
   margin-top: var(--space-4);
   padding-left: var(--space-4);
@@ -792,6 +830,14 @@
 /* ================= Стрічка новин ================= */
 .newsfeed { display: grid; gap: var(--space-6); }
 
+/* На сторінці «Новини» кожна картка загорнута в <div data-category> для фільтра.
+   Без цього правила розтягується лише обгортка, а картка всередині лишається
+   заввишки «по тексту» — картки в ряду виходять різної висоти.
+   `[hidden]` дублюємо явно: авторський `display` перебиває правило браузера. */
+.newsfeed .grid > [data-category] { display: flex; }
+.newsfeed .grid > [data-category] > .card { flex: 1; }
+.newsfeed [data-category][hidden] { display: none; }
+
 .newslead {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -809,8 +855,22 @@
   .newslead__link { grid-template-columns: 1.1fr 1fr; }
 }
 
-.newslead__media { position: relative; aspect-ratio: 16 / 9; background: var(--surface-alt); }
-.newslead__media img { width: 100%; height: 100%; object-fit: cover; }
+.newslead__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-alt);
+}
+.newslead__media > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--cover-pos, 50% 50%);
+}
 @media (min-width: 860px) {
   .newslead__media { aspect-ratio: auto; min-height: 19rem; height: 100%; }
 }

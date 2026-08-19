@@ -1,8 +1,0 @@
----
-title: Вакансія — учитель/учителька хімії (18 годин, з 1 вересня 2026)
-section: kadry
-category: вакансії
-file: /assets/docs/vakansiya-khimiya.pdf
-updatedAt: 2026-01-12
-featured: false
----

@@ -6,7 +6,8 @@
       {% if post.data.cover %}
         <img src="{{ post.data.cover }}"
              {% if post.data.coverSrcset %}srcset="{{ post.data.coverSrcset }}" sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 92vw"{% endif %}
-             alt="" width="640" height="360" loading="lazy">
+             {% if post.data.coverPosition %}style="--cover-pos: {{ post.data.coverPosition }}"{% endif %}
+             alt="" width="640" height="360" loading="lazy" decoding="async">
       {% else %}
         <div class="card__placeholder">{{ icon("leaf", 32) }}<span class="card__placeholder-note">[ФОТО: {{ post.data.title }}]</span></div>
       {% endif %}

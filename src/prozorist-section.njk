@@ -50,7 +50,9 @@ parent:
     </dl>
     {% endif %}
 
-    {% if section.slug != "kadry" %}
+    {# Список документів показуємо в кожному розділі, де вони є. Раніше тут стояла
+       жорстка умова `slug != "kadry"` — тимчасовий обхід для розділу без реальних
+       документів. Через неї доданий звіт директора не потрапляв на сторінку. #}
     {% if groups.length %}
     <div class="docgroups">
       {% for group in groups %}
@@ -87,7 +89,6 @@ parent:
         {{ icon("mail", 18) }} Запитати документ
       </a>
     </div>
-    {% endif %}
     {% endif %}
 
     <div class="notice reveal">

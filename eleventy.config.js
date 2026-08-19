@@ -2,6 +2,9 @@
  * Конфігурація Eleventy (11ty) для сайту Андріївської різнопрофільної гімназії.
  * Джерело — /src, збірка — /_site. CSS збирається окремо через PostCSS (див. package.json).
  */
+const fs = require("node:fs");
+const path = require("node:path");
+
 module.exports = function (eleventyConfig) {
   // ---------- Passthrough: файли, які копіюються в збірку без обробки ----------
   eleventyConfig.addPassthroughCopy({ "src/assets/js": "assets/js" });
@@ -24,11 +27,43 @@ module.exports = function (eleventyConfig) {
       (a.data.order ?? 99) - (b.data.order ?? 99)
     )
   );
-  eleventyConfig.addCollection("documents", (api) =>
-    api.getFilteredByGlob("src/content/documents/*.md").sort((a, b) =>
-      new Date(b.data.updatedAt) - new Date(a.data.updatedAt)
-    )
-  );
+  // Документ потрапляє на сайт, лише якщо файл справді лежить у src/assets/docs.
+  // Причина: у проєкті є плейсхолдери (PDF на ~90 байтів) і записи, для яких
+  // файл ще не завантажили — без перевірки відвідувач отримував би 404 або
+  // порожній PDF. Пропущені записи видно в логах збірки (у тому числі в GitHub
+  // Actions), тож нічого не губиться мовчки.
+  const DOC_MIN_BYTES = 1024;
+  eleventyConfig.addCollection("documents", (api) => {
+    const all = api.getFilteredByGlob("src/content/documents/*.md");
+    const ready = [];
+
+    for (const doc of all) {
+      const file = doc.data.file;
+      const label = doc.data.title || doc.inputPath;
+
+      if (!file) {
+        console.warn(`[документи] пропущено «${label}»: не вказано поле file`);
+        continue;
+      }
+
+      const onDisk = path.join("src", file.replace(/^\//, ""));
+      let size = -1;
+      try { size = fs.statSync(onDisk).size; } catch { /* немає файлу */ }
+
+      if (size < 0) {
+        console.warn(`[документи] пропущено «${label}»: немає файлу ${onDisk}`);
+        continue;
+      }
+      if (size < DOC_MIN_BYTES) {
+        console.warn(`[документи] пропущено «${label}»: ${onDisk} схожий на плейсхолдер (${size} Б)`);
+        continue;
+      }
+
+      ready.push(doc);
+    }
+
+    return ready.sort((a, b) => new Date(b.data.updatedAt) - new Date(a.data.updatedAt));
+  });
   // Профілі навчання — без цієї колекції сторінка «Навчання» лишалася порожньою:
   // Eleventy не створює колекцію з назви теки, лише з тегів або addCollection.
   eleventyConfig.addCollection("profiles", (api) =>

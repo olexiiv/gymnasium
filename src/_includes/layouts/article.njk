@@ -33,7 +33,9 @@ layout: layouts/base.njk
   </div>
 
   {% if cover %}
-  <figure class="article__figure">
+  {# Вертикальні обкладинки показуємо вужчою колонкою — див. .article__figure--portrait #}
+  {% set isPortrait = coverWidth and coverHeight and ((coverHeight | float) > (coverWidth | float)) %}
+  <figure class="article__figure{% if isPortrait %} article__figure--portrait{% endif %}">
     <div class="container container--media">
       <img class="article__cover" src="{{ cover }}"
            {% if coverSrcset %}srcset="{{ coverSrcset }}" sizes="(min-width: 60rem) 56rem, 100vw"{% endif %}
