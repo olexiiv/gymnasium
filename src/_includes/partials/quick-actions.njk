@@ -3,34 +3,15 @@
   <div class="container">
     <h2 class="visually-hidden" id="quick-title">Швидкі дії</h2>
     <ul class="quick__grid">
+      {% for q in home.quick %}
       <li>
-        <a class="quick__card reveal" href="/vstup/">
-          <span class="quick__icon">{{ icon("graduation-cap", 26) }}</span>
-          <span class="quick__label">Вступ</span>
-          <span class="quick__hint">Як подати документи</span>
+        <a class="quick__card reveal" href="{{ q.url }}">
+          <span class="quick__icon">{{ icon(q.icon or "arrow-right", 26) }}</span>
+          <span class="quick__label">{{ q.label }}</span>
+          <span class="quick__hint">{{ q.hint }}</span>
         </a>
       </li>
-      <li>
-        <a class="quick__card reveal" href="/prozorist/">
-          <span class="quick__icon">{{ icon("file-text", 26) }}</span>
-          <span class="quick__label">Документи</span>
-          <span class="quick__hint">Статут, звіти, кошторис</span>
-        </a>
-      </li>
-      <li>
-        <a class="quick__card reveal" href="/#contacts-title">
-          <span class="quick__icon">{{ icon("phone", 26) }}</span>
-          <span class="quick__label">Контакти</span>
-          <span class="quick__hint">Телефон, пошта, форма звʼязку</span>
-        </a>
-      </li>
-      <li>
-        <a class="quick__card reveal" href="/rozklad/">
-          <span class="quick__icon">{{ icon("calendar", 26) }}</span>
-          <span class="quick__label">Розклад</span>
-          <span class="quick__hint">Уроки та дзвінки</span>
-        </a>
-      </li>
+      {% endfor %}
     </ul>
   </div>
 </section>

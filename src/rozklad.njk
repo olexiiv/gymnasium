@@ -9,6 +9,7 @@ permalink: /rozklad/
   <div class="container">
     <p class="schedule__updated">{{ icon("calendar", 18) }} {{ schedule.semester }} · оновлено {{ schedule.updatedAt | dateUA }}</p>
 
+    {% if schedule.classes and schedule.classes.length %}
     {% for cls in schedule.classes %}
     <section class="schedule reveal" aria-labelledby="cls-{{ loop.index }}">
       <h2 class="schedule__class" id="cls-{{ loop.index }}">{{ cls.class }}</h2>
@@ -20,15 +21,18 @@ permalink: /rozklad/
           <thead>
             <tr>
               <th scope="col">№</th>
-              {% for day in schedule.days %}<th scope="col">{{ day }}</th>{% endfor %}
+              {% for d in cls.week %}<th scope="col">{{ d.day }}</th>{% endfor %}
             </tr>
           </thead>
           <tbody>
-            {% for lessonIdx in range(0, cls.week[0].length) %}
+            {% for lessonIdx in range(0, cls.week | maxLessons) %}
             <tr>
-              <th scope="row">{{ loop.index }}</th>
-              {% for day in cls.week %}
-              <td data-day="{{ schedule.days[loop.index0] }}">{{ day[lessonIdx] }}</td>
+              <th scope="row">
+                <span class="schedule__num">{{ loop.index }}</span>
+                {% if site.bells[lessonIdx] %}<span class="schedule__time">{{ site.bells[lessonIdx].time }}</span>{% endif %}
+              </th>
+              {% for d in cls.week %}
+              <td data-day="{{ d.day }}">{{ d.lessons[lessonIdx] if d.lessons[lessonIdx] else "—" }}</td>
               {% endfor %}
             </tr>
             {% endfor %}
@@ -38,8 +42,16 @@ permalink: /rozklad/
     </section>
     {% endfor %}
 
+    {% else %}
+    <div class="notice notice--warm reveal">
+      {{ icon("alert-circle", 22) }}
+      <p><strong>{{ schedule.pendingTitle }}</strong> {{ schedule.pendingText }}</p>
+    </div>
+    {% endif %}
+
     <section class="section__sub" id="dzvinky" aria-labelledby="bells-title">
       <h2 class="section__title" id="bells-title">Розклад дзвінків</h2>
+      {% if site.bellsNote %}<p class="bells__note">{{ icon("clock", 18) }} {{ site.bellsNote }}</p>{% endif %}
       <ul class="bells">
         {% for b in site.bells %}
         <li class="bells__item">

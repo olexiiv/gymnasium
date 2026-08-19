@@ -4,6 +4,7 @@
  */
 const fs = require("node:fs");
 const path = require("node:path");
+const MarkdownIt = require("markdown-it");
 
 module.exports = function (eleventyConfig) {
   // ---------- Passthrough: файли, які копіюються в збірку без обробки ----------
@@ -64,13 +65,6 @@ module.exports = function (eleventyConfig) {
 
     return ready.sort((a, b) => new Date(b.data.updatedAt) - new Date(a.data.updatedAt));
   });
-  // Профілі навчання — без цієї колекції сторінка «Навчання» лишалася порожньою:
-  // Eleventy не створює колекцію з назви теки, лише з тегів або addCollection.
-  eleventyConfig.addCollection("profiles", (api) =>
-    api.getFilteredByGlob("src/content/profiles/*.md").sort((a, b) =>
-      (a.data.order ?? 99) - (b.data.order ?? 99)
-    )
-  );
   eleventyConfig.addCollection("gallery", (api) =>
     api.getFilteredByGlob("src/content/gallery/*.md").sort((a, b) =>
       (a.data.order ?? 99) - (b.data.order ?? 99)
@@ -139,6 +133,23 @@ module.exports = function (eleventyConfig) {
       docs: groups.get(category),
     }));
   });
+
+  // Найдовший день у розкладі класу: {{ cls.week | maxLessons }}
+  // Кількість рядків таблиці має дорівнювати найдовшому дню, інакше уроки
+  // з довших днів мовчки зникають (раніше бралася довжина понеділка).
+  eleventyConfig.addFilter("maxLessons", (week) =>
+    (week || []).reduce((max, day) => Math.max(max, (day.lessons || []).length), 0)
+  );
+
+  // ---------- Markdown у полях адмінпанелі ----------
+  // Тексти сторінок лежать у JSON і редагуються модератором. Щоб він міг
+  // поставити жирний шрифт або посилання, не знаючи HTML, поля проганяються
+  // через markdown. `md` — з абзацами, `mdInline` — без обгортки <p>
+  // (для заголовків, підписів, рядків усередині готової розмітки).
+  const md = new MarkdownIt({ html: false, linkify: true, typographer: false });
+
+  eleventyConfig.addFilter("md", (value) => md.render(String(value || "")));
+  eleventyConfig.addFilter("mdInline", (value) => md.renderInline(String(value || "")));
 
   // Обмеження масиву: {{ collections.news | limit(3) }}
   eleventyConfig.addFilter("limit", (arr, n) => (arr || []).slice(0, n));

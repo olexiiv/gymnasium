@@ -1,10 +1,12 @@
 ---
 layout: layouts/page.njk
-title: Про нас
-intro: Хто ми, як працюємо в умовах війни та у що віримо.
 permalink: /pro-gimnaziyu/
 headImage: /assets/img/school.webp
-headCaption: "Наш корпус у селищі Андріївка. Чекаємо на день, коли повернемось."
+eleventyComputed:
+  title: "{{ about.page.title }}"
+  intro: "{{ about.page.intro }}"
+  description: "{{ about.page.description }}"
+  headCaption: "{{ about.page.headCaption }}"
 ---
 {% from "macros/icon.njk" import icon %}
 
@@ -13,14 +15,10 @@ headCaption: "Наш корпус у селищі Андріївка. Чекає
   <div class="container">
     <div class="about-grid">
       <div class="about-grid__main">
-        <p class="section__eyebrow">Хто ми</p>
-        <h2 class="section__title" id="who-title">Школа, яку не зупинила війна</h2>
-        <p class="lede reveal">{{ site.fullName }} — заклад загальної середньої освіти із селища Андріївка Бердянського району Запорізької області. З 2022 року ми працюємо дистанційно.</p>
-        <div class="prose">
-          <p>Після початку повномасштабного вторгнення й тимчасової окупації громади заклад було релоковано. Сьогодні в гімназії навчається 177 учнів — у різних містах України, за кордоном і на тимчасово окупованій території. Нас об'єднує не адреса, а спільнота: спільні уроки онлайн, класні години, свята та підтримка одне одного.</p>
-          <p>Навчання відбувається за розкладом, з використанням відеоуроків і освітніх платформ. Ми свідомі того, що в дитини вдома може не бути тиші, стабільного інтернету чи навіть світла, тож ставимося до обставин кожного з розумінням і гнучкістю. Матеріали уроків лишаються доступними, щоб надолужити пропущене.</p>
-          <p>Особлива увага — випускним класам: системно готуємо старшокласників до національного мультипредметного тесту (НМТ) та вступу до закладів вищої освіти.</p>
-        </div>
+        <p class="section__eyebrow">{{ about.page.whoEyebrow }}</p>
+        <h2 class="section__title" id="who-title">{{ about.page.whoTitle }}</h2>
+        <p class="lede reveal">{{ about.page.whoLede }}</p>
+        <div class="prose">{{ about.page.whoBody | md | safe }}</div>
       </div>
 
       <aside class="about-aside" aria-label="Наше гасло">
@@ -36,8 +34,8 @@ headCaption: "Наш корпус у селищі Андріївка. Чекає
 <section class="section" aria-labelledby="path-title">
   <div class="container container--narrow">
     <div class="section__head">
-      <p class="section__eyebrow">Наш шлях</p>
-      <h2 class="section__title" id="path-title">Від корпусу в Андріївці — до спільноти без кордонів</h2>
+      <p class="section__eyebrow">{{ about.page.pathEyebrow }}</p>
+      <h2 class="section__title" id="path-title">{{ about.page.pathTitle }}</h2>
     </div>
     <ol class="timeline">
       {% for step in about.timeline %}
@@ -60,8 +58,8 @@ headCaption: "Наш корпус у селищі Андріївка. Чекає
   </div>
   <div class="container">
     <div class="section__head">
-      <p class="section__eyebrow section__eyebrow--onDark">Наші цінності</p>
-      <h2 class="section__title" id="values-title">У що ми віримо</h2>
+      <p class="section__eyebrow section__eyebrow--onDark">{{ about.page.valuesEyebrow }}</p>
+      <h2 class="section__title" id="values-title">{{ about.page.valuesTitle }}</h2>
     </div>
     <ul class="values">
       {% for v in about.values %}
@@ -80,8 +78,8 @@ headCaption: "Наш корпус у селищі Андріївка. Чекає
 <section class="section" aria-labelledby="photos-title">
   <div class="container">
     <div class="section__head">
-      <p class="section__eyebrow">Наша гімназія</p>
-      <h2 class="section__title" id="photos-title">Кілька кадрів</h2>
+      <p class="section__eyebrow">{{ about.page.photosEyebrow }}</p>
+      <h2 class="section__title" id="photos-title">{{ about.page.photosTitle }}</h2>
     </div>
     <ul class="photostrip">
       {% for p in about.photos %}

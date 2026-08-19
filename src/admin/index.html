@@ -3,11 +3,312 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
+  <meta name="robots" content="noindex, nofollow">
   <title>Адмінпанель — Андріївська гімназія</title>
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+
+  <style>
+    /* ------------------------------------------------------------------
+       Екран входу в адмінпанель.
+       Та сама мова, що й на сайті: тепла кремова база, глибокий зелений,
+       Onest на заголовках, Inter у тексті, листок як єдиний декор.
+       Decap завантажується під цим шаром і зʼявляється після входу.
+       ------------------------------------------------------------------ */
+
+    @font-face {
+      font-family: "Onest";
+      src: url("/assets/fonts/onest-700.woff2") format("woff2");
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: "Onest";
+      src: url("/assets/fonts/onest-800.woff2") format("woff2");
+      font-weight: 800; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: "Inter";
+      src: url("/assets/fonts/inter-400.woff2") format("woff2");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: "Inter";
+      src: url("/assets/fonts/inter-500.woff2") format("woff2");
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+
+    :root {
+      --base: #F5F3EF;
+      --surface: #FFFFFF;
+      --surface-alt: #EDEAE3;
+      --brand: #74BE5C;
+      --brand-fill: #3F7A31;
+      --brand-fill-hover: #2F5C24;
+      --brand-soft: #E8F3E3;
+      --ink: #443334;
+      --ink-muted: #6B585A;
+      --line: #DFDBD3;
+      --accent-warm: #D98E4A;
+      --font-display: "Onest", system-ui, sans-serif;
+      --font-body: "Inter", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--base);
+    }
+
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      overflow-y: auto;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1.25rem;
+      background:
+        radial-gradient(120% 80% at 50% -20%, #FFFFFF 0%, transparent 60%),
+        linear-gradient(180deg, var(--base) 0%, var(--surface-alt) 100%);
+    }
+    .gate[hidden] { display: none; }
+
+    /* Декоративні листки — той самий мотив, що в шапці головної сторінки */
+    .gate__leaves {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      color: var(--brand);
+    }
+    .gate__leaf { position: absolute; opacity: 0.16; }
+    .gate__leaf--1 { top: 8%;  left: 9%;  rotate: -18deg; }
+    .gate__leaf--2 { top: 22%; right: 12%; rotate: 24deg; }
+    .gate__leaf--3 { bottom: 14%; left: 16%; rotate: 8deg; }
+    .gate__leaf--4 { bottom: 9%;  right: 8%;  rotate: -32deg; }
+
+    .card {
+      position: relative;
+      width: min(34rem, 100%);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 1.5rem;
+      padding: clamp(1.75rem, 5vw, 2.75rem);
+      box-shadow: 0 24px 60px -32px rgb(68 51 52 / 0.35);
+      text-align: center;
+    }
+
+    /* Тонка зелена риска зверху — акцент з дизайн-системи сайту */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 50%;
+      translate: -50% 0;
+      width: 4.5rem; height: 4px;
+      border-radius: 0 0 4px 4px;
+      background: var(--brand);
+    }
+
+    .card__logo {
+      width: 84px; height: 84px;
+      margin: 0 auto 1.25rem;
+      display: block;
+    }
+
+    .card__eyebrow {
+      margin: 0 0 0.35rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--brand-fill);
+    }
+
+    .card__title {
+      margin: 0 0 0.6rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.1rem);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+    }
+
+    .card__lead {
+      margin: 0 auto 1.75rem;
+      max-width: 26rem;
+      color: var(--ink-muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    .steps {
+      margin: 0 0 1.75rem;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+      display: grid;
+      gap: 0.75rem;
+    }
+    .steps li {
+      display: grid;
+      grid-template-columns: 1.75rem 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.75rem 0.9rem;
+      border-radius: 0.9rem;
+      background: var(--brand-soft);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    .steps b {
+      display: grid;
+      place-items: center;
+      width: 1.75rem; height: 1.75rem;
+      border-radius: 50%;
+      background: var(--brand-fill);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      min-height: 52px;
+      padding: 0 1.5rem;
+      border: 0;
+      border-radius: 999px;
+      background: var(--brand-fill);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .btn:hover { background: var(--brand-fill-hover); }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible {
+      outline: 3px solid var(--brand-fill);
+      outline-offset: 3px;
+    }
+
+    .card__foot {
+      margin: 1.25rem 0 0;
+      font-size: 0.8125rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+    .card__foot a { color: var(--brand-fill); }
+
+    .note {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      margin-top: 1rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 0.9rem;
+      background: color-mix(in srgb, var(--accent-warm) 12%, var(--surface));
+      text-align: left;
+      font-size: 0.8125rem;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .note svg { flex: none; color: var(--accent-warm); margin-top: 1px; }
+
+    /* Поява: спокійна, з невеликим зсувом по черзі */
+    @media (prefers-reduced-motion: no-preference) {
+      .card > * { animation: rise 520ms cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+      .card > *:nth-child(1) { animation-delay: 40ms; }
+      .card > *:nth-child(2) { animation-delay: 90ms; }
+      .card > *:nth-child(3) { animation-delay: 140ms; }
+      .card > *:nth-child(4) { animation-delay: 190ms; }
+      .card > *:nth-child(5) { animation-delay: 240ms; }
+      .card > *:nth-child(6) { animation-delay: 290ms; }
+      .card > *:nth-child(7) { animation-delay: 340ms; }
+      .gate__leaf { animation: drift 640ms ease-out backwards; animation-delay: 200ms; }
+      @keyframes rise {
+        from { opacity: 0; translate: 0 12px; }
+        to   { opacity: 1; translate: 0 0; }
+      }
+      @keyframes drift {
+        from { opacity: 0; scale: 0.9; }
+        to   { opacity: 0.16; scale: 1; }
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Decap CMS: редагування markdown-файлів з /src/content/ через зручний інтерфейс -->
+
+  <div class="gate" id="gate">
+    <div class="gate__leaves" aria-hidden="true">
+      <svg class="gate__leaf gate__leaf--1" width="72" height="72" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.34 1.34.34 11 0 14-14 14-14-1 2-8 2.25-13 3.25S2 17 2 17c1-4 8-6 8-6 4-1 6-2 7-3z"/></svg>
+      <svg class="gate__leaf gate__leaf--2" width="52" height="52" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.34 1.34.34 11 0 14-14 14-14-1 2-8 2.25-13 3.25S2 17 2 17c1-4 8-6 8-6 4-1 6-2 7-3z"/></svg>
+      <svg class="gate__leaf gate__leaf--3" width="60" height="60" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.34 1.34.34 11 0 14-14 14-14-1 2-8 2.25-13 3.25S2 17 2 17c1-4 8-6 8-6 4-1 6-2 7-3z"/></svg>
+      <svg class="gate__leaf gate__leaf--4" width="44" height="44" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.34 1.34.34 11 0 14-14 14-14-1 2-8 2.25-13 3.25S2 17 2 17c1-4 8-6 8-6 4-1 6-2 7-3z"/></svg>
+    </div>
+
+    <main class="card">
+      <img class="card__logo" src="/assets/img/emblema-320.png" alt="" width="84" height="84">
+      <p class="card__eyebrow">Службовий вхід</p>
+      <h1 class="card__title">Адмінпанель гімназії</h1>
+      <p class="card__lead">
+        Тут редагуються новини, документи, розклад і тексти сторінок.
+        Кожна зміна зберігається в історії — нічого не можна втратити безповоротно.
+      </p>
+
+      <ol class="steps">
+        <li><b>1</b><span>Натисніть кнопку нижче — відкриється вікно GitHub.</span></li>
+        <li><b>2</b><span>Увійдіть у свій обліковий запис і дозвольте доступ.</span></li>
+        <li><b>3</b><span>Внесіть зміни й натисніть «Зберегти». Сайт оновиться за 2–3 хвилини.</span></li>
+      </ol>
+
+      <button class="btn" id="gate-btn" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.97.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.8 1.18 1.83 1.18 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+        Увійти через GitHub
+      </button>
+
+      <p class="card__foot">
+        Немає доступу? Напишіть адміністратору сайту.<br>
+        <a href="/">← Повернутися на сайт</a>
+      </p>
+
+      <div class="note">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>Опубліковані зміни бачать усі відвідувачі. Перед збереженням перевірте прізвища, дати й посилання на файли.</span>
+      </div>
+    </main>
+  </div>
+
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    (function () {
+      var gate = document.getElementById("gate");
+      var btn = document.getElementById("gate-btn");
+
+      function openCMS() {
+        gate.hidden = true;
+        document.body.style.background = "";
+      }
+
+      btn.addEventListener("click", openCMS);
+
+      // Якщо сесія вже збережена, Decap заходить сам — тоді екран не потрібен.
+      if (window.CMS && typeof window.CMS.registerEventListener === "function") {
+        window.CMS.registerEventListener({ name: "login", handler: openCMS });
+      }
+
+      // Прев'ю записів показуємо тими самими стилями, що й сайт:
+      // модератор бачить не «сирий» markdown, а справжній вигляд сторінки.
+      if (window.CMS && typeof window.CMS.registerPreviewStyle === "function") {
+        window.CMS.registerPreviewStyle("/assets/css/main.css");
+      }
+    })();
+  </script>
 </body>
 </html>

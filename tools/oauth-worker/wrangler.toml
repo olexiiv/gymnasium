@@ -1,0 +1,23 @@
+# Конфігурація Cloudflare Worker — OAuth-проксі для адмінпанелі.
+#
+# Розгортання:
+#   cd tools/oauth-worker
+#   npx wrangler login
+#   npx wrangler secret put GITHUB_CLIENT_SECRET     # secret, не в git!
+#   npx wrangler deploy
+#
+# GITHUB_CLIENT_ID і ALLOWED_ORIGIN — не таємні, тому лежать тут відкрито.
+# GITHUB_CLIENT_SECRET задається ТІЛЬКИ командою wrangler secret put.
+# Повна інструкція — у README.md, розділ «Вхід модератора».
+
+name = "gymnasium-auth"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# ← Client ID з GitHub OAuth App (Settings → Developer settings → OAuth Apps)
+GITHUB_CLIENT_ID = "ЗАМІНІТЬ_НА_СВІЙ_CLIENT_ID"
+
+# Кому воркер має право віддати токен. Зірочку тут ставити не можна:
+# будь-який сайт зміг би відкрити наш /auth і отримати доступ до репозиторію.
+ALLOWED_ORIGIN = "https://new.andriivka-school.zp.ua"

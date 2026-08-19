@@ -52,12 +52,17 @@
   --surface: #FFFFFF;       /* картки, поверхні */
   --surface-alt: #EDEAE3;   /* другорядні секції, зебра */
   --brand-strong: #3F7A31;  /* зелений для тексту й посилань (WCAG AA) */
+  /* Заливка під білим текстом. НЕ --brand: #74BE5C з білим дає 2.3:1 при
+     нормі WCAG AA 4.5:1. #3F7A31 дає 5.2:1, темніший hover — 7.8:1.
+     --brand лишається для декору без тексту: рисок, крапок, ліній таймлайну. */
+  --brand-fill: #3F7A31;
+  --brand-fill-hover: #2F5C24;
   --brand-soft: #E8F3E3;    /* бейджі, hover-фони, теги */
   --ink-muted: #6B585A;     /* другорядний текст, дати (≥ 4.5:1) */
   --line: #DFDBD3;          /* бордери, роздільники */
   --accent-warm: #D98E4A;   /* рідкісний акцент: терміново, дедлайни */
   --danger: #B3413A;        /* помилки форм */
-  --on-brand: #FFFFFF;      /* текст на --brand */
+  --on-brand: #FFFFFF;      /* текст на --brand-fill (5.2:1) */
 
   /* ---------- Типографіка ---------- */
   --font-display: "Onest", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;

@@ -7,12 +7,12 @@
   </div>
   <div class="container hero__inner">
     <div class="hero__text">
-      <p class="hero__eyebrow">{{ site.address.region }} · дистанційне навчання</p>
-      <h1 class="hero__title" id="hero-title">Продовжуємо навчати —<br><em>попри все.</em></h1>
-      <p class="hero__lead">Андріївська гімназія релокована з Бердянського району й нині працює дистанційно. {{ site.metrics[0].value }} учнів з різних куточків України та з тимчасово окупованих територій навчаються, спілкуються й отримують підтримку — разом, попри відстань.</p>
+      <p class="hero__eyebrow">{{ home.hero.eyebrow }}</p>
+      <h1 class="hero__title" id="hero-title">{{ home.hero.title }}<br><em>{{ home.hero.titleAccent }}</em></h1>
+      <p class="hero__lead">{{ home.hero.lead }}</p>
       <div class="hero__actions">
-        <a class="btn btn--brand btn--lg" href="/vstup/">Як до нас вступити {{ icon("arrow-right", 20) }}</a>
-        <a class="btn btn--ghost btn--lg" href="/pro-gimnaziyu/">Про нас</a>
+        <a class="btn btn--brand btn--lg" href="{{ home.hero.primaryUrl }}">{{ home.hero.primaryLabel }} {{ icon("arrow-right", 20) }}</a>
+        <a class="btn btn--ghost btn--lg" href="{{ home.hero.secondaryUrl }}">{{ home.hero.secondaryLabel }}</a>
       </div>
     </div>
     <div class="hero__media">
@@ -21,7 +21,7 @@
           <source type="image/webp" srcset="/assets/img/school-480.webp 480w, /assets/img/school.webp 960w"
                   sizes="(min-width: 900px) 30rem, 92vw">
           <img src="/assets/img/school.jpg" width="960" height="640" fetchpriority="high"
-               alt="Головний корпус Андріївської гімназії: двоповерхова будівля з розмальованим у кольори веселки ґанком і державним прапором">
+               alt="{{ home.hero.photoAlt }}">
         </picture>
       </figure>
     </div>

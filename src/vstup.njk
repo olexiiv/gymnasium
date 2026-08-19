@@ -1,9 +1,10 @@
 ---
 layout: layouts/page.njk
-title: Вступ
-intro: Як стати учнем гімназії, навчаючись дистанційно з будь-якої точки України чи з-за кордону.
 permalink: /vstup/
-description: "Вступ до Андріївської гімназії: дистанційне зарахування, документи, вступ для дітей із тимчасово окупованих територій, відповіді на поширені запитання."
+eleventyComputed:
+  title: "{{ vstup.title }}"
+  intro: "{{ vstup.intro }}"
+  description: "{{ vstup.description }}"
 ---
 {% from "macros/icon.njk" import icon %}
 
@@ -12,70 +13,42 @@ description: "Вступ до Андріївської гімназії: дис�
 
     <div class="notice notice--warm reveal">
       {{ icon("alert-circle", 22) }}
-      <p><strong>Зарахування триває цілий рік.</strong> Ми приймаємо учнів до всіх класів (1–11) і навчаємо дистанційно. Подати документи можна онлайн, не виходячи з дому.</p>
+      {{ vstup.noticeTop | md | safe }}
     </div>
 
-    <h2 class="section__title">Три кроки до зарахування</h2>
+    <h2 class="section__title">{{ vstup.stepsTitle }}</h2>
     <ol class="steps">
+      {% for step in vstup.steps %}
       <li class="steps__item reveal">
-        <span class="steps__num" aria-hidden="true">1</span>
+        <span class="steps__num" aria-hidden="true">{{ loop.index }}</span>
         <div>
-          <h3>Напишіть нам</h3>
-          <p>Надішліть лист на <a href="mailto:{{ site.admissionEmail }}">{{ site.admissionEmail }}</a> або скористайтеся <a href="/#contacts-title">формою звʼязку</a>. Вкажіть імʼя дитини, клас і як з вами звʼязатися — ми відповімо й підкажемо, які документи потрібні саме у вашому випадку.</p>
+          <h3>{{ step.title }}</h3>
+          {{ step.text | md | safe }}
         </div>
       </li>
-      <li class="steps__item reveal">
-        <span class="steps__num" aria-hidden="true">2</span>
-        <div>
-          <h3>Надішліть скановані документи</h3>
-          <p>Зазвичай це заява одного з батьків, копія свідоцтва про народження та документ про попереднє навчання (табель або свідоцтво). Формат — фото чи скан на пошту. Якщо якогось документа немає — напишіть, знайдемо рішення.</p>
-        </div>
-      </li>
-      <li class="steps__item reveal">
-        <span class="steps__num" aria-hidden="true">3</span>
-        <div>
-          <h3>Долучайтеся до навчання</h3>
-          <p>Після зарахування ви отримаєте розклад, доступ до класної групи й освітніх платформ. Наказ про зарахування публікуємо в розділі «<a href="/prozorist/">Прозорість</a>».</p>
-        </div>
-      </li>
+      {% endfor %}
     </ol>
 
     <div class="notice reveal">
       {{ icon("shield", 22) }}
-      <p><strong>Дітям із тимчасово окупованих територій.</strong> Ми допомагаємо оформити навчання безпечно й підказуємо, як згодом підтвердити результати. Ваша безпека — понад усе: якщо щось із документів наразі недоступне, це не перешкода почати навчатися.</p>
+      {{ vstup.noticeTot | md | safe }}
     </div>
 
-    <h2 class="section__title">Поширені запитання</h2>
+    <h2 class="section__title">{{ vstup.faqTitle }}</h2>
     <div class="accordion">
+      {% for item in vstup.faq %}
       <details class="accordion__item">
-        <summary class="accordion__summary">Чи можна вступити з тимчасово окупованої території? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
+        <summary class="accordion__summary">{{ item.question }} {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
         <div class="accordion__body">
-          <p>Так. Ми приймаємо дітей із ТОТ і навчаємо їх дистанційно. Радимо не залишати особистих даних у небезпечних чатах і звертатися до нас через захищені канали звʼязку. Про безпечне оформлення розповімо індивідуально.</p>
+          {{ item.answer | md | safe }}
         </div>
       </details>
-      <details class="accordion__item">
-        <summary class="accordion__summary">Що робити, якщо немає документів про попереднє навчання? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
-        <div class="accordion__body">
-          <p>Це не перешкода. Законодавство передбачає механізми зарахування без частини документів, зокрема через співбесіду для визначення рівня. Напишіть нам — підкажемо, як діяти саме у вашій ситуації.</p>
-        </div>
-      </details>
-      <details class="accordion__item">
-        <summary class="accordion__summary">Як відбувається навчання технічно? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
-        <div class="accordion__body">
-          <p>Уроки проходять онлайн за розкладом у відеоформаті, матеріали й завдання лишаються доступними для перегляду. Потрібні лише пристрій із камерою та інтернет. Якщо звʼязок нестабільний — учитель допоможе надолужити пропущене.</p>
-        </div>
-      </details>
-      <details class="accordion__item">
-        <summary class="accordion__summary">Чи готуєте ви до НМТ? {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
-        <div class="accordion__body">
-          <p>Так. Для випускних класів працює системна підготовка до національного мультипредметного тесту та консультації щодо вступної кампанії до закладів вищої освіти.</p>
-        </div>
-      </details>
+      {% endfor %}
     </div>
 
     <div class="cta-box reveal">
-      <h2>Залишилися питання?</h2>
-      <p>Напишіть нам — відповімо протягом одного робочого дня й проведемо через усі кроки.</p>
+      <h2>{{ vstup.ctaTitle }}</h2>
+      <p>{{ vstup.ctaText }}</p>
       <div class="hero__actions">
         <a class="btn btn--brand" href="mailto:{{ site.admissionEmail }}">{{ icon("mail", 18) }} {{ site.admissionEmail }}</a>
         <a class="btn btn--ghost" href="/#contacts-title">Форма звʼязку</a>

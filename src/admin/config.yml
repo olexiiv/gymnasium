@@ -1,32 +1,66 @@
-# Decap CMS — конфігурація адмінпанелі.
-# Редагує ті самі markdown-файли, що й розробник у git.
+# ==========================================================================
+#  Адмінпанель Андріївської гімназії (Decap CMS)
+#  Редагує ті самі файли, що й розробник у git. Кожне збереження — коміт.
 #
-# Для GitHub Pages потрібен зовнішній OAuth-провайдер (GitHub OAuth App +
-# проксі, напр. https://github.com/sterlingwes/decap-proxy або Netlify OAuth).
-# Заповніть base_url/auth_endpoint після налаштування.
+#  ВАЖЛИВО ПРО JSON-ФАЙЛИ
+#  Decap перезаписує JSON-файл цілком, лишаючи тільки ті поля, які описані
+#  нижче. Якщо додасте ключ у src/_data/*.json і НЕ опишете його тут —
+#  перше ж збереження з панелі його зітре. Правило: змінили дані —
+#  одразу опишіть поле в цьому файлі.
+#
+#  ВХІД: див. README.md, розділ «Вхід модератора».
+# ==========================================================================
 
 backend:
   name: github
-  repo: olexiiv/gymnasium   # ← замініть на свій репозиторій
+  repo: olexiiv/gymnasium
   branch: main
-  # base_url: https://your-oauth-proxy.example.com
-  # auth_endpoint: /auth
+  # Адреса OAuth-проксі (Cloudflare Worker з tools/oauth-worker/).
+  # Без неї кнопка «Увійти через GitHub» не спрацює.
+  base_url: https://gymnasium-auth.olexiiv.workers.dev
+  auth_endpoint: auth
+  commit_messages:
+    create: "{{collection}}: додано «{{slug}}» ({{author-login}})"
+    update: "{{collection}}: оновлено «{{slug}}» ({{author-login}})"
+    delete: "{{collection}}: видалено «{{slug}}» ({{author-login}})"
+    uploadMedia: "медіа: завантажено {{path}} ({{author-login}})"
+    deleteMedia: "медіа: видалено {{path}} ({{author-login}})"
+
+# Модератор не публікує напряму в main — зміни проходять стадії
+# «Чернетка → На перевірці → Готово до публікації».
+publish_mode: editorial_workflow
 
 locale: uk
 site_url: https://new.andriivka-school.zp.ua
+display_url: https://new.andriivka-school.zp.ua
 logo_url: /assets/img/emblema-320.png
 
 media_folder: "src/assets/img/uploads"
 public_folder: "/assets/img/uploads"
 
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
 collections:
+
+  # ======================================================================
+  #  1. НОВИНИ
+  # ======================================================================
   - name: news
     label: "Новини"
     label_singular: "новина"
+    description: "Оголошення, анонси та звіти про події. Найсвіжіша новина автоматично стає великою карткою на сторінці «Новини»."
     folder: "src/content/news"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "novyny/{{slug}}"
     sortable_fields: [date, title]
+    view_filters:
+      - { label: "Оголошення", field: category, pattern: "Оголошення" }
+      - { label: "Вступ", field: category, pattern: "Вступ" }
+      - { label: "Поради батькам", field: category, pattern: "Поради батькам" }
     fields:
       - { name: title, label: "Заголовок", widget: string }
       - { name: date, label: "Дата", widget: datetime, format: "YYYY-MM-DD", time_format: false }
@@ -34,10 +68,18 @@ collections:
         label: "Категорія"
         widget: select
         options: ["Оголошення", "Навчання", "Вступ", "Безпека", "Підтримка", "Поради батькам", "Життя гімназії"]
-      - { name: cover, label: "Обкладинка (необовʼязково)", widget: image, required: false }
-      - { name: coverSrcset, label: "Версії обкладинки (srcset)", hint: "Заповнює розробник: список «шлях 480w, шлях 800w, …». Без нього браузер вантажить велике фото навіть на телефоні.", widget: string, required: false }
-      - { name: coverWidth, label: "Ширина обкладинки, px", widget: number, required: false, value_type: int }
-      - { name: coverHeight, label: "Висота обкладинки, px", widget: number, required: false, value_type: int }
+      - { name: excerpt, label: "Короткий опис (1–2 речення)", widget: text,
+          hint: "Показується в картці новини й у пошуковій видачі Google." }
+      - { name: body, label: "Текст новини", widget: markdown }
+
+      - name: cover
+        label: "Обкладинка"
+        widget: image
+        required: false
+        hint: "Горизонтальне фото від 1000 px завширшки. Якщо фото немає — картка покаже кольорову заглушку."
+      - { name: coverAlt, label: "Опис обкладинки для незрячих", widget: string, required: false,
+          hint: "Що саме зображено — читає скрінрідер." }
+      - { name: coverCaption, label: "Підпис під обкладинкою", widget: string, required: false }
       - name: coverPosition
         label: "Що показувати в кадрі 16:9"
         hint: "Картка обрізає обкладинку до 16:9. Для вертикальних плакатів та інфографіки виберіть «верх», щоб у кадр потрапила шапка."
@@ -47,36 +89,56 @@ collections:
           - { label: "Центр (за замовчуванням)", value: "50% 50%" }
           - { label: "Верх", value: "50% 0%" }
           - { label: "Низ", value: "50% 100%" }
-      - { name: coverAlt, label: "Опис обкладинки для незрячих", hint: "Що зображено на фото — читає скрінрідер", widget: string, required: false }
-      - { name: coverCaption, label: "Підпис під обкладинкою", widget: string, required: false }
-      - { name: excerpt, label: "Короткий опис (1–2 речення)", widget: text }
-      - { name: body, label: "Текст новини", widget: markdown }
-      - { name: album, label: "Посилання на фотоальбом", hint: "Google Фото або інший альбом — під текстом зʼявиться картка-посилання", widget: string, required: false }
-      - { name: albumNote, label: "Підпис до альбому", hint: "Напр.: 22 світлини із заходу", widget: string, required: false }
 
+      - name: coverSrcset
+        label: "Версії обкладинки (srcset) — заповнює розробник"
+        widget: string
+        required: false
+        hint: "Список «шлях 480w, шлях 800w, …». Без нього телефон вантажить повнорозмірне фото."
+      - { name: coverWidth, label: "Ширина обкладинки, px", widget: number, required: false, value_type: int }
+      - { name: coverHeight, label: "Висота обкладинки, px", widget: number, required: false, value_type: int }
+
+      - { name: album, label: "Посилання на фотоальбом", widget: string, required: false,
+          hint: "Google Фото або інший альбом — під текстом зʼявиться картка-посилання." }
+      - { name: albumNote, label: "Підпис до альбому", widget: string, required: false,
+          hint: "Напр.: 22 світлини із заходу" }
+
+  # ======================================================================
+  #  2. ПЕДАГОГИ
+  # ======================================================================
   - name: teachers
     label: "Педагоги"
     label_singular: "педагог"
+    description: "Педагогічний склад. Перші чотири за порядком показуються на головній сторінці."
     folder: "src/content/teachers"
     create: true
     slug: "{{slug}}"
+    sortable_fields: [order, name]
     fields:
       - { name: name, label: "ПІБ", widget: string }
       - { name: position, label: "Посада", widget: string }
       - { name: subject, label: "Предмети / класне керівництво", widget: string }
       - { name: email, label: "Email", widget: string, required: false }
-      - { name: avatarInitials, label: "Ініціали для аватара (2 літери)", widget: string }
-      - { name: order, label: "Порядок у списку", widget: number, default: 50 }
+      - { name: avatarInitials, label: "Ініціали для аватара", widget: string,
+          hint: "Дві літери: прізвище + імʼя. Напр. «МО» для Малієнка Олександра." }
+      - { name: order, label: "Порядок у списку", widget: number, value_type: int, default: 50,
+          hint: "Менше число — вище у списку. Директор — 1." }
       - { name: body, label: "Коротко про педагога", widget: markdown, required: false }
 
+  # ======================================================================
+  #  3. ДОКУМЕНТИ (розділ «Прозорість»)
+  # ======================================================================
   - name: documents
     label: "Документи (Прозорість)"
     label_singular: "документ"
+    description: "Публічна інформація за ст. 30 Закону «Про освіту». УВАГА: документ зʼявиться на сайті лише тоді, коли справді завантажено PDF — порожні записи збірка пропускає."
     folder: "src/content/documents"
     create: true
     media_folder: "/src/assets/docs"
     public_folder: "/assets/docs"
     sortable_fields: [updatedAt, title]
+    view_groups:
+      - { label: "За розділом", field: section }
     fields:
       - { name: title, label: "Назва документа", widget: string }
       - name: section
@@ -112,31 +174,35 @@ collections:
           - "кадровий склад"
           - "вакансії"
           - "річні звіти"
-      - { name: file, label: "Файл (PDF)", widget: file }
+      - { name: file, label: "Файл (PDF)", widget: file,
+          hint: "Обовʼязково. Без реального файлу документ не буде опубліковано." }
       - { name: updatedAt, label: "Дата затвердження або оновлення", widget: datetime, format: "YYYY-MM-DD", time_format: false }
       - name: featured
         label: "Показати в «Основних документах»"
         hint: "Виводиться нагорі сторінки /prozorist/. Тримайте позначеними 4–6 документів."
         widget: boolean
         default: false
+      - { name: body, label: "Пояснення до документа", widget: markdown, required: false }
 
+  # ======================================================================
+  #  4. ГАЛЕРЕЯ
+  # ======================================================================
   - name: gallery
     label: "Галерея"
     label_singular: "фото"
+    description: "Фотострічка «Життя гімназії» на головній сторінці. Перед завантаженням переконайтеся, що на фото не видно прізвищ учнів."
     folder: "src/content/gallery"
     create: true
+    sortable_fields: [order, caption]
     fields:
       - { name: caption, label: "Підпис під фото", widget: string }
       - { name: alt, label: "Опис для незрячих (alt)", widget: string, required: false,
           hint: "Що саме зображено. Якщо не заповнити — візьметься підпис." }
       - { name: image, label: "Зображення", widget: image, required: false }
-      - { name: width, label: "Ширина великої версії, px", widget: number,
-          value_type: int, required: false,
+      - { name: width, label: "Ширина великої версії, px", widget: number, value_type: int, required: false,
           hint: "Потрібно, щоб сторінка не «стрибала» під час завантаження." }
-      - { name: height, label: "Висота великої версії, px", widget: number,
-          value_type: int, required: false }
-      - { name: order, label: "Порядок", widget: number, value_type: int,
-          default: 99, required: false,
+      - { name: height, label: "Висота великої версії, px", widget: number, value_type: int, required: false }
+      - { name: order, label: "Порядок", widget: number, value_type: int, default: 99, required: false,
           hint: "Менше число — вище у стрічці." }
       - { name: tags, label: "Теги", widget: list, required: false }
       - name: ratio
@@ -146,23 +212,137 @@ collections:
         default: "4 / 3"
         required: false
 
-  - name: about
-    label: "Сторінка «Про нас»"
+  # ======================================================================
+  #  5. СТОРІНКИ
+  # ======================================================================
+  - name: pages
+    label: "Сторінки"
+    description: "Тексти постійних сторінок сайту. Структуру блоків задає верстка — тут редагуються слова."
     files:
-      - name: about_data
-        label: "Про нас — блоки"
+
+      # ---------- Головна ----------
+      - name: home
+        label: "Головна"
+        file: "src/_data/home.json"
+        fields:
+          - { name: note, label: "Службова примітка (не показується на сайті)", widget: string, required: false }
+
+          - name: hero
+            label: "Перший екран"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок, перший рядок", widget: string }
+              - { name: titleAccent, label: "Заголовок, другий рядок (курсивом)", widget: string }
+              - { name: lead, label: "Вступний абзац", widget: text,
+                  hint: "Якщо змінюєте кількість учнів — не забудьте про «Налаштування → Гімназія в цифрах»." }
+              - { name: primaryLabel, label: "Головна кнопка — напис", widget: string }
+              - { name: primaryUrl, label: "Головна кнопка — адреса", widget: string }
+              - { name: secondaryLabel, label: "Друга кнопка — напис", widget: string }
+              - { name: secondaryUrl, label: "Друга кнопка — адреса", widget: string }
+              - { name: photoAlt, label: "Опис фото для незрячих", widget: text }
+
+          - name: quick
+            label: "Швидкі дії (чотири плитки)"
+            widget: list
+            max: 4
+            summary: "{{fields.label}} → {{fields.url}}"
+            fields:
+              - name: icon
+                label: "Іконка"
+                widget: select
+                options: ["graduation-cap", "file-text", "phone", "calendar", "book-open", "users", "shield", "heart", "map-pin", "mail"]
+              - { name: label, label: "Назва", widget: string }
+              - { name: hint, label: "Підказка дрібним шрифтом", widget: string }
+              - { name: url, label: "Адреса", widget: string }
+
+          - name: about
+            label: "Блок «Про нас»"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+              - { name: body, label: "Текст", widget: markdown }
+              - { name: linkLabel, label: "Напис на кнопці", widget: string }
+              - { name: linkUrl, label: "Адреса кнопки", widget: string }
+
+          - name: news
+            label: "Заголовок блоку новин"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+              - { name: linkLabel, label: "Напис на кнопці", widget: string }
+
+          - name: support
+            label: "Блок психологічної підтримки"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+              - { name: text, label: "Текст", widget: text }
+
+          - name: teachers
+            label: "Заголовок блоку вчителів"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+              - { name: linkLabel, label: "Напис на кнопці", widget: string }
+
+          - name: gallery
+            label: "Заголовок блоку галереї"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+
+          - name: contacts
+            label: "Заголовок блоку контактів"
+            widget: object
+            fields:
+              - { name: eyebrow, label: "Надзаголовок", widget: string }
+              - { name: title, label: "Заголовок", widget: string }
+
+      # ---------- Про нас ----------
+      - name: about
+        label: "Про нас"
         file: "src/_data/about.json"
         fields:
+          - { name: note, label: "Службова примітка", widget: string, required: false }
+
+          - name: page
+            label: "Тексти сторінки"
+            widget: object
+            fields:
+              - { name: title, label: "Назва сторінки", widget: string }
+              - { name: intro, label: "Підзаголовок у шапці", widget: text }
+              - { name: description, label: "Опис для Google (до 160 знаків)", widget: text }
+              - { name: headCaption, label: "Підпис під фото в шапці", widget: string }
+              - { name: whoEyebrow, label: "«Хто ми» — надзаголовок", widget: string }
+              - { name: whoTitle, label: "«Хто ми» — заголовок", widget: string }
+              - { name: whoLede, label: "«Хто ми» — перший абзац (великим шрифтом)", widget: text }
+              - { name: whoBody, label: "«Хто ми» — основний текст", widget: markdown }
+              - { name: pathEyebrow, label: "«Наш шлях» — надзаголовок", widget: string }
+              - { name: pathTitle, label: "«Наш шлях» — заголовок", widget: string }
+              - { name: valuesEyebrow, label: "«Цінності» — надзаголовок", widget: string }
+              - { name: valuesTitle, label: "«Цінності» — заголовок", widget: string }
+              - { name: photosEyebrow, label: "«Фото» — надзаголовок", widget: string }
+              - { name: photosTitle, label: "«Фото» — заголовок", widget: string }
+
           - name: timeline
             label: "Наш шлях (хронологія)"
             widget: list
+            summary: "{{fields.year}} — {{fields.title}}"
             fields:
               - { name: year, label: "Період", widget: string }
               - { name: title, label: "Заголовок", widget: string }
               - { name: text, label: "Опис", widget: text }
+
           - name: values
             label: "Цінності"
             widget: list
+            summary: "{{fields.title}}"
             fields:
               - name: icon
                 label: "Іконка"
@@ -170,11 +350,257 @@ collections:
                 options: ["shield", "heart", "leaf", "users", "book-open", "award", "compass"]
               - { name: title, label: "Заголовок", widget: string }
               - { name: text, label: "Опис", widget: text }
+
           - name: photos
             label: "Фотосмуга (порожньо — блок не показується)"
             widget: list
             required: false
+            summary: "{{fields.caption}}"
             fields:
               - { name: src, label: "Фото", widget: image }
               - { name: alt, label: "Опис для незрячих", widget: string }
-              - { name: caption, label: "Підпис (необовʼязково)", widget: string, required: false }
+              - { name: caption, label: "Підпис", widget: string, required: false }
+              - { name: position, label: "Зсув кадру (object-position)", widget: string, required: false,
+                  hint: "Напр. «50% 20%». Порожньо — центр." }
+              - { name: width, label: "Ширина, px", widget: number, value_type: int, required: false }
+              - { name: height, label: "Висота, px", widget: number, value_type: int, required: false }
+
+      # ---------- Вступ ----------
+      - name: vstup
+        label: "Вступ"
+        file: "src/_data/vstup.json"
+        fields:
+          - { name: note, label: "Службова примітка", widget: string, required: false }
+          - { name: title, label: "Назва сторінки", widget: string }
+          - { name: intro, label: "Підзаголовок у шапці", widget: text }
+          - { name: description, label: "Опис для Google", widget: text }
+          - { name: noticeTop, label: "Помаранчева плашка вгорі", widget: markdown }
+          - { name: stepsTitle, label: "Заголовок блоку кроків", widget: string }
+          - name: steps
+            label: "Кроки до зарахування"
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: title, label: "Заголовок кроку", widget: string }
+              - { name: text, label: "Опис", widget: markdown }
+          - { name: noticeTot, label: "Плашка для дітей із ТОТ", widget: markdown }
+          - { name: faqTitle, label: "Заголовок блоку питань", widget: string }
+          - name: faq
+            label: "Поширені запитання"
+            widget: list
+            summary: "{{fields.question}}"
+            fields:
+              - { name: question, label: "Запитання", widget: string }
+              - { name: answer, label: "Відповідь", widget: markdown }
+          - { name: ctaTitle, label: "Нижній блок — заголовок", widget: string }
+          - { name: ctaText, label: "Нижній блок — текст", widget: text }
+
+  # ======================================================================
+  #  6. РОЗКЛАД
+  # ======================================================================
+  - name: schedule
+    label: "Розклад"
+    description: "Розклад уроків по класах і розклад дзвінків."
+    files:
+      - name: lessons
+        label: "Розклад уроків"
+        file: "src/_data/schedule.json"
+        fields:
+          - { name: note, label: "Службова примітка", widget: string, required: false }
+          - { name: semester, label: "Семестр", widget: string,
+              hint: "Напр.: I семестр 2026/2027 н. р. (дистанційно)" }
+          - { name: updatedAt, label: "Дата оновлення", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+          - { name: pendingTitle, label: "Заголовок, поки розкладу немає", widget: string }
+          - { name: pendingText, label: "Текст, поки розкладу немає", widget: text }
+          - name: classes
+            label: "Класи"
+            label_singular: "клас"
+            widget: list
+            required: false
+            summary: "{{fields.class}}"
+            hint: "Порожній список — на сторінці показується повідомлення «розклад готуємо»."
+            fields:
+              - { name: class, label: "Клас", widget: string, hint: "Напр.: 5-А" }
+              - name: week
+                label: "Дні тижня"
+                widget: list
+                summary: "{{fields.day}}"
+                fields:
+                  - name: day
+                    label: "День"
+                    widget: select
+                    options: ["Понеділок", "Вівторок", "Середа", "Четвер", "Пʼятниця"]
+                  - name: lessons
+                    label: "Уроки за порядком"
+                    widget: list
+                    field: { name: lesson, label: "Предмет", widget: string }
+                    hint: "Перший у списку = перший урок. Якщо уроку немає — впишіть «—», інакше решта зсунеться вгору."
+
+      - name: bells
+        label: "Розклад дзвінків"
+        file: "src/_data/site.json"
+        # Той самий файл редагується в «Налаштуваннях». Тут показуємо лише
+        # дзвінки, решта полів — hidden: без них Decap стер би їх при збереженні.
+        fields:
+          - { name: bellsNote, label: "Підпис під заголовком", widget: string,
+              hint: "Напр.: Кожен урок триває 35 хвилин, перерва між уроками — 25 хвилин." }
+          - name: bells
+            label: "Дзвінки"
+            widget: list
+            summary: "{{fields.n}} урок — {{fields.time}}"
+            fields:
+              - { name: n, label: "Номер уроку", widget: number, value_type: int }
+              - { name: time, label: "Час", widget: string, hint: "Формат: 10:00 – 10:35" }
+          - { name: name, widget: hidden }
+          - { name: shortName, widget: hidden }
+          - { name: fullName, widget: hidden }
+          - { name: type, widget: hidden }
+          - { name: tagline, widget: hidden }
+          - { name: url, widget: hidden }
+          - { name: oldSiteUrl, widget: hidden }
+          - { name: relocatedSince, widget: hidden }
+          - { name: language, widget: hidden }
+          - { name: founder, widget: hidden }
+          - { name: address, widget: hidden }
+          - { name: phone, widget: hidden }
+          - { name: phoneHref, widget: hidden }
+          - { name: email, widget: hidden }
+          - { name: admissionEmail, widget: hidden }
+          - { name: hours, widget: hidden }
+          - { name: director, widget: hidden }
+          - { name: edrpou, widget: hidden }
+          - { name: formspreeId, widget: hidden }
+          - { name: metrics, widget: hidden }
+          - { name: support, widget: hidden }
+          - { name: social, widget: hidden }
+          - { name: nav, widget: hidden }
+
+  # ======================================================================
+  #  7. НАЛАШТУВАННЯ САЙТУ
+  # ======================================================================
+  - name: settings
+    label: "Налаштування"
+    description: "Реквізити закладу, контакти, меню, розділи «Прозорості». Змінюється рідко — те, що тут, показується на кожній сторінці."
+    files:
+
+      - name: site
+        label: "Гімназія: реквізити й контакти"
+        file: "src/_data/site.json"
+        fields:
+          - { name: name, label: "Назва", widget: string }
+          - { name: shortName, label: "Коротка назва (для шапки)", widget: string }
+          - { name: fullName, label: "Повна юридична назва", widget: text }
+          - { name: type, label: "Тип закладу", widget: string }
+          - { name: tagline, label: "Гасло", widget: string }
+          - { name: url, label: "Адреса сайту", widget: string }
+          - { name: oldSiteUrl, label: "Адреса старої версії сайту", widget: string }
+          - { name: relocatedSince, label: "Рік релокації", widget: number, value_type: int }
+          - { name: language, label: "Мова навчання", widget: string }
+          - { name: founder, label: "Засновник", widget: string }
+
+          - name: address
+            label: "Адреса"
+            widget: object
+            fields:
+              - { name: origin, label: "Звідки релоковано (родовий відмінок)", widget: string,
+                  hint: "Підставляється після «з»: «з селища Андріївка, Бердянського району…»" }
+              - { name: region, label: "Область", widget: string }
+              - { name: postal, label: "Поштова адреса", widget: string }
+              - { name: mode, label: "Формат роботи", widget: string }
+
+          - { name: phone, label: "Телефон (як показувати)", widget: string }
+          - { name: phoneHref, label: "Телефон для набору", widget: string, hint: "Без пробілів: +380615391139" }
+          - { name: email, label: "E-mail", widget: string }
+          - { name: admissionEmail, label: "E-mail для вступу", widget: string }
+          - { name: hours, label: "Графік роботи", widget: string }
+          - { name: director, label: "Директор", widget: string }
+          - { name: edrpou, label: "Код ЄДРПОУ", widget: string }
+          - { name: formspreeId, label: "ID форми Formspree", widget: string,
+              hint: "Змінювати лише разом із розробником — від цього залежить, чи доходять листи з форми." }
+
+          - name: metrics
+            label: "Гімназія в цифрах (головна сторінка)"
+            widget: list
+            summary: "{{fields.value}} — {{fields.label}}"
+            fields:
+              - name: icon
+                label: "Іконка"
+                widget: select
+                options: ["users", "book-open", "shield", "graduation-cap", "heart", "award", "activity"]
+              - { name: value, label: "Значення", widget: string, hint: "Напр.: 177, «з 2022», «НМТ»" }
+              - { name: label, label: "Підпис", widget: string }
+
+          - name: support
+            label: "Лінії психологічної підтримки"
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - name: icon
+                label: "Іконка"
+                widget: select
+                options: ["heart", "activity", "life-buoy", "shield", "phone"]
+              - { name: name, label: "Назва служби", widget: string }
+              - { name: contact, label: "Що показати (сайт або телефон)", widget: string }
+              - { name: href, label: "Посилання", widget: string }
+              - { name: external, label: "Відкривати в новій вкладці", widget: boolean, default: true }
+
+          - name: social
+            label: "Соцмережі"
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: "Назва", widget: string }
+              - { name: url, label: "Посилання", widget: string }
+              - name: icon
+                label: "Іконка"
+                widget: select
+                options: ["facebook", "youtube", "instagram"]
+
+          - name: nav
+            label: "Головне меню"
+            widget: list
+            summary: "{{fields.label}} → {{fields.url}}"
+            hint: "Порядок пунктів = порядок у шапці. Кнопка «Розклад» додається версткою окремо."
+            fields:
+              - { name: label, label: "Напис", widget: string }
+              - { name: url, label: "Адреса", widget: string }
+              - { name: submenu, label: "Ключ підменю", widget: string, required: false,
+                  hint: "Лише для «Прозорості»: значення transparency. Для решти — порожньо." }
+              - { name: overviewLabel, label: "Напис першого пункту підменю", widget: string, required: false }
+
+          - { name: bellsNote, widget: hidden }
+          - { name: bells, widget: hidden }
+
+      - name: transparency
+        label: "Прозорість: розділи й факти"
+        file: "src/_data/transparency.json"
+        fields:
+          - { name: note, label: "Службова примітка", widget: text, required: false }
+          - { name: deadlineDays, label: "Строк відповіді на запит, днів", widget: number, value_type: int }
+          - name: sections
+            label: "Розділи"
+            widget: list
+            summary: "{{fields.label}}"
+            hint: "Порядок розділів тут = порядок у меню, на хабі та в підменю. Slug змінювати не можна — на нього посилаються документи й зовнішні посилання."
+            fields:
+              - { name: slug, label: "Slug (адреса розділу)", widget: string }
+              - { name: label, label: "Назва в меню", widget: string }
+              - { name: title, label: "Заголовок сторінки", widget: string }
+              - { name: intro, label: "Вступний текст", widget: text }
+              - name: icon
+                label: "Іконка"
+                widget: select
+                options: ["landmark", "book-open", "activity", "shield", "users", "file-text", "award"]
+              - { name: keywords, label: "Підказка в меню", widget: string,
+                  hint: "Через « · », напр.: статут · ліцензія · структура управління" }
+              - name: categories
+                label: "Категорії (порядок підзаголовків)"
+                widget: list
+                field: { name: category, label: "Категорія", widget: string }
+              - name: facts
+                label: "Факти (таблиця вгорі розділу)"
+                widget: list
+                summary: "{{fields.term}}"
+                fields:
+                  - { name: term, label: "Назва", widget: string }
+                  - { name: value, label: "Значення", widget: text }

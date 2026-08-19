@@ -15,11 +15,10 @@ description: "Андріївська різнопрофільна гімназі
   <div class="container">
     <div class="about">
       <div class="about__text reveal">
-        <p class="section__eyebrow">Про нас</p>
-        <h2 class="section__title" id="about-title">Школа, яку не зупинила війна</h2>
-        <p>Андріївська гімназія — заклад із Бердянського району Запорізької області. Після окупації громади ми не припинили роботу: перейшли в дистанційний формат і продовжуємо вчити дітей, де б вони зараз не були — в Україні чи на тимчасово окупованій території.</p>
-        <p>Наші класи невеликі, тож учителі встигають помітити кожного. Ми готуємо старшокласників до НМТ, підтримуємо звʼязок із родинами й дбаємо не лише про оцінки, а й про те, як почувається дитина.</p>
-        <a class="btn btn--ghost" href="/pro-gimnaziyu/">Дізнатися більше {{ icon("arrow-right", 18) }}</a>
+        <p class="section__eyebrow">{{ home.about.eyebrow }}</p>
+        <h2 class="section__title" id="about-title">{{ home.about.title }}</h2>
+        {{ home.about.body | md | safe }}
+        <a class="btn btn--ghost" href="{{ home.about.linkUrl }}">{{ home.about.linkLabel }} {{ icon("arrow-right", 18) }}</a>
       </div>
       <ul class="metrics" aria-label="Гімназія в цифрах">
         {% for m in site.metrics %}
@@ -39,10 +38,10 @@ description: "Андріївська різнопрофільна гімназі
   <div class="container">
     <div class="section__head">
       <div>
-        <p class="section__eyebrow">Що нового</p>
-        <h2 class="section__title" id="news-title">Новини та анонси</h2>
+        <p class="section__eyebrow">{{ home.news.eyebrow }}</p>
+        <h2 class="section__title" id="news-title">{{ home.news.title }}</h2>
       </div>
-      <a class="btn btn--ghost" href="/novyny/">Усі новини {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn--ghost" href="/novyny/">{{ home.news.linkLabel }} {{ icon("arrow-right", 18) }}</a>
     </div>
     <div class="grid grid--3">
       {% for post in collections.news | limit(3) %}
@@ -57,9 +56,9 @@ description: "Андріївська різнопрофільна гімназі
   <div class="container">
     <div class="support">
       <div class="support__intro reveal">
-        <p class="section__eyebrow">Ти не сам</p>
-        <h2 class="section__title" id="support-title">Психологічна підтримка</h2>
-        <p>Війна б'є не тільки по стінах. Якщо тобі тривожно, важко чи просто хочеться поговорити — це нормально звернутися по допомогу. Наш психолог поруч, а ці лінії працюють безкоштовно й анонімно.</p>
+        <p class="section__eyebrow">{{ home.support.eyebrow }}</p>
+        <h2 class="section__title" id="support-title">{{ home.support.title }}</h2>
+        <p>{{ home.support.text }}</p>
       </div>
       <ul class="support__list">
         {% for s in site.support %}
@@ -79,10 +78,10 @@ description: "Андріївська різнопрофільна гімназі
   <div class="container">
     <div class="section__head">
       <div>
-        <p class="section__eyebrow">Команда</p>
-        <h2 class="section__title" id="teachers-title">Наші вчителі</h2>
+        <p class="section__eyebrow">{{ home.teachers.eyebrow }}</p>
+        <h2 class="section__title" id="teachers-title">{{ home.teachers.title }}</h2>
       </div>
-      <a class="btn btn--ghost" href="/vchyteli/">Увесь склад {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn--ghost" href="/vchyteli/">{{ home.teachers.linkLabel }} {{ icon("arrow-right", 18) }}</a>
     </div>
     <div class="grid grid--4">
       {% for t in collections.teachers | limit(4) %}
@@ -97,8 +96,8 @@ description: "Андріївська різнопрофільна гімназі
   <div class="container">
     <div class="section__head">
       <div>
-        <p class="section__eyebrow">Фотозвіти</p>
-        <h2 class="section__title" id="gallery-title">Життя гімназії</h2>
+        <p class="section__eyebrow">{{ home.gallery.eyebrow }}</p>
+        <h2 class="section__title" id="gallery-title">{{ home.gallery.title }}</h2>
       </div>
     </div>
     <div class="masonry">
@@ -137,8 +136,8 @@ description: "Андріївська різнопрофільна гімназі
   <div class="container">
     <div class="section__head">
       <div>
-        <p class="section__eyebrow">Ми на звʼязку</p>
-        <h2 class="section__title" id="contacts-title">Контакти</h2>
+        <p class="section__eyebrow">{{ home.contacts.eyebrow }}</p>
+        <h2 class="section__title" id="contacts-title">{{ home.contacts.title }}</h2>
       </div>
     </div>
     {% include "partials/contacts-block.njk" %}
