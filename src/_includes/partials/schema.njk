@@ -1,0 +1,145 @@
+{#
+  Структуровані дані Schema.org (JSON-LD) для пошукових систем.
+
+  Навіщо: за запитом «Андріївська гімназія» пошуковик бачить лише текст
+  сторінки й здогадується, що це за заклад. JSON-LD каже прямо: це навчальний
+  заклад, ось ЄДРПОУ, телефон, пошта, засновник і соцмережі. Те саме з
+  новинами — розмітка NewsArticle дає дату, розділ і обкладинку.
+
+  Що виводимо:
+    • EducationalOrganization — на кожній сторінці (це видавець контенту);
+    • WebSite                 — тільки на головній;
+    • NewsArticle             — на сторінці новини (ознака: заповнена category);
+    • BreadcrumbList          — усюди, крім головної.
+
+  Усе складається в один @graph, а не в кілька окремих <script>: так вузли
+  посилаються один на одного через @id і не дублюються.
+
+  Про синтаксис: масиви нарощуємо через concat — у Nunjucks немає оператора
+  «кома», тож звичний трюк `(arr.push(x), arr)` тут не спрацює.
+
+  Екранування робить фільтр `jsonld`: він перетворює < > & на \uXXXX, інакше
+  «</script>» у заголовку новини закрив би тег посеред даних.
+#}
+
+{#- Значення з фільтрами виносимо в змінні, а не рахуємо всередині
+    обʼєктів: так вираз видно оком і його легше правити. -#}
+{%- set orgId = site.url + "/#organization" -%}
+{%- set pageAbs = page.url | absoluteUrl(site.url) -%}
+{%- set orgLogo = "/assets/img/emblema.png" | absoluteUrl(site.url) -%}
+{%- set orgPhoto = "/assets/img/school.jpg" | absoluteUrl(site.url) -%}
+{%- set orgSameAs = site.social | pluck("url") -%}
+{%- set newsUrl = "/novyny/" | absoluteUrl(site.url) -%}
+
+{%- set organization = {
+  "@type": "EducationalOrganization",
+  "@id": orgId,
+  "name": site.name,
+  "alternateName": site.shortName,
+  "legalName": site.fullName,
+  "description": "Заклад загальної середньої освіти, релокований із селища Андріївка Бердянського району Запорізької області. Навчання відбувається дистанційно.",
+  "url": site.url + "/",
+  "logo": orgLogo,
+  "image": orgPhoto,
+  "email": site.email,
+  "telephone": site.phoneHref,
+  "inLanguage": "uk-UA",
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "ЄДРПОУ",
+    "value": site.edrpou
+  },
+  "founder": { "@type": "Organization", "name": site.founder },
+  "parentOrganization": { "@type": "Organization", "name": site.founder },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "UA",
+    "addressRegion": site.address.region,
+    "streetAddress": site.address.postal
+  },
+  "sameAs": orgSameAs,
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Приймальна",
+    "telephone": site.phoneHref,
+    "email": site.email,
+    "availableLanguage": "uk"
+  }
+} -%}
+
+{%- set graph = [organization] -%}
+
+{#- Головна: додаємо вузол сайту. -#}
+{%- if page.url == "/" -%}
+  {%- set graph = graph.concat([{
+    "@type": "WebSite",
+    "@id": site.url + "/#website",
+    "name": site.name,
+    "url": site.url + "/",
+    "inLanguage": "uk-UA",
+    "publisher": { "@id": orgId }
+  }]) -%}
+{%- endif -%}
+
+{#- Сторінка новини. Ознака — заповнене поле category; у звичайних сторінок
+    його немає, тому для певності перевіряємо ще й адресу. -#}
+{%- set isArticle = category and ("/novyny/" in page.url) -%}
+
+{%- if isArticle -%}
+  {%- set published = page.date | dateRFC3339 -%}
+  {#- Обкладинку рахуємо окремо: якщо її немає, у графі буде null, і фільтр
+      jsonld просто викине це поле. -#}
+  {%- set articleImage = null -%}
+  {%- if cover -%}{%- set articleImage = cover | absoluteUrl(site.url) -%}{%- endif -%}
+  {%- set article = {
+    "@type": "NewsArticle",
+    "@id": pageAbs + "#article",
+    "headline": title,
+    "description": excerpt,
+    "articleSection": category,
+    "inLanguage": "uk-UA",
+    "datePublished": published,
+    "dateModified": published,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": pageAbs },
+    "author": { "@id": orgId },
+    "publisher": { "@id": orgId },
+    "isAccessibleForFree": true,
+    "image": articleImage
+  } -%}
+  {%- set graph = graph.concat([article]) -%}
+{%- endif -%}
+
+{#- Хлібні крихти повторюють ті, що видно на сторінці. Без заголовка
+    (сторінка 404) остання ланка була б порожня — тоді не виводимо взагалі. -#}
+{%- if page.url != "/" and title -%}
+  {%- set crumbs = [{
+    "@type": "ListItem", "position": 1, "name": "Головна", "item": site.url + "/"
+  }] -%}
+
+  {%- if parent -%}
+    {%- set parentAbs = parent.url | absoluteUrl(site.url) -%}
+    {%- set crumbs = crumbs.concat([{
+      "@type": "ListItem", "position": 2, "name": parent.label,
+      "item": parentAbs
+    }]) -%}
+  {%- elif isArticle -%}
+    {%- set crumbs = crumbs.concat([{
+      "@type": "ListItem", "position": 2, "name": "Новини",
+      "item": newsUrl
+    }]) -%}
+  {%- endif -%}
+
+  {%- set crumbs = crumbs.concat([{
+    "@type": "ListItem", "position": crumbs.length + 1, "name": title, "item": pageAbs
+  }]) -%}
+
+  {%- set graph = graph.concat([{
+    "@type": "BreadcrumbList",
+    "@id": pageAbs + "#breadcrumbs",
+    "itemListElement": crumbs
+  }]) -%}
+{%- endif -%}
+
+<script type="application/ld+json">
+{{ { "@context": "https://schema.org", "@graph": graph } | jsonld | safe }}
+</script>

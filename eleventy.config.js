@@ -74,6 +74,129 @@ module.exports = function (eleventyConfig) {
     )
   );
 
+  // ---------- Архів новин: /novyny/, сторінки та рубрики ----------
+  // Одна колекція описує ВСІ сторінки стрічки одразу: і посторінкову
+  // розбивку «Усіх новин», і рубрики (/novyny/tema/vstup/ тощо) з власною
+  // розбивкою. Кожен елемент колекції — це готова сторінка: список постів,
+  // номери, сусідні адреси, набір вкладок. Шаблон novyny.njk лише малює.
+  //
+  // Чому не вбудована пагінація Eleventy по collections.news: вона вміє
+  // ділити один список на рівні шматки, а нам треба ще й розрізати той самий
+  // список на рубрики й дати першій сторінці інший розмір (там велика картка).
+  // Порахувати це в JS простіше, ніж викручуватися в шаблоні.
+
+  const NEWS_FIRST_PAGE = 10; // 1 велика картка + 9 у сітці 3×3
+  const NEWS_PAGE_SIZE = 9;   // далі — рівно три ряди по три
+
+  // Транслітерація для адрес рубрик. Модератор може додати нову категорію
+  // в адмінпанелі — slug порахується сам, правити конфіг не треба.
+  const UA_TO_LATIN = {
+    а: "a", б: "b", в: "v", г: "g", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh",
+    з: "z", и: "y", і: "i", ї: "yi", й: "i", к: "k", л: "l", м: "m", н: "n",
+    о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts",
+    ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "yu", я: "ya",
+    "'": "", "’": "", "ʼ": "",
+  };
+
+  const slugifyUA = (value) =>
+    String(value)
+      .toLowerCase()
+      .split("")
+      .map((ch) => (ch in UA_TO_LATIN ? UA_TO_LATIN[ch] : ch))
+      .join("")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+  // Перша сторінка більша на одну новину — та, що стає великою карткою.
+  const chunkNews = (posts) => {
+    const chunks = [];
+    let i = 0;
+    while (i < posts.length) {
+      const size = chunks.length === 0 ? NEWS_FIRST_PAGE : NEWS_PAGE_SIZE;
+      chunks.push(posts.slice(i, i + size));
+      i += size;
+    }
+    return chunks.length ? chunks : [[]];
+  };
+
+  // Номери сторінок для нижньої навігації. До семи показуємо всі, далі —
+  // перша, вікно ±1 навколо поточної, остання; розриви позначаємо gap.
+  const paginationLinks = (total, current, urlFor) => {
+    const wanted = new Set([1, total, current - 1, current, current + 1]);
+    if (total <= 7) for (let n = 1; n <= total; n++) wanted.add(n);
+
+    const numbers = [...wanted].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b);
+    const links = [];
+    let previous = 0;
+
+    for (const n of numbers) {
+      if (previous && n - previous > 1) links.push({ gap: true });
+      links.push({ n, url: urlFor(n), isCurrent: n === current });
+      previous = n;
+    }
+    return links;
+  };
+
+  eleventyConfig.addCollection("newsArchive", (api) => {
+    const all = api
+      .getFilteredByGlob("src/content/news/*.md")
+      .sort((a, b) => b.date - a.date);
+
+    // Рубрики — у порядку появи, тобто від найсвіжішої новини.
+    const byCategory = new Map();
+    for (const post of all) {
+      const label = post.data.category;
+      if (!label) continue;
+      if (!byCategory.has(label)) byCategory.set(label, []);
+      byCategory.get(label).push(post);
+    }
+
+    const groups = [{ slug: null, label: "Усі новини", posts: all }];
+    for (const [label, posts] of byCategory) {
+      groups.push({ slug: slugifyUA(label), label, posts });
+    }
+
+    const baseUrl = (slug) => (slug ? `/novyny/tema/${slug}/` : "/novyny/");
+    const tabs = groups.map((g) => ({
+      label: g.slug ? g.label : "Усі",
+      url: baseUrl(g.slug),
+      slug: g.slug,
+      count: g.posts.length,
+    }));
+
+    const pages = [];
+
+    for (const group of groups) {
+      const chunks = chunkNews(group.posts);
+      const urlFor = (n) => (n === 1 ? baseUrl(group.slug) : `${baseUrl(group.slug)}storinka-${n}/`);
+
+      chunks.forEach((posts, index) => {
+        const number = index + 1;
+        const total = chunks.length;
+        const isFirst = number === 1;
+
+        pages.push({
+          key: `${group.slug || "all"}-${number}`,
+          categorySlug: group.slug,
+          categoryLabel: group.slug ? group.label : null,
+          permalink: urlFor(number),
+          // На першій сторінці найсвіжіший матеріал іде великою карткою.
+          lead: isFirst ? posts[0] || null : null,
+          rest: isFirst ? posts.slice(1) : posts,
+          total: group.posts.length,
+          pageNumber: number,
+          totalPages: total,
+          prevUrl: number > 1 ? urlFor(number - 1) : null,
+          nextUrl: number < total ? urlFor(number + 1) : null,
+          links: total > 1 ? paginationLinks(total, number, urlFor) : [],
+          tabs: tabs.map((tab) => ({ ...tab, isCurrent: tab.slug === group.slug })),
+        });
+      });
+    }
+
+    return pages;
+  });
+
   // ---------- Фільтри ----------
   const MONTHS_UA = [
     "січня", "лютого", "березня", "квітня", "травня", "червня",
@@ -91,6 +214,32 @@ module.exports = function (eleventyConfig) {
     const d = new Date(value);
     return d.toISOString().split("T")[0];
   });
+
+  // 2026-03-12T00:00:00.000Z — Atom вимагає повний RFC 3339
+  eleventyConfig.addFilter("dateRFC3339", (value) => new Date(value).toISOString());
+
+  // JSON-LD у <script>. Просто JSON.stringify небезпечний: якщо в заголовку
+  // новини трапиться «</script>», браузер закриє тег посеред даних. Тому
+  // < > & віддаємо юнікод-екранованими — JSON від цього лишається валідним.
+  // Порожні значення (null) викидаємо: краще не мати поля, ніж мати пусте.
+  eleventyConfig.addFilter("jsonld", (value) =>
+    JSON.stringify(value, (key, val) => (val === null || val === "" ? undefined : val), 2)
+      .replace(/</g, "\\u003c")
+      .replace(/>/g, "\\u003e")
+      .replace(/&/g, "\\u0026")
+  );
+
+  // Витягнути одне поле з масиву обʼєктів: site.social | pluck("url").
+  // У Nunjucks немає фільтра map, а для sameAs потрібен саме масив адрес.
+  eleventyConfig.addFilter("pluck", (items, key) =>
+    (items || []).map((item) => item && item[key]).filter(Boolean)
+  );
+
+  // Відносні шляхи → абсолютні. Потрібно у стрічці: читалка показує статтю
+  // на своєму домені, і «/assets/img/...» там веде в нікуди.
+  eleventyConfig.addFilter("absolutizeHtml", (html, base) =>
+    String(html || "").replace(/(src|href)="\/(?!\/)/g, (_m, attr) => `${attr}="${base.replace(/\/$/, "")}/`)
+  );
 
   // Час читання: рахуємо слова у вже зібраному HTML статті.
   // 180 слів/хв — обережна оцінка для української мови.
@@ -156,13 +305,6 @@ module.exports = function (eleventyConfig) {
 
   // Обмеження масиву: {{ collections.news | limit(3) }}
   eleventyConfig.addFilter("limit", (arr, n) => (arr || []).slice(0, n));
-
-  // Унікальні категорії новин для фільтра на сторінці «Новини»
-  eleventyConfig.addFilter("newsCategories", (items) => {
-    const set = new Set();
-    for (const item of items || []) if (item.data.category) set.add(item.data.category);
-    return [...set];
-  });
 
   // Абсолютна адреса для sitemap/og
   eleventyConfig.addFilter("absoluteUrl", (path, base) => {

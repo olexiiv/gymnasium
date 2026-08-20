@@ -826,14 +826,9 @@
 
 /* ================= Стрічка новин ================= */
 .newsfeed { display: grid; gap: var(--space-6); }
-
-/* На сторінці «Новини» кожна картка загорнута в <div data-category> для фільтра.
-   Без цього правила розтягується лише обгортка, а картка всередині лишається
-   заввишки «по тексту» — картки в ряду виходять різної висоти.
-   `[hidden]` дублюємо явно: авторський `display` перебиває правило браузера. */
-.newsfeed .grid > [data-category] { display: flex; }
-.newsfeed .grid > [data-category] > .card { flex: 1; }
-.newsfeed [data-category][hidden] { display: none; }
+/* Картки лежать прямо в сітці — обгортки [data-category] більше немає:
+   рубрики стали окремими сторінками, тож ховати нічого не треба. */
+.newsfeed .grid > .card { height: 100%; }
 
 .newslead {
   background: var(--surface);
@@ -904,6 +899,9 @@
 .newslead__link:hover .card__more { text-decoration: underline; text-underline-offset: 0.2em; }
 
 /* ================= Фільтр новин ================= */
+/* ================= Рубрики новин ================= */
+/* Це посилання, а не кнопки: кожна рубрика має власну адресу, тож фільтр
+   працює без JS, переживає перезавантаження й індексується пошуком. */
 .filter {
   display: flex;
   flex-wrap: wrap;
@@ -911,6 +909,9 @@
   margin-bottom: var(--space-6);
 }
 .filter__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   min-height: 44px;
   padding: 0.45rem 1.1rem;
   border-radius: var(--radius-round);
@@ -920,11 +921,138 @@
   font-weight: 600;
   font-size: 0.9375rem;
   color: var(--ink-muted);
+  text-decoration: none;
   transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
 }
 .filter__btn:hover { border-color: var(--brand); color: var(--ink); }
-.filter__btn.is-active { background: var(--brand-fill); border-color: var(--brand-fill); color: var(--on-brand); }
+.filter__btn.is-active,
+.filter__btn[aria-current="page"] {
+  background: var(--brand-fill);
+  border-color: var(--brand-fill);
+  color: var(--on-brand);
+}
+/* Лічильник матеріалів у рубриці — другорядний, тож тонший і приглушений. */
+.filter__count {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-round);
+  background: var(--surface-alt);
+  color: var(--ink-muted);
+}
+.filter__btn:where(.is-active, [aria-current="page"]) .filter__count {
+  background: rgb(255 255 255 / 0.22);
+  color: var(--on-brand);
+}
 .filter__empty { color: var(--ink-muted); text-align: center; padding-block: var(--space-7); }
+
+/* ================= Посторінкова навігація ================= */
+.pagenav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+.pagenav__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pagenav__num {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding-inline: 0.6rem;
+  border-radius: var(--radius-round);
+  border: 1px solid transparent;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+.pagenav__num:hover { background: var(--brand-soft); color: var(--brand-strong); }
+.pagenav__num.is-current {
+  background: var(--brand-fill);
+  border-color: var(--brand-fill);
+  color: var(--on-brand);
+}
+.pagenav__gap {
+  min-width: 1.5rem;
+  text-align: center;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+}
+.pagenav__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-round);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--brand-strong);
+  text-decoration: none;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.pagenav__step:hover { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-strong); }
+.pagenav__step:hover .icon { transform: translateX(2px); }
+.pagenav__step--prev:hover .icon { transform: translateX(-2px); }
+.pagenav__step .icon { transition: transform var(--t-fast); }
+/* Крайні сторінки: кнопку лишаємо на місці, щоб ряд не «стрибав», але гасимо. */
+.pagenav__step.is-off { opacity: 0.35; pointer-events: none; }
+
+.pagenav__status {
+  margin-top: var(--space-3);
+  text-align: center;
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+}
+
+@media (max-width: 520px) {
+  .pagenav__step span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .pagenav__step { padding-inline: 0.9rem; }
+}
+
+/* ================= Посилання на стрічку оновлень ================= */
+.feedlink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  padding: var(--space-5);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.feedlink:hover { border-color: var(--brand); background: var(--brand-soft); color: inherit; }
+.feedlink__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-round);
+  background: var(--brand-fill);
+  color: var(--on-brand);
+}
+.feedlink__body { display: grid; gap: var(--space-1); }
+.feedlink__title { font-family: var(--font-display); font-weight: 600; }
+.feedlink__note { font-size: var(--fs-caption); color: var(--ink-muted); }
 
 /* ================= Кроки (вступ) ================= */
 .steps { counter-reset: none; display: grid; gap: var(--space-4); margin-block: var(--space-5) var(--space-7); }
@@ -2117,6 +2245,17 @@ html.a11y .value-card {
   border-color: var(--line);
 }
 html.a11y .value-card__icon { color: var(--brand-strong); }
+
+/* Нові компоненти стрічки. У режимі для слабозорих прибираємо декоративне
+   й піднімаємо контраст: пунктир стає суцільним, номер сторінки отримує
+   рамку, а не лише колір тексту, приглушену кнопку видно чіткіше. */
+html.a11y .feedlink { border-style: solid; border-color: var(--line); }
+html.a11y .feedlink__note { color: var(--ink); }
+html.a11y .pagenav__num { border-color: var(--line); color: var(--ink); }
+html.a11y .pagenav__step { color: var(--ink); }
+html.a11y .pagenav__step.is-off { opacity: 0.6; }
+html.a11y .pagenav__status { color: var(--ink); }
+html.a11y .filter__count { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
 
 /* У режимі для слабозорих піднімаємо заливку ще на крок:
    #2F5C24 з білим — 7.8:1, тобто вже рівень AAA. */

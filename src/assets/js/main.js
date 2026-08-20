@@ -1,7 +1,7 @@
 /* ============================================================
    main.js — єдиний JS-бандл сайту (vanilla, без залежностей)
    Мобільне меню · версія для слабозорих · тінь хедера ·
-   поява секцій · фільтр новин · lightbox · валідація форми
+   поява секцій · lightbox · валідація форми
    ============================================================ */
 (function () {
   "use strict";
@@ -171,33 +171,10 @@
     reveals.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /* ---------- 6. Фільтр новин за категорією ---------- */
-  var newsGrid = document.querySelector("[data-news-grid]");
-  var filterBtns = document.querySelectorAll(".filter__btn");
-  var emptyNote = document.querySelector("[data-filter-empty]");
-
-  if (newsGrid && filterBtns.length) {
-    filterBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var value = btn.getAttribute("data-filter");
-
-        filterBtns.forEach(function (b) {
-          var active = b === btn;
-          b.classList.toggle("is-active", active);
-          b.setAttribute("aria-pressed", String(active));
-        });
-
-        var visible = 0;
-        newsGrid.querySelectorAll("[data-category]").forEach(function (item) {
-          var show = value === "all" || item.getAttribute("data-category") === value;
-          item.hidden = !show;
-          if (show) visible++;
-        });
-
-        if (emptyNote) emptyNote.hidden = visible > 0;
-      });
-    });
-  }
+  /* ---------- 6. (звільнено) ----------
+     Тут був фільтр новин за категорією. Рубрики стали окремими сторінками
+     (/novyny/tema/...), тож фільтрувати на клієнті більше нема чого:
+     працює без JS, переживає перезавантаження й індексується пошуком. */
 
   /* ---------- 7. Lightbox галереї ---------- */
   var lbTriggers = Array.prototype.slice.call(document.querySelectorAll("[data-lightbox]"));

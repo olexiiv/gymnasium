@@ -1,0 +1,40 @@
+---
+permalink: /feed.xml
+eleventyExcludeFromCollections: true
+---
+{%- set latest = collections.news | limit(15) -%}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.name }} — новини</title>
+  <subtitle>{{ site.tagline }}</subtitle>
+  <link rel="self" type="application/atom+xml" href="{{ "/feed.xml" | absoluteUrl(site.url) }}"/>
+  <link rel="alternate" type="text/html" href="{{ "/novyny/" | absoluteUrl(site.url) }}"/>
+  <id>{{ site.url }}/</id>
+  <updated>{% if latest.length %}{{ latest[0].date | dateRFC3339 }}{% else %}{{ page.date | dateRFC3339 }}{% endif %}</updated>
+  <icon>{{ "/assets/img/favicon.png" | absoluteUrl(site.url) }}</icon>
+  <logo>{{ "/assets/img/emblema.png" | absoluteUrl(site.url) }}</logo>
+  <rights>© {{ site.name }}</rights>
+  <author>
+    <name>{{ site.name }}</name>
+    <email>{{ site.email }}</email>
+    <uri>{{ site.url }}/</uri>
+  </author>
+{% for post in latest %}
+  <entry>
+    <title>{{ post.data.title }}</title>
+    <link rel="alternate" type="text/html" href="{{ post.url | absoluteUrl(site.url) }}"/>
+    <id>{{ post.url | absoluteUrl(site.url) }}</id>
+    <published>{{ post.date | dateRFC3339 }}</published>
+    <updated>{{ post.date | dateRFC3339 }}</updated>
+    {%- if post.data.category %}
+    <category term="{{ post.data.category }}"/>
+    {%- endif %}
+    {%- if post.data.excerpt %}
+    <summary type="text">{{ post.data.excerpt }}</summary>
+    {%- endif %}
+    {#- Читалка показує статтю на своєму домені, тож усі шляхи всередині
+        робимо абсолютними — інакше картинки й посилання ведуть у нікуди. -#}
+    <content type="html">{{ post.templateContent | absolutizeHtml(site.url) }}</content>
+  </entry>
+{% endfor %}
+</feed>

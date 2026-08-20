@@ -1,39 +1,94 @@
 ---
 layout: layouts/page.njk
-title: Новини
-intro: Оголошення, події та фотозвіти з життя гімназії.
-permalink: /novyny/
+pagination:
+  data: collections.newsArchive
+  size: 1
+  alias: feed
 ---
 {% from "macros/card-news.njk" import cardNews %}
 {% from "macros/card-news-lead.njk" import cardNewsLead %}
+{% from "macros/icon.njk" import icon %}
+
 <section class="section">
   <div class="container">
-    <div class="filter" role="group" aria-label="Фільтр новин за категорією">
-      <button class="filter__btn is-active" type="button" data-filter="all" aria-pressed="true">Усі</button>
-      {% for cat in collections.news | newsCategories %}
-      <button class="filter__btn" type="button" data-filter="{{ cat }}" aria-pressed="false">{{ cat }}</button>
-      {% endfor %}
-    </div>
 
-    {# Обгортка спільна для великої картки й сітки — щоб фільтр бачив усі новини #}
-    <div class="newsfeed" data-news-grid>
-      {% for post in collections.news %}
-        {% if loop.first %}
-        <div data-category="{{ post.data.category }}">{{ cardNewsLead(post) }}</div>
-        {% endif %}
+    {# Рубрики — звичайні посилання, а не кнопки-фільтри. Кожна рубрика має
+       власну адресу, працює без JS, відкривається в новій вкладці й
+       індексується пошуком. #}
+    <nav class="filter" aria-label="Рубрики новин">
+      {% for tab in feed.tabs %}
+      <a class="filter__btn{% if tab.isCurrent %} is-active{% endif %}"
+         href="{{ tab.url }}"
+         {% if tab.isCurrent %}aria-current="page"{% endif %}>{{ tab.label }}<span class="filter__count">{{ tab.count }}</span></a>
       {% endfor %}
+    </nav>
 
-      {% if collections.news.length > 1 %}
+    {% if feed.lead or feed.rest.length %}
+    <div class="newsfeed">
+      {% if feed.lead %}{{ cardNewsLead(feed.lead) }}{% endif %}
+
+      {% if feed.rest.length %}
       <div class="grid grid--3">
-        {% for post in collections.news %}
-          {% if not loop.first %}
-          <div data-category="{{ post.data.category }}">{{ cardNews(post) }}</div>
-          {% endif %}
-        {% endfor %}
+        {% for post in feed.rest %}{{ cardNews(post) }}{% endfor %}
       </div>
       {% endif %}
     </div>
+    {% else %}
+    <p class="filter__empty">Новин поки немає — але скоро зʼявляться.</p>
+    {% endif %}
 
-    <p class="filter__empty" data-filter-empty hidden>У цій категорії поки немає новин.</p>
+    {% if feed.totalPages > 1 %}
+    <nav class="pagenav" aria-label="Сторінки новин">
+      {% if feed.prevUrl %}
+      <a class="pagenav__step pagenav__step--prev" rel="prev" href="{{ feed.prevUrl }}">
+        {{ icon("arrow-right", 18, "icon--flip") }}<span>Новіші</span>
+      </a>
+      {% else %}
+      <span class="pagenav__step pagenav__step--prev is-off" aria-hidden="true">
+        {{ icon("arrow-right", 18, "icon--flip") }}<span>Новіші</span>
+      </span>
+      {% endif %}
+
+      <ol class="pagenav__list">
+        {% for link in feed.links %}
+          {% if link.gap %}
+          <li class="pagenav__gap" aria-hidden="true">…</li>
+          {% else %}
+          <li>
+            <a class="pagenav__num{% if link.isCurrent %} is-current{% endif %}"
+               href="{{ link.url }}"
+               {% if link.isCurrent %}aria-current="page"{% endif %}
+               aria-label="Сторінка {{ link.n }}{% if link.isCurrent %}, поточна{% endif %}">{{ link.n }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+      </ol>
+
+      {% if feed.nextUrl %}
+      <a class="pagenav__step pagenav__step--next" rel="next" href="{{ feed.nextUrl }}">
+        <span>Давніші</span>{{ icon("arrow-right", 18) }}
+      </a>
+      {% else %}
+      <span class="pagenav__step pagenav__step--next is-off" aria-hidden="true">
+        <span>Давніші</span>{{ icon("arrow-right", 18) }}
+      </span>
+      {% endif %}
+    </nav>
+
+    <p class="pagenav__status" role="status">Сторінка {{ feed.pageNumber }} з {{ feed.totalPages }}</p>
+    {% endif %}
+
+    <a class="feedlink" href="/feed.xml">
+      <span class="feedlink__icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <span class="feedlink__body">
+        <span class="feedlink__title">Стрічка оновлень</span>
+        <span class="feedlink__note">Підпишіться в читалці або Telegram-боті — нові матеріали приходитимуть самі</span>
+      </span>
+    </a>
+
   </div>
 </section>

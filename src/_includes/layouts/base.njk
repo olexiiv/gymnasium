@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if title %}{{ title }} — {{ site.shortName }}{% else %}{{ site.name }}{% endif %}</title>
+  {# `metaTitle` дає змогу розвести <title> і <h1>: на сторінках стрічки
+     заголовок «Вступ» доречний у h1, а у вкладці має бути «Новини: Вступ». #}
+  <title>{% if metaTitle %}{{ metaTitle }} — {{ site.shortName }}{% elif title %}{{ title }} — {{ site.shortName }}{% else %}{{ site.name }}{% endif %}</title>
   <meta name="description" content="{{ description or excerpt or (site.name + ' — офіційний сайт закладу освіти. Вступ, розклад, новини, документи, контакти.') }}">
   <link rel="canonical" href="{{ page.url | absoluteUrl(site.url) }}">
+  <link rel="alternate" type="application/atom+xml" title="{{ site.shortName }} — новини" href="/feed.xml">
   <meta property="og:title" content="{{ title or site.name }}">
   <meta property="og:description" content="{{ description or excerpt or site.tagline }}">
   <meta property="og:type" content="{% if category %}article{% else %}website{% endif %}">
@@ -24,6 +27,8 @@
       } catch (e) {}
     })();
   </script>
+
+  {% include "partials/schema.njk" %}
 
   <link rel="stylesheet" href="/assets/css/main.css">
 </head>
