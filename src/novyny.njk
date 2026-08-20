@@ -78,15 +78,18 @@ pagination:
     <p class="pagenav__status" role="status">Сторінка {{ feed.pageNumber }} з {{ feed.totalPages }}</p>
     {% endif %}
 
-    <a class="feedlink" href="/feed.xml">
+    {# Веде на людську сторінку, а не просто на /feed.xml: сам файл стрічки
+       у браузері показується службовим текстом із кодом, і відвідувач,
+       який не знає, що таке стрічка, просто лякається. #}
+    <a class="feedlink" href="/novyny/pidpyska/">
       <span class="feedlink__icon" aria-hidden="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
           <path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none"/>
         </svg>
       </span>
       <span class="feedlink__body">
-        <span class="feedlink__title">Стрічка оновлень</span>
-        <span class="feedlink__note">Підпишіться в читалці або Telegram-боті — нові матеріали приходитимуть самі</span>
+        <span class="feedlink__title">Підписатися на новини</span>
+        <span class="feedlink__note">Читалка або Telegram-бот приноситимуть нові матеріали самі — заходити на сайт не доведеться</span>
       </span>
     </a>
 

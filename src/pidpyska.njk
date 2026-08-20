@@ -1,0 +1,109 @@
+---
+layout: layouts/page.njk
+permalink: /novyny/pidpyska/
+title: Стрічка оновлень
+intro: Щоб не заходити на сайт щодня, підпишіться на новини гімназії — вони приходитимуть самі.
+description: "Як підписатися на новини Андріївської гімназії: адреса стрічки, читалки, Facebook-група та YouTube-канал."
+parent:
+  url: /novyny/
+  label: Новини
+---
+{% from "macros/icon.njk" import icon %}
+{% set feedUrl = "/feed.xml" | absoluteUrl(site.url) %}
+
+<section class="section">
+  <div class="container container--narrow">
+
+    <div class="prose">
+      <p>Стрічка оновлень — це технічний файл, який програма-читалка перевіряє
+      замість вас. Щойно на сайті зʼявляється новина, вона приходить туди,
+      де вам зручно її читати: в окремому застосунку, у браузері або
+      в Telegram.</p>
+    </div>
+
+    <h2 class="section__title">Адреса стрічки</h2>
+
+    <div class="copyfield reveal">
+      <label class="copyfield__label" for="feed-url">Скопіюйте цей рядок</label>
+      <div class="copyfield__row">
+        <input class="copyfield__input" id="feed-url" type="text" readonly
+               value="{{ feedUrl }}" data-copy-source
+               aria-describedby="feed-url-note">
+        <button class="btn btn--brand btn--sm copyfield__btn" type="button"
+                data-copy-button data-copy-target="feed-url">
+          {{ icon("check", 18) }}<span>Копіювати</span>
+        </button>
+      </div>
+      <p class="copyfield__note" id="feed-url-note">
+        Це не сторінка для читання: якщо відкрити адресу просто в браузері,
+        побачите службовий текст із кодом. Так і має бути — цей файл написаний
+        для програм, а не для людей.
+      </p>
+    </div>
+
+    <h2 class="section__title">Як підписатися</h2>
+
+    <ol class="steps">
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">1</span>
+        <div>
+          <h3>Оберіть читалку</h3>
+          <p>Це безкоштовні застосунки, які збирають новини з різних сайтів
+          в одну стрічку. Поширені: Feedly, Inoreader, NetNewsWire, Thunderbird.
+          Підійде будь-яка — усі вони працюють однаково.</p>
+        </div>
+      </li>
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">2</span>
+        <div>
+          <h3>Додайте адресу</h3>
+          <p>У читалці знайдіть кнопку «Додати джерело» (Add feed, +) і вставте
+          скопійований рядок. Багатьом читалкам достатньо адреси сайту —
+          <code>{{ site.url }}</code> — вони знаходять стрічку самі.</p>
+        </div>
+      </li>
+      <li class="steps__item reveal">
+        <span class="steps__num" aria-hidden="true">3</span>
+        <div>
+          <h3>Готово</h3>
+          <p>Нові матеріали зʼявлятимуться самі. Заходити на сайт і перевіряти
+          більше не треба.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="notice reveal">
+      {{ icon("alert-circle", 22) }}
+      <p><strong>У Telegram теж можна.</strong> Боти на кшталт
+      <em>@TheFeedReaderBot</em> приймають ту саму адресу й надсилають новини
+      звичайним повідомленням — окремий застосунок не потрібен.</p>
+    </div>
+
+    <h2 class="section__title">Якщо читалка — це зайве</h2>
+
+    <div class="prose">
+      <p>Нічого встановлювати не обовʼязково. Ті самі новини ми публікуємо там,
+      де ви, найімовірніше, і так буваєте:</p>
+    </div>
+
+    <ul class="linkrow">
+      {% for item in site.social %}
+      <li>
+        <a class="linkrow__item" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">
+          <span class="linkrow__icon" aria-hidden="true">{{ icon(item.icon, 20) }}</span>
+          <span class="linkrow__name">{{ item.name }}</span>
+          <span class="linkrow__arrow" aria-hidden="true">{{ icon("external-link", 16) }}</span>
+        </a>
+      </li>
+      {% endfor %}
+      <li>
+        <a class="linkrow__item" href="/novyny/">
+          <span class="linkrow__icon" aria-hidden="true">{{ icon("file-text", 20) }}</span>
+          <span class="linkrow__name">Просто сторінка «Новини» на сайті</span>
+          <span class="linkrow__arrow" aria-hidden="true">{{ icon("arrow-right", 16) }}</span>
+        </a>
+      </li>
+    </ul>
+
+  </div>
+</section>

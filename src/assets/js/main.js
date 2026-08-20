@@ -1,7 +1,7 @@
 /* ============================================================
    main.js — єдиний JS-бандл сайту (vanilla, без залежностей)
    Мобільне меню · версія для слабозорих · тінь хедера ·
-   поява секцій · lightbox · валідація форми
+   поява секцій · копіювання адреси · lightbox · валідація форми
    ============================================================ */
 (function () {
   "use strict";
@@ -171,10 +171,48 @@
     reveals.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /* ---------- 6. (звільнено) ----------
-     Тут був фільтр новин за категорією. Рубрики стали окремими сторінками
-     (/novyny/tema/...), тож фільтрувати на клієнті більше нема чого:
-     працює без JS, переживає перезавантаження й індексується пошуком. */
+  /* ---------- 6. Копіювання адреси стрічки ----------
+     Раніше тут був фільтр новин за категорією. Рубрики стали окремими
+     сторінками (/novyny/tema/...), тож фільтрувати на клієнті нема чого. */
+  var copyButtons = document.querySelectorAll("[data-copy-button]");
+
+  copyButtons.forEach(function (btn) {
+    var field = document.getElementById(btn.getAttribute("data-copy-target"));
+    if (!field) return;
+
+    var label = btn.querySelector("span");
+    var original = label ? label.textContent : "";
+    var timer = null;
+
+    function done(text) {
+      if (!label) return;
+      label.textContent = text;
+      btn.classList.add("is-done");
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        label.textContent = original;
+        btn.classList.remove("is-done");
+      }, 2000);
+    }
+
+    btn.addEventListener("click", function () {
+      // Виділяємо рядок у будь-якому разі: навіть якщо копіювання не
+      // спрацює, людина зможе натиснути Ctrl+C — це не тупик.
+      field.focus();
+      field.select();
+      field.setSelectionRange(0, field.value.length);
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(field.value).then(
+          function () { done("Скопійовано"); },
+          function () { done("Натисніть Ctrl+C"); }
+        );
+      } else {
+        // http, старий браузер, WebView — клавіатурне копіювання лишається.
+        done("Натисніть Ctrl+C");
+      }
+    });
+  });
 
   /* ---------- 7. Lightbox галереї ---------- */
   var lbTriggers = Array.prototype.slice.call(document.querySelectorAll("[data-lightbox]"));
