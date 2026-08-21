@@ -17,14 +17,23 @@ description: "Публічна інформація Андріївської р�
     <ul class="doccards reveal">
       {% for doc in featured %}
       <li>
-        <a class="doccard" href="{{ doc.data.file }}" target="_blank">
+        <div class="doccard">
           <span class="doccard__icon">{{ icon("file-text", 20) }}</span>
           <span class="doccard__body">
             <span class="doccard__title">{{ doc.data.title }}</span>
             <span class="doccard__meta">PDF · оновлено {{ doc.data.updatedAt | dateUA }}</span>
           </span>
-          <span class="doccard__action" aria-hidden="true">{{ icon("download", 18) }}</span>
-        </a>
+          <span class="doccard__actions">
+            <a class="doccard__btn" href="{{ doc.data.file }}" target="_blank" rel="noopener"
+               aria-label="Відкрити «{{ doc.data.title }}» у новій вкладці">
+              {{ icon("external-link", 18) }}
+            </a>
+            <a class="doccard__btn" href="{{ doc.data.file }}" download
+               aria-label="Завантажити «{{ doc.data.title }}»">
+              {{ icon("download", 18) }}
+            </a>
+          </span>
+        </div>
       </li>
       {% endfor %}
     </ul>

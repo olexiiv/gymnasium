@@ -69,6 +69,13 @@
       "contact": "la-strada.org.ua",
       "href": "https://la-strada.org.ua/",
       "external": true
+    },
+    {
+      "icon": "shield",
+      "name": "Зіткнулися з булінгом у школі? Порядок дій і зразок заяви",
+      "contact": "Документи «Прозорості»",
+      "href": "/prozorist/bezpeka/",
+      "external": false
     }
   ],
   "social": [

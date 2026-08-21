@@ -68,10 +68,16 @@ parent:
               <p class="doclist__title">{{ doc.data.title }}</p>
               <p class="doclist__date">Оновлено {{ doc.data.updatedAt | dateUA }}</p>
             </div>
-            <a class="btn btn--ghost btn--sm" href="{{ doc.data.file }}" download
-               aria-label="Завантажити PDF: {{ doc.data.title }}">
-              {{ icon("download", 16) }} PDF
-            </a>
+            <div class="doclist__actions">
+              <a class="btn btn--ghost btn--sm" href="{{ doc.data.file }}" target="_blank" rel="noopener"
+                 aria-label="Відкрити «{{ doc.data.title }}» у новій вкладці">
+                {{ icon("external-link", 16) }}<span class="btn__label">Відкрити</span>
+              </a>
+              <a class="btn btn--ghost btn--sm" href="{{ doc.data.file }}" download
+                 aria-label="Завантажити «{{ doc.data.title }}»">
+                {{ icon("download", 16) }}<span class="btn__label">PDF</span>
+              </a>
+            </div>
           </li>
           {% endfor %}
         </ul>

@@ -1333,6 +1333,23 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
 .doclist__title { font-weight: 500; color: var(--ink); }
 .doclist__date { font-size: var(--fs-caption); color: var(--ink-muted); }
 
+.doclist__actions { display: flex; gap: var(--space-2); flex: none; }
+
+/* На вузькому екрані заголовок документа й дві кнопки не вміщуються в один
+   рядок. Підписи кнопок ховаємо — aria-label на самій <a> вже дає повну
+   назву для екранного читача, тож текст лишається доступним, просто не
+   видимим; іконок «відкрити»/«завантажити» досить, щоб розрізнити дії. */
+@media (max-width: 30rem) {
+  .doclist__item { flex-wrap: wrap; row-gap: var(--space-3); }
+  .doclist__actions { margin-left: auto; }
+  .doclist__actions .btn__label {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .doclist__actions .btn { padding-inline: 0.7rem; }
+}
+
 /* ================= Розклад ================= */
 .schedule__updated {
   display: inline-flex;
@@ -2016,10 +2033,10 @@ html:not(.js) .header__item--group:focus-within > .header__sub { display: block;
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
   color: var(--ink);
-  text-decoration: none;
-  transition: background var(--t-fast), border-color var(--t-fast);
+  transition: border-color var(--t-fast);
 }
-.doccard:hover { background: var(--brand-soft); border-color: var(--brand); color: var(--ink); }
+.doccard:has(.doccard__btn:hover),
+.doccard:has(.doccard__btn:focus-visible) { border-color: var(--brand); }
 .doccard__icon {
   display: inline-grid;
   place-items: center;
@@ -2029,11 +2046,24 @@ html:not(.js) .header__item--group:focus-within > .header__sub { display: block;
   background: var(--surface-alt);
   color: var(--ink-muted);
 }
-.doccard:hover .doccard__icon { background: var(--surface); color: var(--brand-strong); }
-.doccard__body { display: grid; gap: 2px; }
+.doccard__body { display: grid; gap: 2px; min-width: 0; }
 .doccard__title { font-weight: 500; line-height: 1.35; }
 .doccard__meta { font-size: var(--fs-caption); color: var(--ink-muted); }
-.doccard__action { margin-left: auto; color: var(--brand-strong); flex: none; }
+
+/* Дві дії замість однієї великої картки-посилання: розкрити в новій вкладці
+   (переглянути, не завантажуючи) або одразу зберегти файл. Кожна — окрема
+   кнопка-іконка, а не вкладені <a>, які HTML і так забороняє. */
+.doccard__actions { display: flex; gap: var(--space-2); margin-left: auto; flex: none; }
+.doccard__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-round);
+  background: var(--surface-alt);
+  color: var(--brand-strong);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.doccard__btn:hover, .doccard__btn:focus-visible { background: var(--brand-soft); color: var(--brand-strong); }
 
 /* ---------- Навігація між розділами на підсторінках ---------- */
 .sectionnav {
@@ -2447,6 +2477,9 @@ html.a11y .topicsfilter__trigger { border-color: var(--ink-muted); }
 html.a11y .searchbox__input { border-color: var(--ink-muted); }
 html.a11y .newsresults__status { color: var(--ink); }
 html.a11y .newsresults mark { background: var(--brand-fill); color: var(--on-brand); }
+html.a11y .doccard__btn { border: 1px solid var(--line); color: var(--ink); }
+html.a11y .doccard__btn:hover, html.a11y .doccard__btn:focus-visible { border-color: var(--brand-strong); color: var(--brand-strong); }
+html.a11y .doccard { border-color: var(--ink-muted); }
 html.a11y .copyfield__note { color: var(--ink); }
 html.a11y .copyfield__input { background: var(--surface); border-color: var(--ink-muted); }
 html.a11y .linkrow__arrow { color: var(--ink); }

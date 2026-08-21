@@ -4,5 +4,5 @@ section: finansy
 category: кошторис
 file: /assets/docs/vydatky-2025.pdf
 updatedAt: 2026-01-10
-featured: true
+featured: false
 ---
