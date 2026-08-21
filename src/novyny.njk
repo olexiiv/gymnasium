@@ -12,71 +12,119 @@ pagination:
 <section class="section">
   <div class="container">
 
-    {# Рубрики — звичайні посилання, а не кнопки-фільтри. Кожна рубрика має
-       власну адресу, працює без JS, відкривається в новій вкладці й
-       індексується пошуком. #}
-    <nav class="filter" aria-label="Рубрики новин">
-      {% for tab in feed.tabs %}
-      <a class="filter__btn{% if tab.isCurrent %} is-active{% endif %}"
-         href="{{ tab.url }}"
-         {% if tab.isCurrent %}aria-current="page"{% endif %}>{{ tab.label }}<span class="filter__count">{{ tab.count }}</span></a>
-      {% endfor %}
-    </nav>
-
-    {% if feed.lead or feed.rest.length %}
-    <div class="newsfeed">
-      {% if feed.lead %}{{ cardNewsLead(feed.lead) }}{% endif %}
-
-      {% if feed.rest.length %}
-      <div class="grid grid--3">
-        {% for post in feed.rest %}{{ cardNews(post) }}{% endfor %}
+    <div class="newstools">
+      {# Без JS поле пошуку марне — вписаний туди текст нічого не робить,
+         тож ховаємо його, доки JS не підтвердив, що спрацює (клас .js
+         на <html>, main.js розділ 9). Категорії лишаються посиланнями,
+         тож вони працюють і без JS. #}
+      <div class="searchbox">
+        <span class="searchbox__icon" aria-hidden="true">{{ icon("search", 18) }}</span>
+        <label class="visually-hidden" for="news-search">Пошук новин</label>
+        <input class="searchbox__input" type="search" id="news-search"
+               placeholder="Пошук за назвою чи текстом…" autocomplete="off"
+               data-news-search="{{ "/assets/data/novyny.json" | url }}"
+               data-news-category="{{ feed.categorySlug or '' }}"
+               aria-describedby="news-results-status">
+        <button class="searchbox__clear" type="button" data-news-search-clear
+                aria-label="Очистити пошук">{{ icon("x", 16) }}</button>
       </div>
+
+      {# Категорії — випадний список замість ряду кнопок: на чотирьох
+         рубриках різниці не видно, а на десяти-двадцяти ряд пігулок
+         не поміщався б і переносився на кілька рядків. Це посилання,
+         а не кнопки: кожна рубрика має власну адресу, працює без JS
+         і індексується пошуком. Розкриває та ж поведінка, що й підменю
+         в шапці (main.js, розділ 1b) — атрибути data-nav-* спільні. #}
+      <div class="topicsfilter" data-nav-group>
+        <button class="topicsfilter__trigger" type="button"
+                aria-expanded="false" aria-controls="news-topics-panel" data-nav-trigger>
+          <span class="topicsfilter__icon" aria-hidden="true">{{ icon("compass", 18) }}</span>
+          <span class="topicsfilter__label">{{ feed.categoryLabel or "Усі новини" }}</span>
+          <span class="topicsfilter__badge">{{ feed.total }}</span>
+          {{ icon("chevron-down", 16, "topicsfilter__chev") }}
+        </button>
+        <ul class="topicsfilter__panel" id="news-topics-panel" data-nav-panel>
+          {% for tab in feed.tabs %}
+          <li>
+            <a class="topicsfilter__item{% if tab.isCurrent %} is-active{% endif %}"
+               href="{{ tab.url }}"
+               {% if tab.isCurrent %}aria-current="page"{% endif %}>
+              <span class="topicsfilter__itemlabel">{{ tab.label }}</span>
+              <span class="topicsfilter__itemcount">{{ tab.count }}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    {# Дві паралельні секції: сторінка з сервера (звична пагінація) і
+       результати пошуку (JS підвантажує всі новини й фільтрує на клієнті —
+       бо пошук має охоплювати всю рубрику, а не лише поточну сторінку
+       стрічки). Видима завжди рівно одна; перемикає main.js, розділ 9.
+       Без JS друга секція просто ніколи не показується. #}
+    <div data-news-static>
+      {% if feed.lead or feed.rest.length %}
+      <div class="newsfeed">
+        {% if feed.lead %}{{ cardNewsLead(feed.lead) }}{% endif %}
+
+        {% if feed.rest.length %}
+        <div class="grid grid--3">
+          {% for post in feed.rest %}{{ cardNews(post) }}{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <p class="filter__empty">Новин поки немає — але скоро зʼявляться.</p>
+      {% endif %}
+
+      {% if feed.totalPages > 1 %}
+      <nav class="pagenav" aria-label="Сторінки новин">
+        {% if feed.prevUrl %}
+        <a class="pagenav__step pagenav__step--prev" rel="prev" href="{{ feed.prevUrl }}">
+          {{ icon("arrow-right", 18, "icon--flip") }}<span>Новіші</span>
+        </a>
+        {% else %}
+        <span class="pagenav__step pagenav__step--prev is-off" aria-hidden="true">
+          {{ icon("arrow-right", 18, "icon--flip") }}<span>Новіші</span>
+        </span>
+        {% endif %}
+
+        <ol class="pagenav__list">
+          {% for link in feed.links %}
+            {% if link.gap %}
+            <li class="pagenav__gap" aria-hidden="true">…</li>
+            {% else %}
+            <li>
+              <a class="pagenav__num{% if link.isCurrent %} is-current{% endif %}"
+                 href="{{ link.url }}"
+                 {% if link.isCurrent %}aria-current="page"{% endif %}
+                 aria-label="Сторінка {{ link.n }}{% if link.isCurrent %}, поточна{% endif %}">{{ link.n }}</a>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ol>
+
+        {% if feed.nextUrl %}
+        <a class="pagenav__step pagenav__step--next" rel="next" href="{{ feed.nextUrl }}">
+          <span>Давніші</span>{{ icon("arrow-right", 18) }}
+        </a>
+        {% else %}
+        <span class="pagenav__step pagenav__step--next is-off" aria-hidden="true">
+          <span>Давніші</span>{{ icon("arrow-right", 18) }}
+        </span>
+        {% endif %}
+      </nav>
+
+      <p class="pagenav__status" role="status">Сторінка {{ feed.pageNumber }} з {{ feed.totalPages }}</p>
       {% endif %}
     </div>
-    {% else %}
-    <p class="filter__empty">Новин поки немає — але скоро зʼявляться.</p>
-    {% endif %}
 
-    {% if feed.totalPages > 1 %}
-    <nav class="pagenav" aria-label="Сторінки новин">
-      {% if feed.prevUrl %}
-      <a class="pagenav__step pagenav__step--prev" rel="prev" href="{{ feed.prevUrl }}">
-        {{ icon("arrow-right", 18, "icon--flip") }}<span>Новіші</span>
-      </a>
-      {% else %}
-      <span class="pagenav__step pagenav__step--prev is-off" aria-hidden="true">
-        {{ icon("arrow-right", 18, "icon--flip") }}<span>Новіші</span>
-      </span>
-      {% endif %}
-
-      <ol class="pagenav__list">
-        {% for link in feed.links %}
-          {% if link.gap %}
-          <li class="pagenav__gap" aria-hidden="true">…</li>
-          {% else %}
-          <li>
-            <a class="pagenav__num{% if link.isCurrent %} is-current{% endif %}"
-               href="{{ link.url }}"
-               {% if link.isCurrent %}aria-current="page"{% endif %}
-               aria-label="Сторінка {{ link.n }}{% if link.isCurrent %}, поточна{% endif %}">{{ link.n }}</a>
-          </li>
-          {% endif %}
-        {% endfor %}
-      </ol>
-
-      {% if feed.nextUrl %}
-      <a class="pagenav__step pagenav__step--next" rel="next" href="{{ feed.nextUrl }}">
-        <span>Давніші</span>{{ icon("arrow-right", 18) }}
-      </a>
-      {% else %}
-      <span class="pagenav__step pagenav__step--next is-off" aria-hidden="true">
-        <span>Давніші</span>{{ icon("arrow-right", 18) }}
-      </span>
-      {% endif %}
-    </nav>
-
-    <p class="pagenav__status" role="status">Сторінка {{ feed.pageNumber }} з {{ feed.totalPages }}</p>
-    {% endif %}
+    <div class="newsresults" data-news-results hidden>
+      <p class="newsresults__status" id="news-results-status" role="status" data-news-results-status></p>
+      <div class="grid grid--3" data-news-results-grid></div>
+      <p class="filter__empty" data-news-results-empty hidden></p>
+    </div>
 
     {# Веде на людську сторінку, а не просто на /feed.xml: сам файл стрічки
        у браузері показується службовим текстом із кодом, і відвідувач,

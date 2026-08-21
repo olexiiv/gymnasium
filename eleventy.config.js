@@ -204,6 +204,11 @@ module.exports = function (eleventyConfig) {
   ];
 
   // 12 березня 2026
+  // Той самий slug, що й у адресах рубрик /novyny/tema/<slug>/ — потрібен
+  // окремо для індексу пошуку, щоб JS міг звірити категорію новини
+  // з категорією поточної сторінки без повторної транслітерації на клієнті.
+  eleventyConfig.addFilter("slugUA", slugifyUA);
+
   eleventyConfig.addFilter("dateUA", (value) => {
     const d = new Date(value);
     return `${d.getDate()}\u00A0${MONTHS_UA[d.getMonth()]} ${d.getFullYear()}`;
@@ -234,6 +239,12 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("pluck", (items, key) =>
     (items || []).map((item) => item && item[key]).filter(Boolean)
   );
+
+  // Звичайний JSON, без екранування < > & — на відміну від jsonld, цей вивід
+  // не вставляється в <script> посеред HTML, а є самостійним файлом
+  // (наприклад, індекс пошуку /assets/data/novyny.json), тож ризику
+  // передчасного закриття тегу немає.
+  eleventyConfig.addFilter("json", (value) => JSON.stringify(value));
 
   // Відносні шляхи → абсолютні. Потрібно у стрічці: читалка показує статтю
   // на своєму домені, і «/assets/img/...» там веде в нікуди.

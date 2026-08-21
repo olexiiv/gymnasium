@@ -898,53 +898,169 @@
 .newslead__excerpt { color: var(--ink-muted); }
 .newslead__link:hover .card__more { text-decoration: underline; text-underline-offset: 0.2em; }
 
-/* ================= Фільтр новин ================= */
-/* ================= Рубрики новин ================= */
-/* Це посилання, а не кнопки: кожна рубрика має власну адресу, тож фільтр
-   працює без JS, переживає перезавантаження й індексується пошуком. */
-.filter {
+/* ================= Тулбар: пошук + рубрики ================= */
+.newstools {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-3);
   margin-bottom: var(--space-6);
 }
-.filter__btn {
+
+/* Порожній стан — і для «новин поки немає», і для «нічого не знайдено». */
+.filter__empty { color: var(--ink-muted); text-align: center; padding-block: var(--space-7); }
+
+/* ---------- Поле пошуку ---------- */
+/* Без JS поле нічого не робить (немає чого фільтрувати на клієнті), тож
+   ховаємо його, доки клас .js на <html> не підтвердить, що скрипт
+   завантажився — той самий прийом, що й у кнопки «Нагору». */
+.searchbox { display: none; }
+.js .searchbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+.searchbox__icon {
+  position: absolute;
+  left: var(--space-4);
+  color: var(--ink-muted);
+  pointer-events: none;
+}
+.searchbox__input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-round);
+  background: var(--surface);
+  font: inherit;
+  color: var(--ink);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.searchbox__input::placeholder { color: var(--ink-muted); }
+.searchbox__input:focus-visible {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+/* Системний хрестик очищення в <input type="search"> прибираємо — своя
+   кнопка нижче керує тим самим, але видима завжди однаково у всіх браузерах. */
+.searchbox__input::-webkit-search-cancel-button { display: none; }
+.searchbox__clear {
+  display: none;
+  position: absolute;
+  right: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-round);
+  color: var(--ink-muted);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.searchbox__clear:hover { background: var(--surface-alt); color: var(--ink); }
+.searchbox.has-value .searchbox__clear { display: inline-flex; }
+
+/* ---------- Рубрики: випадний список ---------- */
+/* Той самий шаблон «кнопка + панель», що й підменю в шапці (.header__sub) —
+   і та сама JS-поведінка (main.js, розділ 1b): відкриття/закриття кліком,
+   Esc, клік поза межами, фокус. Стилі окремі, бо тут це не рядок навігації,
+   а фільтр на сторінці. */
+.topicsfilter { position: relative; flex: none; }
+.topicsfilter__trigger {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: 44px;
-  padding: 0.45rem 1.1rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-round);
-  background: var(--surface);
   border: 1px solid var(--line);
+  background: var(--surface);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9375rem;
-  color: var(--ink-muted);
-  text-decoration: none;
-  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast);
 }
-.filter__btn:hover { border-color: var(--brand); color: var(--ink); }
-.filter__btn.is-active,
-.filter__btn[aria-current="page"] {
-  background: var(--brand-fill);
-  border-color: var(--brand-fill);
-  color: var(--on-brand);
-}
-/* Лічильник матеріалів у рубриці — другорядний, тож тонший і приглушений. */
-.filter__count {
+.topicsfilter__trigger:hover { border-color: var(--brand); }
+.topicsfilter.is-open .topicsfilter__trigger { border-color: var(--brand); background: var(--brand-soft); }
+.topicsfilter__icon { color: var(--brand-strong); flex: none; }
+.topicsfilter__label { white-space: nowrap; }
+.topicsfilter__badge {
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
-  padding: 0.05rem 0.4rem;
+  padding: 0.05rem 0.45rem;
   border-radius: var(--radius-round);
-  background: var(--surface-alt);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+.topicsfilter.is-open .topicsfilter__badge { background: rgb(255 255 255 / 0.5); }
+.topicsfilter__chev { flex: none; color: var(--ink-muted); transition: transform var(--t-fast); }
+.topicsfilter.is-open .topicsfilter__chev { transform: rotate(180deg); }
+
+.topicsfilter__panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 60;
+  width: max-content;
+  min-width: 14rem;
+  max-width: min(20rem, calc(100vw - 3rem));
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-m);
+}
+.topicsfilter.is-open > .topicsfilter__panel { display: block; }
+/* Без JS панель розкривається наведенням і фокусом — доступ не втрачається */
+html:not(.js) .topicsfilter:hover > .topicsfilter__panel,
+html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block; }
+
+.topicsfilter__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: 0.5rem var(--space-3);
+  border-radius: var(--radius-s);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background var(--t-fast);
+}
+.topicsfilter__item:hover { background: var(--brand-soft); color: var(--ink); }
+.topicsfilter__item.is-active { background: var(--brand-soft); }
+.topicsfilter__item.is-active .topicsfilter__itemlabel { color: var(--brand-strong); font-weight: 700; }
+.topicsfilter__itemlabel { font-weight: 500; }
+.topicsfilter__itemcount { font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+
+@media (max-width: 560px) {
+  /* На вузькому екрані праву прив'язку панелі скасовуємо — інакше вона
+     виїжджає за межі екрана ліворуч від кнопки, що стоїть біля самого краю. */
+  .topicsfilter__panel { right: auto; left: 0; width: calc(100vw - 3rem); }
+}
+
+/* ---------- Результати пошуку ---------- */
+/* Показує рівно одну з двох секцій: серверну сторінку стрічки (пагінація)
+   або результати пошуку. Перемикає JS; без нього ця секція не з'являється
+   взагалі, бо порожнє поле пошуку теж прибрано (.js .searchbox). */
+.newsresults__status {
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-caption);
   color: var(--ink-muted);
 }
-.filter__btn:where(.is-active, [aria-current="page"]) .filter__count {
-  background: rgb(255 255 255 / 0.22);
-  color: var(--on-brand);
+.newsresults mark {
+  background: var(--brand-soft);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 0.15em;
 }
-.filter__empty { color: var(--ink-muted); text-align: center; padding-block: var(--space-7); }
 
 /* ================= Посторінкова навігація ================= */
 .pagenav {
@@ -2325,7 +2441,12 @@ html.a11y .pagenav__num { border-color: var(--line); color: var(--ink); }
 html.a11y .pagenav__step { color: var(--ink); }
 html.a11y .pagenav__step.is-off { opacity: 0.6; }
 html.a11y .pagenav__status { color: var(--ink); }
-html.a11y .filter__count { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+html.a11y .topicsfilter__badge,
+html.a11y .topicsfilter__itemcount { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+html.a11y .topicsfilter__trigger { border-color: var(--ink-muted); }
+html.a11y .searchbox__input { border-color: var(--ink-muted); }
+html.a11y .newsresults__status { color: var(--ink); }
+html.a11y .newsresults mark { background: var(--brand-fill); color: var(--on-brand); }
 html.a11y .copyfield__note { color: var(--ink); }
 html.a11y .copyfield__input { background: var(--surface); border-color: var(--ink-muted); }
 html.a11y .linkrow__arrow { color: var(--ink); }

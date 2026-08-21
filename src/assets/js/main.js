@@ -1,7 +1,8 @@
 /* ============================================================
    main.js — єдиний JS-бандл сайту (vanilla, без залежностей)
    Мобільне меню · версія для слабозорих · тінь хедера ·
-   поява секцій · копіювання адреси · lightbox · валідація форми
+   поява секцій · копіювання адреси · lightbox · валідація форми ·
+   пошук новин
    ============================================================ */
 (function () {
   "use strict";
@@ -412,5 +413,208 @@
           });
       }
     });
+  }
+
+  /* ---------- 9. Пошук новин (стрічка) ----------
+     Сторінка «Новини» показує лише одну «сторінку» стрічки за раз
+     (пагінація), а шукати відвідувач хоче по всіх новинах одразу. DOM
+     просто не містить решти — тому підвантажуємо окремий JSON-індекс
+     (src/novyny-indeks.njk) один раз і фільтруємо вже його. Категорія
+     поточної сторінки (якщо це рубрика) звужує пошук так само, як і
+     звичайну стрічку — шукаємо в межах того, що людина й так переглядає. */
+  var newsSearchInput = document.querySelector("[data-news-search]");
+
+  if (newsSearchInput) {
+    var newsStaticEl = document.querySelector("[data-news-static]");
+    var newsResultsEl = document.querySelector("[data-news-results]");
+    var newsResultsGrid = document.querySelector("[data-news-results-grid]");
+    var newsResultsStatus = document.querySelector("[data-news-results-status]");
+    var newsResultsEmpty = document.querySelector("[data-news-results-empty]");
+    var newsClearBtn = document.querySelector("[data-news-search-clear]");
+    var newsIndexUrl = newsSearchInput.getAttribute("data-news-search");
+    var newsCategorySlug = newsSearchInput.getAttribute("data-news-category") || "";
+
+    var NEWS_MONTHS_UA = [
+      "січня", "лютого", "березня", "квітня", "травня", "червня",
+      "липня", "серпня", "вересня", "жовтня", "листопада", "грудня",
+    ];
+    var newsDateUA = function (iso) {
+      var d = new Date(iso);
+      return d.getDate() + "\u00A0" + NEWS_MONTHS_UA[d.getMonth()] + " " + d.getFullYear();
+    };
+
+    // Українське узгодження числівника з іменником: 1 новина, 2–4 новини,
+    // 5+ новин (і так само 11–14, де завжди «новин»).
+    var newsWord = function (n) {
+      var mod10 = n % 10;
+      var mod100 = n % 100;
+      if (mod10 === 1 && mod100 !== 11) return "новину";
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return "новини";
+      return "новин";
+    };
+
+    var newsEscapeHtml = function (value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    };
+
+    // Підсвічує слова запиту в уже екранованому тексті. Порядок важливий:
+    // спершу екрануємо HTML і лише потім вставляємо <mark> — інакше символи
+    // на кшталт "<" у запиті зламали б розмітку картки.
+    var newsHighlight = function (text, terms) {
+      var safe = newsEscapeHtml(text);
+      terms.forEach(function (term) {
+        if (!term) return;
+        var re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+        safe = safe.replace(re, "<mark>$1</mark>");
+      });
+      return safe;
+    };
+
+    var NEWS_ARROW_ICON =
+      '<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+    var NEWS_LEAF_ICON =
+      '<svg class="icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>' +
+      '<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>';
+
+    var newsRenderCard = function (item, terms) {
+      var media = item.cover
+        ? '<img src="' + item.cover + '"' +
+          (item.coverSrcset
+            ? ' srcset="' + item.coverSrcset + '" sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 92vw"'
+            : "") +
+          (item.coverPosition ? ' style="--cover-pos: ' + item.coverPosition + '"' : "") +
+          ' alt="" width="640" height="360" loading="lazy" decoding="async">'
+        : '<div class="card__placeholder">' + NEWS_LEAF_ICON +
+          '<span class="card__placeholder-note">[ФОТО: ' + newsEscapeHtml(item.title) + ']</span></div>';
+
+      return (
+        '<article class="card card--news">' +
+          '<a class="card__link" href="' + item.url + '">' +
+            '<div class="card__media" aria-hidden="true">' + media + "</div>" +
+            '<div class="card__body">' +
+              '<div class="card__meta">' +
+                (item.category ? '<span class="badge">' + newsEscapeHtml(item.category) + "</span>" : "") +
+                '<time class="card__date" datetime="' + item.date + '">' + newsDateUA(item.date) + "</time>" +
+              "</div>" +
+              '<h3 class="card__title">' + newsHighlight(item.title, terms) + "</h3>" +
+              '<p class="card__excerpt">' + newsHighlight(item.excerpt, terms) + "</p>" +
+              '<span class="card__more">Читати далі ' + NEWS_ARROW_ICON + "</span>" +
+            "</div>" +
+          "</a>" +
+        "</article>"
+      );
+    };
+
+    var newsShowStatic = function () {
+      if (newsStaticEl) newsStaticEl.hidden = false;
+      if (newsResultsEl) newsResultsEl.hidden = true;
+    };
+
+    var newsShowResults = function () {
+      if (newsStaticEl) newsStaticEl.hidden = true;
+      if (newsResultsEl) newsResultsEl.hidden = false;
+    };
+
+    var newsShowUnavailable = function () {
+      if (newsResultsGrid) newsResultsGrid.hidden = true;
+      if (newsResultsStatus) newsResultsStatus.textContent = "";
+      if (newsResultsEmpty) {
+        newsResultsEmpty.hidden = false;
+        newsResultsEmpty.textContent = "Пошук тимчасово недоступний. Спробуйте перезавантажити сторінку.";
+      }
+    };
+
+    var newsRunSearch = function (query, index) {
+      var terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+
+      var matches = index.filter(function (item) {
+        if (newsCategorySlug && item.categorySlug !== newsCategorySlug) return false;
+        var haystack = (item.title + " " + item.excerpt + " " + item.text).toLowerCase();
+        return terms.every(function (term) { return haystack.indexOf(term) !== -1; });
+      });
+
+      if (newsResultsStatus) {
+        newsResultsStatus.textContent = matches.length
+          ? "Знайдено " + matches.length + " " + newsWord(matches.length) + " за запитом «" + query + "»."
+          : "";
+      }
+
+      if (matches.length && newsResultsGrid) {
+        newsResultsGrid.innerHTML = matches.map(function (item) { return newsRenderCard(item, terms); }).join("");
+        newsResultsGrid.hidden = false;
+        if (newsResultsEmpty) newsResultsEmpty.hidden = true;
+      } else {
+        if (newsResultsGrid) { newsResultsGrid.innerHTML = ""; newsResultsGrid.hidden = true; }
+        if (newsResultsEmpty) {
+          newsResultsEmpty.hidden = false;
+          newsResultsEmpty.textContent = "За запитом «" + query + "» нічого не знайдено. Спробуйте інше слово.";
+        }
+      }
+    };
+
+    // Індекс підвантажуємо один раз і кешуємо проміс: повторний пошук
+    // не робить другого запиту, а помилка мережі не «застрягає» назавжди —
+    // catch повертає null, і наступний виклик спробує ще раз.
+    var newsIndexPromise = null;
+    var newsLoadIndex = function () {
+      if (!newsIndexPromise) {
+        newsIndexPromise = fetch(newsIndexUrl)
+          .then(function (res) {
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            return res.json();
+          })
+          .catch(function () {
+            newsIndexPromise = null;
+            return null;
+          });
+      }
+      return newsIndexPromise;
+    };
+
+    var newsSearchTimer = null;
+    var newsHandleInput = function () {
+      var query = newsSearchInput.value.trim();
+      var wrap = newsSearchInput.closest(".searchbox");
+      if (wrap) wrap.classList.toggle("has-value", Boolean(query));
+
+      clearTimeout(newsSearchTimer);
+
+      if (!query) {
+        newsShowStatic();
+        return;
+      }
+
+      // Невелика затримка згладжує швидкий друк: без неї кожна натиснута
+      // клавіша перемальовувала б сітку карток наново.
+      newsSearchTimer = setTimeout(function () {
+        newsLoadIndex().then(function (index) {
+          newsShowResults();
+          if (!index) { newsShowUnavailable(); return; }
+          newsRunSearch(query, index);
+        });
+      }, 200);
+    };
+
+    newsSearchInput.addEventListener("input", newsHandleInput);
+
+    if (newsClearBtn) {
+      newsClearBtn.addEventListener("click", function () {
+        newsSearchInput.value = "";
+        newsSearchInput.focus();
+        newsHandleInput();
+      });
+    }
+
+    // Підвантажуємо індекс заздалегідь, при першому фокусі на полі — щоб
+    // перший символ пошуку не чекав на мережу.
+    newsSearchInput.addEventListener("focus", newsLoadIndex, { once: true });
   }
 })();

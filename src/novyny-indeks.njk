@@ -1,0 +1,44 @@
+---
+permalink: /assets/data/novyny.json
+eleventyExcludeFromCollections: true
+---
+{#-
+  Індекс для пошуку новин на клієнті (src/assets/js/main.js, розділ 9).
+
+  Навіщо окремий файл, а не пошук по DOM: сторінка «Новини» показує лише
+  одну «сторінку» стрічки за раз (пагінація), а шукати відвідувач хоче
+  по всіх новинах одразу. DOM просто не містить решти — тому JS підвантажує
+  цей файл один раз і фільтрує вже його.
+
+  Що в індексі: заголовок, короткий опис і повний текст без розмітки —
+  щоб знаходились не лише збіги в заголовку, а й у тілі новини. Для
+  звичайної шкільної стрічки (кілька новин на місяць) файл лишається
+  малим; якщо новин одного дня стане за сотню, найпростіший наступний
+  крок — обрізати `text` через `| truncate(...)`.
+-#}
+{#-
+  ВАЖЛИВО ПРО ЦИКЛ: {% set items = items.concat(...) %} всередині {% for %}
+  тут НЕ спрацював би. У Nunjucks (як і в Jinja2) {% set %} усередині циклу
+  створює змінну, локальну для цієї ітерації, — переприсвоєння не переживає
+  цикл, і після {% endfor %} зовнішній `items` лишився б порожнім масивом.
+  (Це не стосується {% if %} — там така сама конструкція, як у schema.njk,
+  працює штатно; обмеження саме циклів.) Тому масив не переприсвоюємо,
+  а мутуємо через push(): items оголошено один раз до циклу, і push()
+  змінює той самий обʼєкт, а не створює новий.
+-#}
+{%- set items = [] -%}
+{%- for post in collections.news -%}
+  {%- set _ = items.push({
+    "title": post.data.title,
+    "url": post.url,
+    "date": post.date | dateISO,
+    "category": post.data.category,
+    "categorySlug": post.data.category | slugUA if post.data.category else null,
+    "excerpt": post.data.excerpt,
+    "cover": post.data.cover,
+    "coverSrcset": post.data.coverSrcset,
+    "coverPosition": post.data.coverPosition,
+    "text": post.templateContent | striptags | trim
+  }) -%}
+{%- endfor -%}
+{{ items | json | safe }}
