@@ -740,6 +740,100 @@
 }
 .prose--article th { font-family: var(--font-display); font-weight: 600; }
 
+/* ---------- Відео з YouTube ----------
+   Поки не натиснули, це просто посилання на кадрі 16:9 — жодних запитів до
+   YouTube, жодних чужих кук. Після кліку JS замінює вміст на <iframe>. */
+.videobox {
+  margin: 0 0 var(--space-7);
+}
+.videobox__frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  aspect-ratio: 16 / 9;
+  padding: var(--space-5);
+  background:
+    radial-gradient(120% 140% at 100% 0%, var(--brand-soft), transparent 60%),
+    var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-s);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform var(--t-med), box-shadow var(--t-med), border-color var(--t-med);
+}
+.videobox__frame:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-m);
+  border-color: var(--brand);
+  color: inherit;
+}
+.videobox__play {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-round);
+  background: var(--brand-fill);
+  color: var(--on-brand);
+  /* Трикутник у колі виглядає зміщеним ліворуч — компенсуємо оптично */
+  padding-left: 4px;
+  transition: background var(--t-fast), transform var(--t-med);
+}
+.videobox__frame:hover .videobox__play {
+  background: var(--brand-fill-hover);
+  transform: scale(1.06);
+}
+.videobox__label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.videobox__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+.videobox__note {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+}
+
+/* Плеєр після кліку заповнює той самий кадр. Ефекти наведення знімаємо:
+   плеєр, що підстрибує під курсором, — це вже не підказка, а перешкода. */
+.videobox__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.videobox__frame.is-playing {
+  padding: 0;
+  cursor: default;
+}
+.videobox__frame.is-playing:hover {
+  transform: none;
+  box-shadow: var(--shadow-s);
+  border-color: var(--line);
+}
+
+@media (max-width: 34rem) {
+  .videobox__frame {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-3);
+  }
+  .videobox__play { width: 60px; height: 60px; }
+  .videobox__title { font-size: 1rem; }
+}
+
 /* ---------- Картка фотоальбому ---------- */
 .albumcard {
   display: flex;
@@ -778,6 +872,11 @@
 .albumcard__note { font-size: var(--fs-caption); color: var(--ink-muted); }
 .albumcard__arrow { flex: none; color: var(--brand-strong); transition: transform var(--t-fast); }
 .albumcard:hover .albumcard__arrow { transform: translate(2px, -2px); }
+/* Файл до новини: стрілка вниз, тож і рух при наведенні — вниз, а не вбік. */
+.albumcard--file:hover .albumcard__arrow { transform: translateY(2px); }
+
+/* Друга картка поспіль (файл + альбом) не має злипатися з першою */
+.albumcard + .albumcard { margin-top: var(--space-4); }
 
 /* ---------- Підвал статті: сусідні новини ---------- */
 .article__footer { margin-top: var(--space-7); }
@@ -2444,6 +2543,14 @@ html.a11y .pullquote::before { display: none !important; }
    а обкладинку — без глибокої тіні й скруглення */
 html.a11y .prose--article ul li::before { border-radius: 0; transform: none; }
 html.a11y .article__cover { border-radius: 0; border-color: var(--line); }
+/* Відео: у версії для слабозорих прибираємо м'який градієнт і заокруглення —
+   лишається чіткий прямокутник із суцільною межею, як в обкладинки. */
+html.a11y .videobox__frame {
+  background: var(--surface);
+  border-radius: 0;
+  border-color: var(--ink-muted);
+}
+html.a11y .videobox__note { color: var(--ink); }
 html.a11y .page-head--photo .page-head__title,
 html.a11y .page-head--photo .breadcrumbs,
 html.a11y .page-head--photo .breadcrumbs a,

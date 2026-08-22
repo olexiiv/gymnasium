@@ -263,6 +263,50 @@ module.exports = function (eleventyConfig) {
     return Math.max(1, Math.round(words / 180));
   });
 
+  // ---------- Відео з YouTube ----------
+  // Модератор вставляє посилання так, як його скопіював: із кнопки
+  // «Поділитися» (youtu.be/ID?si=…), з адресного рядка (watch?v=ID&t=…),
+  // з коду вставки (/embed/ID) або зі Shorts. Фільтр витягує з будь-якої
+  // форми сам ідентифікатор — далі шаблон будує з нього адресу
+  // youtube-nocookie.com. Порожній результат означає «блок не малюємо»:
+  // краще не показати відео, ніж показати порожній плеєр.
+  const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
+  const badVideoUrls = new Set(); // щоб не дублювати попередження в логах
+
+  eleventyConfig.addFilter("youtubeId", (value) => {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    if (YOUTUBE_ID.test(raw)) return raw; // вставили сам ідентифікатор
+
+    let url;
+    try {
+      url = new URL(raw);
+    } catch {
+      url = null;
+    }
+
+    let candidate = "";
+    if (url) {
+      const host = url.hostname.replace(/^www\./, "");
+      if (host === "youtu.be") {
+        candidate = url.pathname.slice(1);
+      } else if (host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com")) {
+        candidate =
+          url.searchParams.get("v") ||
+          (url.pathname.match(/^\/(?:embed|shorts|live|v)\/([^/?#]+)/) || [])[1] ||
+          "";
+      }
+    }
+
+    if (YOUTUBE_ID.test(candidate)) return candidate;
+
+    if (!badVideoUrls.has(raw)) {
+      badVideoUrls.add(raw);
+      console.warn(`[відео] не розпізнав посилання на YouTube: ${raw}`);
+    }
+    return "";
+  });
+
   // ---------- Прозорість / публічна інформація ----------
 
   // Документи одного розділу: {{ collections.documents | inSection("finansy") }}

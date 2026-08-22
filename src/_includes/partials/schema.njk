@@ -109,6 +109,26 @@
     "image": articleImage
   } -%}
   {%- set graph = graph.concat([article]) -%}
+
+  {#- Якщо в новині є відео, описуємо його окремим вузлом: пошуковик тоді
+      знає, що на сторінці не просто текст, і може показати її з
+      прев'ю ролика. Мініатюру бере з YouTube — власного файлу для неї
+      в проєкті немає, а без thumbnailUrl вузол вважається неповним. -#}
+  {%- set schemaVideoId = video | youtubeId -%}
+  {%- if schemaVideoId -%}
+    {%- set graph = graph.concat([{
+      "@type": "VideoObject",
+      "@id": pageAbs + "#video",
+      "name": videoTitle or title,
+      "description": excerpt,
+      "uploadDate": published,
+      "thumbnailUrl": "https://i.ytimg.com/vi/" + schemaVideoId + "/hqdefault.jpg",
+      "embedUrl": "https://www.youtube-nocookie.com/embed/" + schemaVideoId,
+      "contentUrl": "https://www.youtube.com/watch?v=" + schemaVideoId,
+      "inLanguage": "uk-UA",
+      "publisher": { "@id": orgId }
+    }]) -%}
+  {%- endif -%}
 {%- endif -%}
 
 {#- Хлібні крихти повторюють ті, що видно на сторінці. Без заголовка

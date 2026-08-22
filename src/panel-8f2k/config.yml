@@ -98,6 +98,25 @@ collections:
       - { name: coverWidth, label: "Ширина обкладинки, px", widget: number, required: false, value_type: int }
       - { name: coverHeight, label: "Висота обкладинки, px", widget: number, required: false, value_type: int }
 
+      - { name: video, label: "Відео з YouTube", widget: string, required: false,
+          hint: "Вставте посилання так, як скопіювали: youtu.be/…, watch?v=… або Shorts. Плеєр зʼявиться під обкладинкою." }
+      - { name: videoTitle, label: "Назва відео", widget: string, required: false,
+          hint: "Показується на кнопці плеєра. Якщо не заповнити — візьметься заголовок новини." }
+      - { name: videoCaption, label: "Підпис під відео", widget: string, required: false }
+
+      - name: attachment
+        label: "Файл до новини (PDF)"
+        widget: file
+        required: false
+        # Без цього PDF ліг би в теку картинок (глобальний media_folder).
+        media_folder: "/src/assets/docs"
+        public_folder: "/assets/docs"
+        hint: "Презентація, буклет, положення конкурсу. Під текстом зʼявиться картка для завантаження."
+      - { name: attachmentTitle, label: "Назва файлу", widget: string, required: false,
+          hint: "Що саме за файл — напр.: Презентація проєкту. Без цього напишеться «Матеріал до новини»." }
+      - { name: attachmentNote, label: "Підпис до файлу", widget: string, required: false,
+          hint: "Напр.: PDF, 4 сторінки, 3,7 МБ" }
+
       - { name: album, label: "Посилання на фотоальбом", widget: string, required: false,
           hint: "Google Фото або інший альбом — під текстом зʼявиться картка-посилання." }
       - { name: albumNote, label: "Підпис до альбому", widget: string, required: false,
