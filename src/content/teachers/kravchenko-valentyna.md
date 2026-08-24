@@ -7,5 +7,3 @@ pedTitle: старший учитель
 avatarInitials: КВ
 order: 2
 ---
-
-Учителька вищої категорії.
