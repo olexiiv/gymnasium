@@ -4,6 +4,17 @@
   <h3 class="card--teacher__name">{{ t.data.name }}</h3>
   <p class="card--teacher__position">{{ t.data.position }}</p>
   <p class="card--teacher__subject">{{ t.data.subject }}</p>
+
+  {#- Категорія і звання зʼявляються, лише якщо їх заповнили. Порожні поля
+      не малюють ані бейджа, ані відступу під ним: у частини педагогів
+      категорії немає за посадою, і рядок-заглушка виглядав би як помилка. -#}
+  {% if t.data.category or t.data.pedTitle %}
+  <p class="card--teacher__ranks">
+    {% if t.data.category %}<span class="badge badge--muted">{{ t.data.category }}</span>{% endif %}
+    {% if t.data.pedTitle %}<span class="badge badge--muted">{{ t.data.pedTitle }}</span>{% endif %}
+  </p>
+  {% endif %}
+
   {% if t.data.email %}
   <a class="card--teacher__email" href="mailto:{{ t.data.email }}">{{ t.data.email }}</a>
   {% endif %}

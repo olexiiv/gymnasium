@@ -7,6 +7,7 @@ eleventyComputed:
   description: "{{ vstup.description }}"
 ---
 {% from "macros/icon.njk" import icon %}
+{% from "macros/schema-faq.njk" import faqSchema %}
 
 <section class="section">
   <div class="container container--narrow">
@@ -56,3 +57,5 @@ eleventyComputed:
     </div>
   </div>
 </section>
+
+{{ faqSchema(vstup.faq, page.url, site.url) }}

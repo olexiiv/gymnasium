@@ -3,7 +3,7 @@ layout: layouts/page.njk
 title: Прозорість та інформаційна відкритість
 intro: Публічна інформація про гімназію згідно зі статтею 30 Закону України «Про освіту». Документи згруповані за розділами — оберіть потрібний або завантажте основні одразу тут.
 permalink: /prozorist/
-description: "Публічна інформація Андріївської різнопрофільної гімназії: статут, ліцензія, кошторис і фінансові звіти, освітні програми, безпечне середовище, кадри та звітність."
+description: "Публічна інформація Андріївської різнопрофільної гімназії: статут, ліцензія, кошторис і фінансові звіти, освітні програми, безпечне середовище, кадри, атестація педагогів і звітність."
 ---
 {% from "macros/icon.njk" import icon %}
 {% set featured = collections.documents | featuredDocs %}
@@ -54,8 +54,9 @@ description: "Публічна інформація Андріївської р�
           <span class="seccard__top">
             <span class="seccard__icon">{{ icon(section.icon, 22) }}</span>
             {% if docs.length %}
-            <span class="badge badge--muted">{{ docs.length }}
-              {%- if docs.length == 1 %} документ{% elif docs.length < 5 %} документи{% else %} документів{% endif %}</span>
+            {# Множина через фільтр plural: попередній варіант рахував «менше пʼяти»
+               й на 21 документі писав би «документів», а на 12 — «документи». #}
+            <span class="badge badge--muted">{{ docs.length }} {{ docs.length | plural("документ", "документи", "документів") }}</span>
             {% else %}
             <span class="badge badge--muted">готується</span>
             {% endif %}

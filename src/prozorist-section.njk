@@ -50,6 +50,21 @@ parent:
     </dl>
     {% endif %}
 
+    {# Картка-перехід на окрему сторінку розділу. Малюється, лише якщо в
+       transparency.json у розділу є блок spotlight — жодних перевірок на
+       конкретний slug у шаблоні: ця помилка вже коштувала нам зниклого
+       документа (див. коментар нижче). #}
+    {% if section.spotlight %}
+    <a class="spotlight reveal" href="{{ section.spotlight.url }}">
+      <span class="spotlight__icon" aria-hidden="true">{{ icon(section.spotlight.icon or section.icon, 24) }}</span>
+      <span class="spotlight__body">
+        <span class="spotlight__title">{{ section.spotlight.title }}</span>
+        <span class="spotlight__text">{{ section.spotlight.text }}</span>
+        <span class="spotlight__go">{{ section.spotlight.cta }} {{ icon("arrow-right", 16) }}</span>
+      </span>
+    </a>
+    {% endif %}
+
     {# Список документів показуємо в кожному розділі, де вони є. Раніше тут стояла
        жорстка умова `slug != "kadry"` — тимчасовий обхід для розділу без реальних
        документів. Через неї доданий звіт директора не потрапляв на сторінку. #}
@@ -77,6 +92,12 @@ parent:
                  aria-label="Завантажити «{{ doc.data.title }}»">
                 {{ icon("download", 16) }}<span class="btn__label">PDF</span>
               </a>
+              {% if doc.data.altFile %}
+              <a class="btn btn--ghost btn--sm" href="{{ doc.data.altFile }}" download
+                 aria-label="Завантажити «{{ doc.data.title }}» у форматі {{ doc.data.altFormat }} — для заповнення">
+                {{ icon("download", 16) }}<span class="btn__label">{{ doc.data.altFormat }}</span>
+              </a>
+              {% endif %}
             </div>
           </li>
           {% endfor %}

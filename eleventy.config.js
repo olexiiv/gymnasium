@@ -63,6 +63,20 @@ module.exports = function (eleventyConfig) {
         continue;
       }
 
+      // Друга, редаговна версія того самого документа (бланк заяви у DOCX поруч
+      // із PDF). Необовʼязкова: якщо файлу немає — прибираємо поле, і шаблон
+      // просто не малює зайву кнопку. Сам документ через це не зникає.
+      if (doc.data.altFile) {
+        const altOnDisk = path.join("src", doc.data.altFile.replace(/^\//, ""));
+        let altSize = -1;
+        try { altSize = fs.statSync(altOnDisk).size; } catch { /* немає файлу */ }
+
+        if (altSize < DOC_MIN_BYTES) {
+          console.warn(`[документи] «${label}»: додатковий файл ${altOnDisk} відсутній або порожній — кнопку не показуємо`);
+          doc.data.altFile = null;
+        }
+      }
+
       ready.push(doc);
     }
 
@@ -312,6 +326,34 @@ module.exports = function (eleventyConfig) {
   // Документи одного розділу: {{ collections.documents | inSection("finansy") }}
   eleventyConfig.addFilter("inSection", (items, slug) =>
     (items || []).filter((item) => item.data.section === slug)
+  );
+
+  // Відбір за будь-яким полем front matter:
+  // {{ collections.teachers | whereField("category", "спеціаліст вищої категорії") }}
+  // Порожнє значення поля вважається «немає», а не збігом із порожнім рядком.
+  eleventyConfig.addFilter("whereField", (items, key, value) =>
+    (items || []).filter((item) => item.data[key] && item.data[key] === value)
+  );
+
+
+  // Українська множина: {{ 16 | plural("педагог", "педагоги", "педагогів") }}
+  // Форми: 1 педагог / 2–4 педагоги / 5–20 педагогів, далі за останніми
+  // цифрами. Раніше така логіка стояла просто в шаблоні «Прозорості» —
+  // після другого разу винесена сюди.
+  eleventyConfig.addFilter("plural", (value, one, few, many) => {
+    const n = Math.abs(Number(value) || 0);
+    const tens = n % 100;
+    if (tens >= 11 && tens <= 14) return many;
+    const ones = n % 10;
+    if (ones === 1) return one;
+    if (ones >= 2 && ones <= 4) return few;
+    return many;
+  });
+
+  // Документи однієї категорії всередині розділу — потрібно окремій сторінці
+  // (наприклад, «Атестація»), яка показує лише свою частину розділу «Кадри».
+  eleventyConfig.addFilter("inCategory", (items, category) =>
+    (items || []).filter((item) => item.data.category === category)
   );
 
   // Позначені як основні — для добірки на хаб-сторінці

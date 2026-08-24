@@ -529,6 +529,17 @@
 .card--teacher__position { font-weight: 500; font-size: 0.9375rem; }
 .card--teacher__subject { font-size: var(--fs-caption); color: var(--ink-muted); margin-block: var(--space-2); }
 .card--teacher__email { font-size: var(--fs-caption); word-break: break-all; }
+/* Категорія і звання: два бейджі під предметами. Переносяться на новий
+   рядок, бо «спеціаліст вищої категорії» + «учитель-методист» в одну
+   лінію картки завширшки 4 колонки не влазять. */
+.card--teacher__ranks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.card--teacher__ranks .badge { font-size: 0.75rem; }
 
 /* Профілі навчання */
 
@@ -2597,3 +2608,239 @@ html.a11y {
   --brand-fill: #2F5C24;
   --brand-fill-hover: #24491B;
 }
+
+/* ============================================================
+   Атестація педагогічних працівників (v1.34)
+   ============================================================ */
+
+/* ---------- Картка-перехід у розділі «Прозорості» ----------
+   Ширша за .linkrow__item: тут потрібен ще й пояснювальний рядок,
+   бо посилання веде на цілу сторінку, а не на файл. */
+.spotlight {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  align-items: start;
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-m);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+}
+.spotlight:hover {
+  color: inherit;
+  border-color: var(--brand);
+  border-left-color: var(--brand-fill);
+  box-shadow: var(--shadow-m);
+  transform: translateY(-2px);
+}
+.spotlight__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  border-radius: var(--radius-round);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+.spotlight__body { display: grid; gap: var(--space-2); min-width: 0; }
+.spotlight__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: var(--lh-heading);
+}
+.spotlight__text { color: var(--ink-muted); font-size: 0.9375rem; line-height: 1.55; }
+.spotlight__go {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--brand-strong);
+}
+.spotlight__go .icon { transition: transform var(--t-fast); }
+.spotlight:hover .spotlight__go .icon { transform: translateX(3px); }
+
+/* ---------- Календар строків ----------
+   Вертикальна лінія проходить крізь весь етап, крапка позначає крок.
+   Плашка зі строком стоїть над текстом на телефоні й ліворуч на ширших
+   екранах — так строк лишається першим, що читається.
+
+   Клас навмисно НЕ .timeline: цю назву вже займає хронологія «Наш шлях»
+   на сторінці «Про нас» (вище в цьому файлі) — суцільна лінія через
+   .timeline::before на всю висоту списку. Обидва компоненти жили в
+   одному файлі під однаковим іменем, тож на сторінці атестації стара
+   наскрізна лінія накладалася на нову структуру з фазами: рядок-заголовок
+   фази опинявся впритул до чужої лінії. Замість переробки старого
+   компонента (він і так працює на своєму місці) — новий отримав власне
+   імʼя .atescal («атестаційний календар»). */
+.atescal { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-6); }
+.atescal__phase { display: grid; gap: var(--space-4); }
+.atescal__phase-title {
+  font-size: 1.0625rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+.atescal__items {
+  list-style: none;
+  padding: 0 0 0 var(--space-5);
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  border-left: 2px solid var(--brand-soft);
+}
+.atescal__item {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+}
+/* Крапка на лінії. Декор — у режимі для слабозорих ховається. */
+.atescal__item::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--space-5) * -1 - 6px);
+  top: var(--space-5);
+  width: 10px; height: 10px;
+  border-radius: var(--radius-round);
+  background: var(--brand);
+  box-shadow: 0 0 0 4px var(--base);
+}
+.atescal__deadline {
+  justify-self: start;
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--radius-round);
+  background: color-mix(in srgb, var(--accent-warm) 16%, var(--surface));
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+.atescal__title { font-family: var(--font-display); font-weight: 600; line-height: 1.35; }
+.atescal__text { color: var(--ink-muted); font-size: 0.9375rem; line-height: 1.55; }
+
+@media (min-width: 760px) {
+  .atescal__item {
+    grid-template-columns: 9.5rem 1fr;
+    align-items: start;
+    column-gap: var(--space-5);
+  }
+  .atescal__deadline { grid-row: 1 / span 2; margin-top: 2px; }
+  .atescal__body { grid-column: 2; display: grid; gap: var(--space-2); }
+}
+
+/* ---------- Кваліфікаційні категорії ---------- */
+.tiers { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-4); }
+.tiers__item {
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+}
+.tiers__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  margin-bottom: var(--space-3);
+}
+.tiers__specs { display: grid; gap: var(--space-3); }
+.tiers__spec { display: grid; gap: var(--space-1); }
+@media (min-width: 640px) {
+  .tiers__spec { grid-template-columns: 5.5rem 1fr; gap: var(--space-4); align-items: baseline; }
+}
+.tiers__spec dt {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+.tiers__spec dd { font-size: 0.9375rem; line-height: 1.55; }
+.tiers__note {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+/* ---------- Перелік умов із «галочками» ---------- */
+.checklist { list-style: none; padding: 0; margin: 0 0 var(--space-5); display: grid; gap: var(--space-3); }
+.checklist__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+.checklist__item .icon { color: var(--brand-strong); margin-top: 2px; }
+
+/* ---------- Склад комісії, графік, списки ---------- */
+.subhead {
+  font-size: var(--fs-h3);
+  margin-block: var(--space-6) var(--space-4);
+}
+.peoplelist { list-style: none; padding: 0; margin: 0 0 var(--space-5); border-top: 1px solid var(--line); }
+.peoplelist__item {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (min-width: 640px) {
+  .peoplelist__item { grid-template-columns: 1fr auto; gap: var(--space-5); align-items: baseline; }
+  .peoplelist__role { text-align: right; }
+}
+.peoplelist__name { font-weight: 500; }
+.peoplelist__role { font-size: var(--fs-caption); color: var(--ink-muted); }
+
+/* ---------- Другий формат того самого документа ---------- */
+.doccard__alt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-left: calc(40px + var(--space-4));
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+}
+.doccard__alt:hover { color: var(--brand-strong); text-decoration: underline; text-underline-offset: 0.2em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight, .spotlight__go .icon { transition: none; }
+  .spotlight:hover { transform: none; }
+}
+
+/* ---------- Версія для слабозорих ---------- */
+html.a11y .atescal__item::before { display: none; }
+html.a11y .atescal__items { border-left-color: var(--ink-muted); }
+html.a11y .atescal__deadline {
+  background: var(--surface);
+  border: 1px solid var(--ink-muted);
+  color: var(--ink);
+}
+html.a11y .atescal__text,
+html.a11y .spotlight__text,
+html.a11y .tiers__note,
+html.a11y .peoplelist__role,
+html.a11y .doccard__alt { color: var(--ink); }
+html.a11y .tiers__spec dt { color: var(--ink); }
+html.a11y .spotlight { border-left-color: var(--brand-strong); }

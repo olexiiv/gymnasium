@@ -137,6 +137,27 @@ collections:
       - { name: name, label: "ПІБ", widget: string }
       - { name: position, label: "Посада", widget: string }
       - { name: subject, label: "Предмети / класне керівництво", widget: string }
+      - name: category
+        label: "Кваліфікаційна категорія"
+        widget: select
+        required: false
+        options:
+          - "спеціаліст"
+          - "спеціаліст другої категорії"
+          - "спеціаліст першої категорії"
+          - "спеціаліст вищої категорії"
+        hint: "За результатами останньої атестації. Порожньо — бейдж на картці не зʼявиться. Посади, які не передбачають категорії, лишайте порожніми."
+      - name: pedTitle
+        label: "Педагогічне звання"
+        widget: select
+        required: false
+        options:
+          - "старший учитель"
+          - "учитель-методист"
+          - "вихователь-методист"
+          - "педагог-організатор-методист"
+          - "практичний психолог — методист"
+          - "керівник гуртка — методист"
       - { name: email, label: "Email", widget: string, required: false }
       - { name: avatarInitials, label: "Ініціали для аватара", widget: string,
           hint: "Дві літери: прізвище + імʼя. Напр. «МО» для Малієнка Олександра." }
@@ -169,7 +190,8 @@ collections:
           - { label: "Освітній процес", value: "osvitniy-protses" }
           - { label: "Фінанси", value: "finansy" }
           - { label: "Безпечне середовище", value: "bezpeka" }
-          - { label: "Кадри та звітність", value: "kadry" }
+          - { label: "Кадри та атестація", value: "kadry" }
+          - { label: "Звітність", value: "zvitnist" }
       - name: category
         label: "Категорія (підзаголовок у розділі)"
         widget: select
@@ -180,6 +202,7 @@ collections:
           - "стратегія розвитку"
           - "освітні програми"
           - "навчальні плани"
+          - "сімейна (домашня) форма освіти"
           - "кодекс академічної доброчесності"
           - "внутрішня система якості"
           - "моніторинг якості"
@@ -193,10 +216,21 @@ collections:
           - "порядок подання заяв"
           - "правила поведінки"
           - "кадровий склад"
+          - "атестація педагогічних працівників"
           - "вакансії"
           - "річні звіти"
+          - "самооцінювання"
+          - "інституційний аудит"
       - { name: file, label: "Файл (PDF)", widget: file,
           hint: "Обовʼязково. Без реального файлу документ не буде опубліковано." }
+      - { name: altFile, label: "Той самий документ у другому форматі", widget: file, required: false,
+          hint: "Для бланків: DOCX поруч із PDF, щоб педагог міг заповнити на компʼютері. Якщо файлу немає — кнопка просто не зʼявиться." }
+      - name: altFormat
+        label: "Підпис на кнопці другого формату"
+        widget: select
+        required: false
+        options: ["DOCX", "XLSX", "ODT", "RTF"]
+        hint: "Заповнюйте разом із попереднім полем."
       - { name: updatedAt, label: "Дата затвердження або оновлення", widget: datetime, format: "YYYY-MM-DD", time_format: false }
       - name: featured
         label: "Показати в «Основних документах»"
@@ -416,6 +450,131 @@ collections:
           - { name: ctaTitle, label: "Нижній блок — заголовок", widget: string }
           - { name: ctaText, label: "Нижній блок — текст", widget: text }
 
+      # ---------- Атестація педагогічних працівників ----------
+      # Сторінка /prozorist/kadry/atestatsiia/. Календар, категорії та
+      # відповіді переказують Положення — їх правлять лише тоді, коли
+      # змінюється сам наказ МОН. Блок «Атестаційна комісія» — навпаки,
+      # заповнюється щороку: пункт 3 розділу III зобовʼязує заклад
+      # оприлюднити склад, списки, графік і строки протягом пʼяти робочих
+      # днів із дня рішення комісії.
+      - name: atestatsiia
+        label: "Атестація педагогів"
+        file: "src/_data/atestatsiia.json"
+        fields:
+          - { name: note, label: "Службова примітка", widget: text, required: false }
+          - { name: title, label: "Назва сторінки", widget: string }
+          - { name: intro, label: "Підзаголовок у шапці", widget: text }
+          - { name: description, label: "Опис для Google", widget: text }
+          - { name: basisTitle, label: "Плашка вгорі — заголовок", widget: string }
+          - { name: basisText, label: "Плашка вгорі — текст", widget: markdown }
+
+          - name: commission
+            label: "Атестаційна комісія (заповнює секретар щороку)"
+            widget: object
+            fields:
+              - { name: published, label: "Оприлюднити дані комісії", widget: boolean, default: false,
+                  hint: "Поки вимкнено — на сторінці стоїть повідомлення «готуємо до оприлюднення». Вмикайте, коли заповните склад і списки." }
+              - { name: year, label: "Навчальний рік", widget: string, hint: "Напр.: 2026/2027" }
+              - { name: pendingTitle, label: "Текст очікування — заголовок", widget: string }
+              - { name: pendingText, label: "Текст очікування — пояснення", widget: text }
+              - name: level
+                label: "Рівень комісії"
+                widget: select
+                options: ["I", "II", "III"]
+                hint: "Комісія I рівня створюється в закладі, де працює 15 і більше педагогів."
+              - { name: orderTitle, label: "Підпис рядка з наказом", widget: string }
+              - { name: order, label: "Номер наказу про створення комісії", widget: string, required: false }
+              - { name: orderDate, label: "Дата наказу", widget: datetime, format: "YYYY-MM-DD", time_format: false, required: false }
+              - { name: email, label: "Пошта для подання документів", widget: string, required: false }
+              - { name: submitNote, label: "Строк подання документів", widget: string, required: false,
+                  hint: "Напр.: до 14 листопада 2026 року, PDF, кожен документ окремим файлом" }
+              - name: members
+                label: "Персональний склад"
+                widget: list
+                required: false
+                summary: "{{fields.name}} — {{fields.role}}"
+                fields:
+                  - { name: name, label: "Прізвище, імʼя, по батькові", widget: string }
+                  - { name: role, label: "Роль у комісії", widget: string, hint: "Голова / секретар / член комісії" }
+              - name: meetings
+                label: "Графік засідань"
+                widget: list
+                required: false
+                summary: "{{fields.date}}"
+                fields:
+                  - { name: date, label: "Дата засідання", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+                  - { name: note, label: "Що розглядається", widget: string, required: false }
+              - name: requiredDocs
+                label: "Перелік обовʼязкових документів"
+                widget: list
+                required: false
+                field: { name: item, label: "Документ", widget: string }
+              - name: listRegular
+                label: "Список чергової атестації"
+                widget: list
+                required: false
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: name, label: "Прізвище, імʼя, по батькові", widget: string }
+                  - { name: position, label: "Посада", widget: string }
+                  - { name: note, label: "Строк атестації", widget: string, required: false }
+              - name: listExtra
+                label: "Список позачергової атестації"
+                widget: list
+                required: false
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: name, label: "Прізвище, імʼя, по батькові", widget: string }
+                  - { name: position, label: "Посада", widget: string }
+                  - { name: note, label: "Строк атестації", widget: string, required: false }
+
+          - { name: calendarTitle, label: "Календар — заголовок", widget: string }
+          - { name: calendarLead, label: "Календар — вступний рядок", widget: text }
+          - name: calendar
+            label: "Календар строків"
+            widget: list
+            summary: "{{fields.phase}}"
+            fields:
+              - { name: phase, label: "Етап", widget: string }
+              - name: items
+                label: "Кроки етапу"
+                widget: list
+                summary: "{{fields.deadline}} — {{fields.title}}"
+                fields:
+                  - { name: deadline, label: "Строк", widget: string, hint: "Напр.: до 20 жовтня, 10 робочих днів" }
+                  - { name: title, label: "Що відбувається", widget: string }
+                  - { name: text, label: "Пояснення", widget: text }
+
+          - { name: tiersTitle, label: "Категорії — заголовок", widget: string }
+          - { name: tiersLead, label: "Категорії — вступний рядок", widget: text }
+          - name: tiers
+            label: "Кваліфікаційні категорії та звання"
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: "Категорія або звання", widget: string }
+              - { name: education, label: "Вимоги до освіти", widget: text }
+              - { name: experience, label: "Вимоги до стажу", widget: string }
+              - { name: note, label: "Примітка", widget: text, required: false }
+          - { name: tiersNote, label: "Плашка під категоріями", widget: text }
+
+          - { name: extraTitle, label: "Позачергова — заголовок", widget: string }
+          - { name: extraLead, label: "Позачергова — вступний рядок", widget: text }
+          - name: extraConditions
+            label: "Умови позачергової атестації"
+            widget: list
+            field: { name: item, label: "Умова", widget: string }
+          - { name: extraNote, label: "Позачергова — плашка", widget: text }
+
+          - { name: faqTitle, label: "Питання — заголовок", widget: string }
+          - name: faq
+            label: "Питання й відповіді"
+            widget: list
+            summary: "{{fields.question}}"
+            fields:
+              - { name: question, label: "Запитання", widget: string }
+              - { name: answer, label: "Відповідь", widget: markdown }
+
   # ======================================================================
   #  6. РОЗКЛАД
   # ======================================================================
@@ -611,13 +770,30 @@ collections:
               - name: icon
                 label: "Іконка"
                 widget: select
-                options: ["landmark", "book-open", "activity", "shield", "users", "file-text", "award"]
+                options: ["landmark", "book-open", "activity", "shield", "users", "file-text", "award", "eye", "calendar"]
               - { name: keywords, label: "Підказка в меню", widget: string,
                   hint: "Через « · », напр.: статут · ліцензія · структура управління" }
               - name: categories
                 label: "Категорії (порядок підзаголовків)"
                 widget: list
                 field: { name: category, label: "Категорія", widget: string }
+              - name: spotlight
+                label: "Картка-перехід на окрему сторінку"
+                widget: object
+                required: false
+                collapsed: true
+                hint: "Необовʼязково. Якщо заповнити — угорі розділу зʼявиться велика картка з посиланням (так зроблено для «Атестації» в розділі «Кадри»). Щоб прибрати картку, очистіть поле «Адреса»."
+                fields:
+                  - name: icon
+                    label: "Іконка"
+                    widget: select
+                    required: false
+                    options: ["award", "users", "file-text", "calendar", "book-open", "shield", "eye"]
+                  - { name: title, label: "Заголовок картки", widget: string, required: false }
+                  - { name: text, label: "Пояснення", widget: text, required: false }
+                  - { name: url, label: "Адреса", widget: string, required: false,
+                      hint: "Напр.: /prozorist/kadry/atestatsiia/" }
+                  - { name: cta, label: "Напис на посиланні", widget: string, required: false }
               - name: facts
                 label: "Факти (таблиця вгорі розділу)"
                 widget: list

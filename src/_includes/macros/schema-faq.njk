@@ -1,0 +1,45 @@
+{#
+  Розмітка FAQPage (Schema.org) для сторінок з акордеоном «питання — відповідь».
+
+  Навіщо: педагог гуглить не «атестація педагогічних працівників», а
+  «чи зараховується мобілізація в міжатестаційний період». Розмітка каже
+  пошуковику, що на сторінці є прямі відповіді на конкретні запитання, —
+  і він може показати їх одразу у видачі.
+
+  Виводиться в тілі сторінки окремим <script>, а не в schema.njk: той
+  партіал живе в <head> макета й не бачить змінних, оголошених у шаблоні
+  сторінки. Кілька блоків JSON-LD на сторінці — нормально.
+
+  Масив нарощуємо через push(), а не {% set x = x.concat(...) %}:
+  всередині {% for %} переприсвоєння живе лише одну ітерацію (див.
+  докладний коментар у novyny-indeks.njk).
+
+  Використання:
+    {% from "macros/schema-faq.njk" import faqSchema %}
+    {{ faqSchema(atestatsiia.faq, page.url, site.url) }}
+#}
+{% macro faqSchema(items, pageUrl, siteUrl) %}
+{%- if items and items.length -%}
+  {%- set pageAbs = pageUrl | absoluteUrl(siteUrl) -%}
+  {%- set entities = [] -%}
+  {%- for item in items -%}
+    {%- set _ = entities.push({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer | md
+      }
+    }) -%}
+  {%- endfor -%}
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": pageAbs + "#faq",
+  "inLanguage": "uk-UA",
+  "mainEntity": entities
+} | jsonld | safe }}
+</script>
+{%- endif -%}
+{% endmacro %}

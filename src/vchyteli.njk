@@ -1,16 +1,53 @@
 ---
 layout: layouts/page.njk
-title: Педагогічний склад
-intro: 34 педагоги, з них 12 — учителі вищої категорії. Знайомтеся з командою.
 permalink: /vchyteli/
+title: Педагогічний склад
+intro: Учителі, які продовжують навчати попри все. Знайомтеся з командою.
+description: "Педагогічний склад Андріївської різнопрофільної гімназії: учителі, предмети, кваліфікаційні категорії та педагогічні звання."
 ---
 {% from "macros/card-teacher.njk" import cardTeacher %}
+{% from "macros/icon.njk" import icon %}
+
+{#- Числа рахує збірка. Раніше в шапці сторінки стояло жорстко вписане
+    «34 педагоги, з них 12 — учителі вищої категорії», хоча карток було 16,
+    а поля «категорія» в даних не існувало взагалі. Тепер обидва числа
+    беруться з колекції й розійтися з нею не можуть. Про категорії згадуємо,
+    лише якщо їх комусь проставили: доки поле порожнє в усіх, рядок про
+    «нуль педагогів вищої категорії» був би гіршим за його відсутність. -#}
+{%- set total = collections.teachers.length -%}
+{%- set topCategory = collections.teachers | whereField("category", "спеціаліст вищої категорії") -%}
+
 <section class="section">
   <div class="container">
+
+    <p class="section__lead">
+      У списку {{ total }} {{ total | plural("педагог", "педагоги", "педагогів") }}{% if topCategory.length %},
+      з них {{ topCategory.length }}
+      {{ topCategory.length | plural("має", "мають", "мають") }} вищу кваліфікаційну категорію{% endif %}.
+      Категорії та звання присвоюються за результатами
+      <a href="/prozorist/kadry/atestatsiia/">атестації</a>.
+    </p>
+
     <div class="grid grid--4">
       {% for t in collections.teachers %}
         {{ cardTeacher(t) }}
       {% endfor %}
     </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container container--narrow">
+    <a class="spotlight reveal" href="/prozorist/kadry/atestatsiia/">
+      <span class="spotlight__icon" aria-hidden="true">{{ icon("award", 24) }}</span>
+      <span class="spotlight__body">
+        <span class="spotlight__title">Атестація педагогічних працівників</span>
+        <span class="spotlight__text">
+          Календар строків, склад атестаційної комісії, вимоги до категорій і звань,
+          порядок позачергової атестації та бланк заяви.
+        </span>
+        <span class="spotlight__go">Відкрити сторінку атестації {{ icon("arrow-right", 16) }}</span>
+      </span>
+    </a>
   </div>
 </section>

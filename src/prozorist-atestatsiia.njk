@@ -1,0 +1,267 @@
+---
+layout: layouts/page.njk
+permalink: /prozorist/kadry/atestatsiia/
+eleventyComputed:
+  title: "{{ atestatsiia.title }}"
+  intro: "{{ atestatsiia.intro }}"
+  description: "{{ atestatsiia.description }}"
+parent:
+  label: Кадри та атестація
+  url: /prozorist/kadry/
+---
+{% from "macros/icon.njk" import icon %}
+{% from "macros/schema-faq.njk" import faqSchema %}
+{% set c = atestatsiia.commission %}
+{% set docs = collections.documents | inSection("kadry") | inCategory("атестація педагогічних працівників") %}
+
+<section class="section section--tight">
+  <div class="container container--narrow">
+
+    <div class="notice reveal">
+      {{ icon("file-text", 22) }}
+      <div>
+        <strong>{{ atestatsiia.basisTitle }}.</strong>
+        {{ atestatsiia.basisText | mdInline | safe }}
+      </div>
+    </div>
+
+    {# ---------- Що комісія зобовʼязана оприлюднити ----------
+       Пункт 3 розділу III Положення: склад, списки, графік, строки, перелік
+       документів. Поки секретар не заповнив дані в атестації — показуємо
+       чесне «готуємо», а не порожні заголовки. #}
+    <h2 class="section__title" id="komisiia">Атестаційна комісія {{ c.year }}</h2>
+
+    {% if c.published %}
+    <dl class="facts reveal">
+      {% if c.order %}
+      <div class="facts__row">
+        <dt class="facts__term">{{ c.orderTitle }}</dt>
+        <dd class="facts__value">№ {{ c.order }}{% if c.orderDate %} від {{ c.orderDate | dateUA }}{% endif %}</dd>
+      </div>
+      {% endif %}
+      <div class="facts__row">
+        <dt class="facts__term">Рівень комісії</dt>
+        <dd class="facts__value">{{ c.level }} рівня — створена в закладі освіти</dd>
+      </div>
+      {% if c.email %}
+      <div class="facts__row">
+        <dt class="facts__term">Куди подавати документи</dt>
+        <dd class="facts__value">
+          <a href="mailto:{{ c.email }}">{{ c.email }}</a>{% if c.submitNote %} — {{ c.submitNote }}{% endif %}
+        </dd>
+      </div>
+      {% endif %}
+    </dl>
+
+    {% if c.members.length %}
+    <h3 class="subhead">Персональний склад</h3>
+    <ul class="peoplelist reveal">
+      {% for m in c.members %}
+      <li class="peoplelist__item">
+        <span class="peoplelist__name">{{ m.name }}</span>
+        <span class="peoplelist__role">{{ m.role }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if c.requiredDocs.length %}
+    <h3 class="subhead">Документи, які подаються обовʼязково</h3>
+    <ul class="checklist reveal">
+      {% for d in c.requiredDocs %}
+      <li class="checklist__item">{{ icon("check", 18) }}<span>{{ d }}</span></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if c.meetings.length %}
+    <h3 class="subhead">Графік засідань</h3>
+    <ul class="peoplelist reveal">
+      {% for meeting in c.meetings %}
+      <li class="peoplelist__item">
+        <span class="peoplelist__name">{{ meeting.date | dateUA }}</span>
+        <span class="peoplelist__role">{{ meeting.note }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if c.listRegular.length %}
+    <h3 class="subhead">Чергова атестація {{ c.year }}</h3>
+    <ul class="peoplelist reveal">
+      {% for p in c.listRegular %}
+      <li class="peoplelist__item">
+        <span class="peoplelist__name">{{ p.name }}</span>
+        <span class="peoplelist__role">{{ p.position }}{% if p.note %} · {{ p.note }}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if c.listExtra.length %}
+    <h3 class="subhead">Позачергова атестація {{ c.year }}</h3>
+    <ul class="peoplelist reveal">
+      {% for p in c.listExtra %}
+      <li class="peoplelist__item">
+        <span class="peoplelist__name">{{ p.name }}</span>
+        <span class="peoplelist__role">{{ p.position }}{% if p.note %} · {{ p.note }}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% else %}
+    <div class="empty reveal">
+      <span class="empty__icon">{{ icon("clock", 26) }}</span>
+      <h3 class="empty__title">{{ c.pendingTitle }}</h3>
+      <p class="empty__text">{{ c.pendingText }}</p>
+      <a class="btn btn--brand" href="/#contacts-title">{{ icon("mail", 18) }} Написати до гімназії</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{# ---------- Календар ---------- #}
+<section class="section section--tight" id="kalendar">
+  <div class="container container--narrow">
+    <h2 class="section__title">{{ atestatsiia.calendarTitle }}</h2>
+    <p class="section__lead">{{ atestatsiia.calendarLead }}</p>
+
+    <ol class="atescal">
+      {% for phase in atestatsiia.calendar %}
+      <li class="atescal__phase reveal">
+        <h3 class="atescal__phase-title">{{ phase.phase }}</h3>
+        <ol class="atescal__items">
+          {% for item in phase.items %}
+          <li class="atescal__item">
+            <span class="atescal__deadline">{{ item.deadline }}</span>
+            <div class="atescal__body">
+              <p class="atescal__title">{{ item.title }}</p>
+              <p class="atescal__text">{{ item.text }}</p>
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+{# ---------- Категорії та звання ---------- #}
+<section class="section section--tight" id="katehorii">
+  <div class="container container--narrow">
+    <h2 class="section__title">{{ atestatsiia.tiersTitle }}</h2>
+    <p class="section__lead">{{ atestatsiia.tiersLead }}</p>
+
+    <ul class="tiers">
+      {% for tier in atestatsiia.tiers %}
+      <li class="tiers__item reveal">
+        <p class="tiers__name">{{ tier.name }}</p>
+        <dl class="tiers__specs">
+          <div class="tiers__spec">
+            <dt>Освіта</dt>
+            <dd>{{ tier.education }}</dd>
+          </div>
+          <div class="tiers__spec">
+            <dt>Стаж</dt>
+            <dd>{{ tier.experience }}</dd>
+          </div>
+        </dl>
+        {% if tier.note %}<p class="tiers__note">{{ tier.note }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="notice reveal">
+      {{ icon("alert-circle", 22) }}
+      <p>{{ atestatsiia.tiersNote }}</p>
+    </div>
+  </div>
+</section>
+
+{# ---------- Позачергова ---------- #}
+<section class="section section--tight" id="pozachergova">
+  <div class="container container--narrow">
+    <h2 class="section__title">{{ atestatsiia.extraTitle }}</h2>
+    <p class="section__lead">{{ atestatsiia.extraLead }}</p>
+
+    <ul class="checklist reveal">
+      {% for cond in atestatsiia.extraConditions %}
+      <li class="checklist__item">{{ icon("check", 18) }}<span>{{ cond }}</span></li>
+      {% endfor %}
+    </ul>
+
+    <div class="notice reveal">
+      {{ icon("calendar", 22) }}
+      <p>{{ atestatsiia.extraNote }}</p>
+    </div>
+  </div>
+</section>
+
+{# ---------- Документи ---------- #}
+{% if docs.length %}
+<section class="section section--tight" id="dokumenty">
+  <div class="container container--narrow">
+    <h2 class="section__title">Документи</h2>
+    <p class="section__lead">Повний текст Положення та бланк заяви. Бланк є і у форматі DOCX — щоб заповнити на компʼютері.</p>
+
+    <ul class="doccards reveal">
+      {% for doc in docs %}
+      <li>
+        <div class="doccard">
+          <span class="doccard__icon">{{ icon("file-text", 20) }}</span>
+          <span class="doccard__body">
+            <span class="doccard__title">{{ doc.data.title }}</span>
+            <span class="doccard__meta">PDF · оновлено {{ doc.data.updatedAt | dateUA }}</span>
+          </span>
+          <span class="doccard__actions">
+            <a class="doccard__btn" href="{{ doc.data.file }}" target="_blank" rel="noopener"
+               aria-label="Відкрити «{{ doc.data.title }}» у новій вкладці">
+              {{ icon("external-link", 18) }}
+            </a>
+            <a class="doccard__btn" href="{{ doc.data.file }}" download
+               aria-label="Завантажити «{{ doc.data.title }}»">
+              {{ icon("download", 18) }}
+            </a>
+          </span>
+        </div>
+        {% if doc.data.altFile %}
+        <a class="doccard__alt" href="{{ doc.data.altFile }}" download>
+          {{ icon("download", 16) }} Завантажити у форматі {{ doc.data.altFormat }} — для заповнення
+        </a>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- Питання ---------- #}
+<section class="section section--tight" id="pytannya">
+  <div class="container container--narrow">
+    <h2 class="section__title">{{ atestatsiia.faqTitle }}</h2>
+
+    <div class="accordion">
+      {% for item in atestatsiia.faq %}
+      <details class="accordion__item">
+        <summary class="accordion__summary">{{ item.question }} {{ icon("chevron-down", 20, "accordion__chev") }}</summary>
+        <div class="accordion__body">
+          {{ item.answer | md | safe }}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+
+    <div class="notice reveal">
+      {{ icon("mail", 22) }}
+      <p>
+        Питання щодо власної атестації — на <a href="mailto:{{ site.email }}?subject=Атестація">{{ site.email }}</a>.
+        Решта документів гімназії — у розділі <a href="/prozorist/kadry/">«Кадри та атестація»</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+{{ faqSchema(atestatsiia.faq, page.url, site.url) }}
