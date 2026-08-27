@@ -626,14 +626,14 @@ collections:
                   hint: "Латиницею, без пробілів. Напр.: pochatkova-2. Саме цей код вписується класу." }
               - { name: label, label: "Назва", widget: string, hint: "Напр.: 2 клас" }
               - { name: note, label: "Підпис", widget: string, required: false,
-                  hint: "Напр.: Урок триває 35 хвилин, перерва між уроками — 15 хвилин." }
+                  hint: "Напр.: Урок триває 40 хвилин, перерва між уроками — 10 хвилин." }
               - name: bells
                 label: "Дзвінки"
                 widget: list
                 summary: "{{fields.n}} урок — {{fields.time}}"
                 fields:
                   - { name: n, label: "Номер уроку", widget: number, value_type: int }
-                  - { name: time, label: "Час", widget: string, hint: "Формат: 16:00 – 16:35" }
+                  - { name: time, label: "Час", widget: string, hint: "Формат: 16:00 – 16:40" }
           - name: classes
             label: "Класи"
             label_singular: "клас"
@@ -669,14 +669,14 @@ collections:
         # дзвінки, решта полів — hidden: без них Decap стер би їх при збереженні.
         fields:
           - { name: bellsNote, label: "Підпис під заголовком", widget: string,
-              hint: "Напр.: Кожен урок триває 35 хвилин, перерва між уроками — 25 хвилин." }
+              hint: "Напр.: Кожен урок триває 45 хвилин, перерва між уроками — 15 хвилин." }
           - name: bells
             label: "Дзвінки"
             widget: list
             summary: "{{fields.n}} урок — {{fields.time}}"
             fields:
               - { name: n, label: "Номер уроку", widget: number, value_type: int }
-              - { name: time, label: "Час", widget: string, hint: "Формат: 10:00 – 10:35" }
+              - { name: time, label: "Час", widget: string, hint: "Формат: 10:00 – 10:45" }
           - { name: name, widget: hidden }
           - { name: shortName, widget: hidden }
           - { name: fullName, widget: hidden }
