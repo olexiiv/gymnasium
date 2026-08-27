@@ -1,5 +1,6 @@
 ---
 title: "Заява про проведення позачергової атестації (додаток 1 до Положення)"
+slug: atestatsiia-zayava-pozachergova
 section: kadry
 category: атестація педагогічних працівників
 file: /assets/docs/zayava-pozachergova-atestatsiia.pdf

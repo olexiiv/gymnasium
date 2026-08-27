@@ -1,5 +1,6 @@
 ---
 title: 'Оновлено документи з протидії булінгу'
+slug: protydia-bulingu
 date: 2026-08-07
 category: 'Оголошення'
 cover: '/assets/img/news/stop-buling.webp'

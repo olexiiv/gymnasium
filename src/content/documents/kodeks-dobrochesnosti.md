@@ -1,5 +1,6 @@
 ---
 title: Кодекс академічної доброчесності
+slug: kodeks-dobrochesnosti
 section: osvitniy-protses
 category: кодекс академічної доброчесності
 file: /assets/docs/kodeks.pdf

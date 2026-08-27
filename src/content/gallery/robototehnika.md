@@ -1,5 +1,6 @@
 ---
 caption: "Робототехніка: програмуємо робота"
+slug: robototehnika
 alt: "Учень за компʼютером програмує робота у блоковому середовищі"
 image: "/assets/img/gallery/robototehnika.webp"
 width: 919

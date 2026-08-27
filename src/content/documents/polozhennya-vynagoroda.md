@@ -1,5 +1,6 @@
 ---
 title: Положення про порядок надання щорічної грошової винагороди педагогічним працівникам
+slug: polozhennya-vynagoroda
 section: kadry
 category: умови оплати праці
 file: /assets/docs/polozhennya-vynagoroda.pdf

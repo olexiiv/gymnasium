@@ -1,5 +1,6 @@
 ---
 title: Відповідальність осіб, причетних до булінгу
+slug: vidpovidalnist-bulling
 section: bezpeka
 category: протидія булінгу
 file: /assets/docs/vidpovidalnist-za-bulling.pdf

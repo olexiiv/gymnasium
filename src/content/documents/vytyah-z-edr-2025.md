@@ -1,5 +1,6 @@
 ---
 title: Виписка з Єдиного державного реєстру юридичних осіб (лютий 2025)
+slug: vytyah-z-edr-2025
 section: ustanovchi
 category: структура управління
 file: /assets/docs/vytyah-z-edr-2025.pdf

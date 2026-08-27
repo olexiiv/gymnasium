@@ -1,5 +1,6 @@
 ---
 caption: "День знань: синьо-жовті кулі злітають у небо"
+slug: den-znan-kulky
 alt: "Учні та вчителі стоять колом на площі й тримають синьо-жовті повітряні кулі"
 image: "/assets/img/gallery/den-znan-kulky.webp"
 width: 1600

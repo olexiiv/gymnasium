@@ -1,5 +1,6 @@
 ---
 caption: "Свято до Дня знань для наймолодших"
+slug: den-znan-vidkryttya
 alt: "Діти у вишиванках і білих сорочках вітаються з великим плюшевим ведмедем у святковій залі"
 image: "/assets/img/gallery/den-znan-vidkryttya.webp"
 width: 1600

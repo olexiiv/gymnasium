@@ -1,5 +1,6 @@
 ---
 title: Декларація про провадження освітньої діяльності в умовах воєнного стану
+slug: deklaratsiya-osvitnya-diyalnist-2025
 section: ustanovchi
 category: ліцензія
 file: /assets/docs/deklaratsiya-osvitnya-diyalnist-2025.pdf

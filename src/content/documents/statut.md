@@ -1,5 +1,6 @@
 ---
 title: Статут Андріївської різнопрофільної гімназії
+slug: statut
 section: ustanovchi
 category: статут
 file: /assets/docs/statut-2025.pdf

@@ -20,9 +20,10 @@ permalink: /rozklad/
     </nav>
 
     {% for cls in schedule.classes %}
-    {#- Власна сітка дзвінків класу; якщо bellSet не заданий — загальна. -#}
+    {#- Сітка потрібна лише для рядка-попередження над таблицею: години
+        уроків показуються один раз унизу сторінки, а не в кожній із
+        десяти таблиць. -#}
     {%- set bellSet = schedule.bellSets | byId(cls.bellSet) -%}
-    {%- set bells = bellSet.bells if bellSet and bellSet.bells and bellSet.bells.length else site.bells -%}
     <section class="schedule reveal" id="{{ cls.id if cls.id else 'cls-' + loop.index }}" aria-labelledby="cls-{{ loop.index }}-title">
       <h2 class="schedule__class" id="cls-{{ loop.index }}-title">{{ cls.class }}</h2>
 
@@ -47,10 +48,7 @@ permalink: /rozklad/
           <tbody>
             {% for lessonIdx in range(0, cls.week | maxLessons) %}
             <tr>
-              <th scope="row">
-                <span class="schedule__num">{{ loop.index }}</span>
-                {% if bells[lessonIdx] %}<span class="schedule__time">{{ bells[lessonIdx].time }}</span>{% endif %}
-              </th>
+              <th scope="row"><span class="schedule__num">{{ loop.index }}</span></th>
               {% for d in cls.week %}
               <td data-day="{{ d.day }}">{{ d.lessons[lessonIdx] if d.lessons[lessonIdx] else "—" }}</td>
               {% endfor %}

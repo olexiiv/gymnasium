@@ -1,5 +1,6 @@
 ---
 title: Освітня програма на 2025-2026 навчальний рік
+slug: osvitnya-prohrama-2025-2026
 section: osvitniy-protses
 category: освітні програми
 file: /assets/docs/osvitnya-prohrama-2025-2026.pdf

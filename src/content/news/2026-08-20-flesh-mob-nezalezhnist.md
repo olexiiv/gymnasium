@@ -1,5 +1,6 @@
 ---
 title: "«Діти незалежної України»: флешмоб до Дня Незалежності"
+slug: flesh-mob-nezalezhnist
 date: 2026-08-20
 category: "Оголошення"
 cover: "/assets/img/news/flesh-mob-nezalezhnist.webp"

@@ -1,5 +1,6 @@
 ---
 title: Порядок реагування на доведені випадки булінгу
+slug: poryadok-reaguvannya
 section: bezpeka
 category: протидія булінгу
 file: /assets/docs/poryadok-reaguvannya-bulling.pdf

@@ -54,8 +54,9 @@ collections:
     description: "Оголошення, анонси та звіти про події. Найсвіжіша новина автоматично стає великою карткою на сторінці «Новини»."
     folder: "src/content/news"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    preview_path: "novyny/{{slug}}"
+    identifier_field: title
+    slug: "{{year}}-{{month}}-{{day}}-{{fields.slug}}"
+    preview_path: "novyny/{{year}}-{{month}}-{{day}}-{{fields.slug}}"
     sortable_fields: [date, title]
     view_filters:
       - { label: "Оголошення", field: category, pattern: "Оголошення" }
@@ -63,6 +64,9 @@ collections:
       - { label: "Поради батькам", field: category, pattern: "Поради батькам" }
     fields:
       - { name: title, label: "Заголовок", widget: string }
+      - { name: slug, label: "Імʼя файлу (латиницею)", widget: string, required: false, default: "",
+          pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$|^$", "Тільки маленькі латинські літери, цифри й дефіси"],
+          hint: "Заповнюється автоматично із заголовка й стає адресою новини: /novyny/2026-09-01-den-znan/. Дату додає система, тут — лише хвіст. Після публікації не змінюйте: старе посилання перестане працювати." }
       - { name: date, label: "Дата", widget: datetime, format: "YYYY-MM-DD", time_format: false }
       - name: category
         label: "Категорія"
@@ -131,10 +135,14 @@ collections:
     description: "Педагогічний склад. Перші чотири за порядком показуються на головній сторінці."
     folder: "src/content/teachers"
     create: true
-    slug: "{{slug}}"
+    identifier_field: name
+    slug: "{{fields.slug}}"
     sortable_fields: [order, name]
     fields:
       - { name: name, label: "ПІБ", widget: string }
+      - { name: slug, label: "Імʼя файлу (латиницею)", widget: string, required: false, default: "",
+          pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$|^$", "Тільки маленькі латинські літери, цифри й дефіси"],
+          hint: "Заповнюється автоматично з ПІБ. На адресу сторінки не впливає — це лише імʼя файлу в репозиторії." }
       - { name: position, label: "Посада", widget: string }
       - { name: subject, label: "Предмети / класне керівництво", widget: string }
       - name: category
@@ -176,11 +184,16 @@ collections:
     create: true
     media_folder: "/src/assets/docs"
     public_folder: "/assets/docs"
+    identifier_field: title
+    slug: "{{fields.slug}}"
     sortable_fields: [updatedAt, title]
     view_groups:
       - { label: "За розділом", field: section }
     fields:
       - { name: title, label: "Назва документа", widget: string }
+      - { name: slug, label: "Імʼя файлу (латиницею)", widget: string, required: false, default: "",
+          pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$|^$", "Тільки маленькі латинські літери, цифри й дефіси"],
+          hint: "Заповнюється автоматично з назви. На адресу сторінки не впливає — це лише імʼя файлу в репозиторії." }
       - name: section
         label: "Розділ на сайті"
         hint: "Визначає, на якій сторінці розділу «Прозорість» зʼявиться документ"
@@ -248,9 +261,14 @@ collections:
     description: "Фотострічка «Життя гімназії» на головній сторінці. Перед завантаженням переконайтеся, що на фото не видно прізвищ учнів."
     folder: "src/content/gallery"
     create: true
+    identifier_field: caption
+    slug: "{{fields.slug}}"
     sortable_fields: [order, caption]
     fields:
       - { name: caption, label: "Підпис під фото", widget: string }
+      - { name: slug, label: "Імʼя файлу (латиницею)", widget: string, required: false, default: "",
+          pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$|^$", "Тільки маленькі латинські літери, цифри й дефіси"],
+          hint: "Заповнюється автоматично з підпису. На адресу сторінки не впливає — це лише імʼя файлу в репозиторії." }
       - { name: alt, label: "Опис для незрячих (alt)", widget: string, required: false,
           hint: "Що саме зображено. Якщо не заповнити — візьметься підпис." }
       - { name: image, label: "Зображення", widget: image, required: false }

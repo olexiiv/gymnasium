@@ -1,5 +1,6 @@
 ---
 title: Підтримка дітей у стресових ситуаціях під час війни
+slug: pidtrymai-ditei
 date: 2026-08-17
 category: Поради батькам
 cover: '/assets/img/news/infograph-porady.webp'

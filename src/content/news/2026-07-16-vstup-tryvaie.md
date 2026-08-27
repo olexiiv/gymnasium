@@ -1,5 +1,6 @@
 ---
 title: Триває зарахування на 2026/2027 навчальний рік — навчаємо дистанційно
+slug: vstup-tryvaie
 date: 2026-07-16
 category: Вступ
 cover: "/assets/img/news/vstup-tryvaie.webp"

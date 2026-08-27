@@ -331,6 +331,77 @@
         window.CMS.registerEventListener({ name: "login", handler: openCMS });
       }
 
+      /**
+       * Імена файлів для нових записів.
+       *
+       * Decap рахує імʼя файлу за шаблоном `slug` у config.yml. Раніше там
+       * стояв {{slug}} — вбудований слаг Decap, а він при
+       * `slug.encoding: "ascii"` вирізає кирилицю дощенту. Українська назва
+       * давала порожній рядок, і Decap падав на запасний варіант: іменував
+       * файл за структурою полів колекції (звідси
+       * `map-order-17-name-n-position-...md` у педагогах). Наступний педагог
+       * отримав би таке саме імʼя й перезаписав би попереднього.
+       *
+       * Тепер шаблон бере {{fields.slug}} — звичайне поле запису, — а це
+       * місце заповнює його транслітерацією перед збереженням. Таблиця та
+       * сама, що в eleventy.config.js для адрес рубрик: одна транслітерація
+       * на весь проєкт.
+       *
+       * Заповнюємо ЛИШЕ порожнє поле. У наявних записів slug уже вписано у
+       * front matter і збігається з іменем файлу на диску; перезаписувати
+       * його при редагуванні не можна — Decap не перейменовує наявні файли,
+       * і значення розійшлося б із дійсністю.
+       */
+      var UA_TO_LATIN = {
+        а: "a", б: "b", в: "v", г: "g", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh",
+        з: "z", и: "y", і: "i", ї: "yi", й: "i", к: "k", л: "l", м: "m", н: "n",
+        о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts",
+        ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "yu", я: "ya",
+        "'": "", "\u2019": "", "\u02bc": ""
+      };
+
+      function slugifyUA(value) {
+        var out = String(value || "")
+          .toLowerCase()
+          .split("")
+          .map(function (ch) { return ch in UA_TO_LATIN ? UA_TO_LATIN[ch] : ch; })
+          .join("")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        // Довгі назви документів ріжемо по межі слова, а не посеред нього:
+        // «...pratsivnykiv», а не «...pratsivn».
+        if (out.length > 60) {
+          out = out.slice(0, 60);
+          var cut = out.lastIndexOf("-");
+          if (cut > 20) out = out.slice(0, cut);
+        }
+        return out.replace(/-+$/, "");
+      }
+
+      if (window.CMS && typeof window.CMS.registerEventListener === "function") {
+        window.CMS.registerEventListener({
+          name: "preSave",
+          handler: function (payload) {
+            try {
+              var data = payload.entry.get("data");
+              // Файлові колекції (Розклад, Сторінки, Налаштування) поля
+              // `slug` не мають — їх не чіпаємо, інакше в JSON заклався б
+              // зайвий ключ.
+              if (!data.has("slug") || data.get("slug")) return data;
+              var source = data.get("title") || data.get("name") || data.get("caption") || "";
+              var slug = slugifyUA(source);
+              // Якщо транслітерація дала порожньо (назва з самих цифр чи
+              // емодзі) — краще дата, ніж запис без імені файлу.
+              if (!slug) slug = "zapys-" + new Date().toISOString().slice(0, 10);
+              return data.set("slug", slug);
+            } catch (e) {
+              // Ніколи не блокуємо збереження через цю зручність.
+              return payload.entry.get("data");
+            }
+          }
+        });
+      }
+
       // Прев'ю записів показуємо тими самими стилями, що й сайт:
       // модератор бачить не «сирий» markdown, а справжній вигляд сторінки.
       if (window.CMS && typeof window.CMS.registerPreviewStyle === "function") {

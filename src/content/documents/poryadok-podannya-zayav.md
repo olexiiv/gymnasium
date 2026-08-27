@@ -1,5 +1,6 @@
 ---
 title: Порядок подання та розгляду заяв про випадки булінгу
+slug: poryadok-podannya-zayav
 section: bezpeka
 category: порядок подання заяв
 file: /assets/docs/poryadok-podannya-zayav-bulling.pdf

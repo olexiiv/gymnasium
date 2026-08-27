@@ -1,5 +1,6 @@
 ---
 title: Ліцензія на провадження освітньої діяльності
+slug: litsenziya
 section: ustanovchi
 category: ліцензія
 file: /assets/docs/litsenziya.pdf

@@ -1,5 +1,6 @@
 ---
 title: Касові видатки по Андріївській різнопрофільній гімназії за 2025 рік
+slug: vydatky-25
 section: finansy
 category: кошторис
 file: /assets/docs/vydatky-2025.pdf

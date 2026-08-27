@@ -1,5 +1,6 @@
 ---
 title: Освітня програма на 2024-2025 навчальний рік
+slug: osvitnya-prohrama-2024-2025
 section: osvitniy-protses
 category: освітні програми
 file: /assets/docs/osvitnya-prohrama-2024-2025.pdf

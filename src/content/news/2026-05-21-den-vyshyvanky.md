@@ -1,5 +1,6 @@
 ---
 title: "День вишиванки 2026: код твоєї перемоги"
+slug: den-vyshyvanky
 date: 2026-05-21
 category: "Життя гімназії"
 cover: "/assets/img/news/den-vyshyvanky.webp"

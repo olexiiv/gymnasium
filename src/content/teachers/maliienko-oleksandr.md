@@ -1,5 +1,6 @@
 ---
 name: Малієнко Олександр Миколайович
+slug: maliienko-oleksandr
 position: Директор гімназії
 subject: Керівництво закладом
 category: спеціаліст вищої категорії

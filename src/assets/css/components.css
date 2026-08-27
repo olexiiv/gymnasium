@@ -1514,10 +1514,10 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
 
 .schedule__scroll { overflow-x: auto; border-radius: var(--radius-m); border: 1px solid var(--line); background: var(--surface); }
 
-/* 820px, а не 640: за шести колонок назви на кшталт «Практикум із синтаксису
-   української мови» ламалися в стовпчик по одному слову. Краще горизонтальна
-   прокрутка, ніж нечитабельна гармошка. */
-.schedule__table { width: 100%; min-width: 820px; }
+/* 760px, а не 640: назви на кшталт «Практикум із синтаксису української
+   мови» за вужчих колонок ламалися в стовпчик по одному слову. Краще
+   горизонтальна прокрутка, ніж нечитабельна гармошка. */
+.schedule__table { width: 100%; min-width: 760px; }
 .schedule__table th, .schedule__table td {
   padding: var(--space-3) var(--space-4);
   text-align: left;
@@ -1534,15 +1534,10 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
 .schedule__table tbody tr:last-child th,
 .schedule__table tbody tr:last-child td { border-bottom: 0; }
 .schedule__table tbody tr:nth-child(even) { background: var(--surface-alt); }
-.schedule__table tbody th { color: var(--ink-muted); font-weight: 600; width: 7.5rem; white-space: nowrap; }
+/* Колонка з самим номером уроку: години більше не дублюються в кожній
+   із десяти таблиць — вони один раз унизу сторінки. */
+.schedule__table tbody th { color: var(--ink-muted); font-weight: 600; width: 3rem; white-space: nowrap; }
 .schedule__num { font-family: var(--font-display); font-weight: 700; color: var(--brand-strong); }
-.schedule__time {
-  display: block;
-  font-size: var(--fs-caption);
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-muted);
-}
 
 /* Мобільний: таблиця → картки по днях */
 @media (max-width: 639px) {
@@ -1568,7 +1563,6 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
   /* Суфікс чіпляється до номера, а не до всього заголовка:
      інакше «урок» опинявся б після рядка з часом. */
   .schedule__num::after { content: " урок"; }
-  .schedule__time { display: inline; margin-left: var(--space-2); }
   .schedule__table td {
     border: 0;
     padding: 0.3rem 0;

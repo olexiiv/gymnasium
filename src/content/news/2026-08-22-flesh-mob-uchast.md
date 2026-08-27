@@ -1,5 +1,6 @@
 ---
 title: "Учні гімназії долучилися до флешмобу «Діти незалежної України»"
+slug: flesh-mob-uchast
 date: 2026-08-22
 category: "Життя гімназії"
 cover: "/assets/img/news/flesh-mob-uchast.webp"

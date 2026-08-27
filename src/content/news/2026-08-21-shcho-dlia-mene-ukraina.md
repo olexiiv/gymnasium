@@ -1,5 +1,6 @@
 ---
 title: "«Що для мене Україна?» — наші девʼятикласниці на всеукраїнському конкурсі"
+slug: shcho-dlia-mene-ukraina
 date: 2026-08-21
 category: "Життя гімназії"
 cover: "/assets/img/news/shcho-dlia-mene-ukraina.webp"

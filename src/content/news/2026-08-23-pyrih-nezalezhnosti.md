@@ -1,5 +1,6 @@
 ---
 title: "Родинний рецепт нашої учениці — на конкурсі «Мій Пиріг Незалежності — 2026»"
+slug: pyrih-nezalezhnosti
 date: 2026-08-23
 category: "Життя гімназії"
 cover: "/assets/img/news/pyrih-nezalezhnosti.webp"

@@ -1,5 +1,6 @@
 ---
 caption: "Онлайн-урок: клас на звʼязку з різних куточків"
+slug: onlayn-urok
 alt: "Скриншот онлайн-уроку: сітка з відеовікнами учнів і вчителів"
 image: "/assets/img/gallery/onlayn-urok.webp"
 width: 600

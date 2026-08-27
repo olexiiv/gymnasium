@@ -1,5 +1,6 @@
 ---
 title: Правила поведінки учнів під час проведення дистанційного уроку в Google Meet
+slug: pravyla-povedinky-dystantsiynyi-urok
 section: osvitniy-protses
 category: правила поведінки
 file: /assets/docs/pravyla-povedinky-dystantsiynyi-urok.pdf

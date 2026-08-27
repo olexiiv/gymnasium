@@ -1,5 +1,6 @@
 ---
 caption: "Учнівська подяка захисникам"
+slug: podyaka-zahysnykam
 alt: "Двоє чоловіків тримають плакат «Дякуємо за захист», зроблений учнями гімназії"
 image: "/assets/img/gallery/podyaka-zahysnykam.webp"
 width: 700
