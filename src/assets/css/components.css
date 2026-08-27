@@ -1469,11 +1469,55 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
   font-size: var(--fs-caption);
   margin-bottom: var(--space-5);
 }
-.schedule { margin-bottom: var(--space-7); }
+/* Перехід до класу: десять таблиць поспіль інакше гортаються наосліп. */
+.schedule__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+.schedule__navlink {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-round);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+}
+.schedule__navlink:hover,
+.schedule__navlink:focus-visible {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+
+/* Липкий хедер інакше накриває заголовок класу після переходу за якорем. */
+.schedule { margin-bottom: var(--space-7); scroll-margin-top: 6rem; }
 .schedule__class { margin-bottom: var(--space-4); }
+
+/* Клас із власною сіткою дзвінків (2 клас навчається з 16:00). */
+.schedule__bellsnote {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  color: var(--ink-muted);
+  font-size: var(--fs-caption);
+}
+.schedule__bellsnote svg { flex: none; color: var(--brand-strong); margin-top: 0.1em; }
+
 .schedule__scroll { overflow-x: auto; border-radius: var(--radius-m); border: 1px solid var(--line); background: var(--surface); }
 
-.schedule__table { width: 100%; min-width: 640px; }
+/* 820px, а не 640: за шести колонок назви на кшталт «Практикум із синтаксису
+   української мови» ламалися в стовпчик по одному слову. Краще горизонтальна
+   прокрутка, ніж нечитабельна гармошка. */
+.schedule__table { width: 100%; min-width: 820px; }
 .schedule__table th, .schedule__table td {
   padding: var(--space-3) var(--space-4);
   text-align: left;
@@ -1539,6 +1583,15 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
   }
 }
 
+/* Підзаголовок сітки дзвінків («Загальний», «2 клас»). */
+.bells__group {
+  font-size: 1.0625rem;
+  font-family: var(--font-display);
+  margin-top: var(--space-6);
+  margin-bottom: 0;
+}
+.bells__group:first-of-type { margin-top: var(--space-5); }
+
 .bells__note {
   display: flex;
   align-items: center;
@@ -1558,11 +1611,17 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
   grid-template-columns: repeat(4, 1fr);
   margin-top: var(--space-5);
 }
+/* Рівно пʼять карток (сітка 2 класу) за чотирьох колонок лягали 4+1 —
+   один осиротілий рядок. Пʼять колонок дають один рівний ряд. Браузери
+   без :has() побачать звичні чотири — не поламано, лише не так рівно. */
+.bells:has(> :nth-child(5):last-child) { grid-template-columns: repeat(5, 1fr); }
 @media (max-width: 900px) {
-  .bells { grid-template-columns: repeat(2, 1fr); }
+  .bells,
+  .bells:has(> :nth-child(5):last-child) { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 420px) {
-  .bells { grid-template-columns: 1fr; }
+  .bells,
+  .bells:has(> :nth-child(5):last-child) { grid-template-columns: 1fr; }
 }
 .bells__item {
   background: var(--surface);

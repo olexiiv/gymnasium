@@ -2,6 +2,7 @@
 layout: layouts/page.njk
 title: Розклад уроків
 intro: Актуальний розклад по класах і розклад дзвінків.
+description: "Розклад уроків Андріївської різнопрофільної гімназії по класах на 2026/2027 навчальний рік і розклад дзвінків."
 permalink: /rozklad/
 ---
 {% from "macros/icon.njk" import icon %}
@@ -10,14 +11,33 @@ permalink: /rozklad/
     <p class="schedule__updated">{{ icon("calendar", 18) }} {{ schedule.semester }} · оновлено {{ schedule.updatedAt | dateUA }}</p>
 
     {% if schedule.classes and schedule.classes.length %}
+
+    {# Класів десять — без переходів сторінка гортається наосліп. #}
+    <nav class="schedule__nav" aria-label="Перехід до класу">
+      {% for cls in schedule.classes %}
+      <a class="schedule__navlink" href="#{{ cls.id if cls.id else 'cls-' + loop.index }}">{{ cls.class }}</a>
+      {% endfor %}
+    </nav>
+
     {% for cls in schedule.classes %}
-    <section class="schedule reveal" aria-labelledby="cls-{{ loop.index }}">
-      <h2 class="schedule__class" id="cls-{{ loop.index }}">{{ cls.class }}</h2>
+    {#- Власна сітка дзвінків класу; якщо bellSet не заданий — загальна. -#}
+    {%- set bellSet = schedule.bellSets | byId(cls.bellSet) -%}
+    {%- set bells = bellSet.bells if bellSet and bellSet.bells and bellSet.bells.length else site.bells -%}
+    <section class="schedule reveal" id="{{ cls.id if cls.id else 'cls-' + loop.index }}" aria-labelledby="cls-{{ loop.index }}-title">
+      <h2 class="schedule__class" id="cls-{{ loop.index }}-title">{{ cls.class }}</h2>
+
+      {% if bellSet %}
+      <p class="schedule__bellsnote">
+        {{ icon("clock", 18) }}
+        <span>Окрема сітка дзвінків: перший урок — {{ bellSet.bells[0].time }}.
+        {{ bellSet.note }} <a href="#dzvinky">Повний перелік нижче</a>.</span>
+      </p>
+      {% endif %}
 
       {# Десктоп: таблиця. Мобільний: та сама розмітка перетворюється на картки по днях через CSS #}
       <div class="schedule__scroll">
         <table class="schedule__table">
-          <caption class="visually-hidden">Розклад уроків для класу {{ cls.class }}</caption>
+          <caption class="visually-hidden">Розклад уроків, {{ cls.class }}</caption>
           <thead>
             <tr>
               <th scope="col">№</th>
@@ -29,7 +49,7 @@ permalink: /rozklad/
             <tr>
               <th scope="row">
                 <span class="schedule__num">{{ loop.index }}</span>
-                {% if site.bells[lessonIdx] %}<span class="schedule__time">{{ site.bells[lessonIdx].time }}</span>{% endif %}
+                {% if bells[lessonIdx] %}<span class="schedule__time">{{ bells[lessonIdx].time }}</span>{% endif %}
               </th>
               {% for d in cls.week %}
               <td data-day="{{ d.day }}">{{ d.lessons[lessonIdx] if d.lessons[lessonIdx] else "—" }}</td>
@@ -51,6 +71,12 @@ permalink: /rozklad/
 
     <section class="section__sub" id="dzvinky" aria-labelledby="bells-title">
       <h2 class="section__title" id="bells-title">Розклад дзвінків</h2>
+
+      {#- Підзаголовок «Загальний» має сенс лише тоді, коли поруч є окремі
+          сітки; доки bellSets порожній, розділ виглядає як і раніше. -#}
+      {% if schedule.bellSets and schedule.bellSets.length %}
+      <h3 class="bells__group">Загальний</h3>
+      {% endif %}
       {% if site.bellsNote %}<p class="bells__note">{{ icon("clock", 18) }} {{ site.bellsNote }}</p>{% endif %}
       <ul class="bells">
         {% for b in site.bells %}
@@ -60,6 +86,19 @@ permalink: /rozklad/
         </li>
         {% endfor %}
       </ul>
+
+      {% for bellSet in schedule.bellSets %}
+      <h3 class="bells__group">{{ bellSet.label }}</h3>
+      {% if bellSet.note %}<p class="bells__note">{{ icon("clock", 18) }} {{ bellSet.note }}</p>{% endif %}
+      <ul class="bells">
+        {% for b in bellSet.bells %}
+        <li class="bells__item">
+          <span class="bells__num">{{ b.n }} урок</span>
+          <span class="bells__time">{{ b.time }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endfor %}
     </section>
   </div>
 </section>

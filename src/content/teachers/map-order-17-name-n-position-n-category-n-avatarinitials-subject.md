@@ -1,8 +1,7 @@
 ---
-name: Руденко  Крістіна Олексіївна
-position: асистент вчителя
-subject: " "
+name: Руденко Крістіна Олексіївна
+position: Асистент вчителя
 category: спеціаліст
-avatarInitials: РK
+avatarInitials: РК
 order: 17
 ---

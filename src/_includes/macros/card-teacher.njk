@@ -2,8 +2,11 @@
 <article class="card card--teacher reveal">
   <div class="avatar" aria-hidden="true">{{ t.data.avatarInitials }}</div>
   <h3 class="card--teacher__name">{{ t.data.name }}</h3>
-  <p class="card--teacher__position">{{ t.data.position }}</p>
-  <p class="card--teacher__subject">{{ t.data.subject }}</p>
+  {#- Порожні поля не малюють порожнього абзацу: у директора й асистента
+      вчителя предметів немає, і <p> із самим пробілом лишав під іменем
+      дірку завширшки з рядок. -#}
+  {% if t.data.position %}<p class="card--teacher__position">{{ t.data.position }}</p>{% endif %}
+  {% if t.data.subject %}<p class="card--teacher__subject">{{ t.data.subject }}</p>{% endif %}
 
   {#- Категорія і звання зʼявляються, лише якщо їх заповнили. Порожні поля
       не малюють ані бейджа, ані відступу під ним: у частини педагогів

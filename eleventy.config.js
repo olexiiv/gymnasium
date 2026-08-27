@@ -390,6 +390,15 @@ module.exports = function (eleventyConfig) {
     (week || []).reduce((max, day) => Math.max(max, (day.lessons || []).length), 0)
   );
 
+  // Пошук елемента масиву за полем `id`: {{ schedule.bellSets | byId(cls.bellSet) }}
+  // Потрібен розкладу: клас може мати власну сітку дзвінків (2 клас
+  // навчається з 16:00), і шаблон має дістати її за посиланням. Через
+  // {% for %} це не робиться — Nunjucks не випускає {% set %} за межі
+  // ітерації, тож вибірка живе у фільтрі.
+  eleventyConfig.addFilter("byId", (items, id) =>
+    id ? (items || []).find((item) => item && item.id === id) || null : null
+  );
+
   // ---------- Markdown у полях адмінпанелі ----------
   // Тексти сторінок лежать у JSON і редагуються модератором. Щоб він міг
   // поставити жирний шрифт або посилання, не знаючи HTML, поля проганяються
