@@ -35,6 +35,15 @@
 .btn--sm { min-height: 44px; padding: 0.45rem 1rem; font-size: 0.9375rem; }
 .btn--lg { padding: 0.85rem 1.75rem; font-size: 1.0625rem; }
 
+/* Іконка всередині кнопки завжди кольору тексту кнопки.
+   Блоки на кшталт .notice фарбують свої іконки в --brand-strong, а це
+   той самий #3F7A31, що й заливка .btn--brand: стрілка на зеленій
+   кнопці ставала невидимою. Селектор із тегом (0,2,1) навмисне —
+   він має перебивати контекстні правила виду `.notice .icon` (0,2,0),
+   які лежать нижче у файлі. */
+a.btn .icon,
+button.btn .icon { color: inherit; }
+
 .icon { flex: none; }
 .icon--flip { transform: scaleX(-1); }
 
@@ -1386,9 +1395,9 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
   margin-block: var(--space-5);
   color: var(--ink);
 }
-.notice .icon { color: var(--brand-strong); flex: none; margin-top: 2px; }
+.notice > .icon { color: var(--brand-strong); flex: none; margin-top: 2px; }
 .notice--warm { background: color-mix(in srgb, var(--accent-warm) 14%, var(--surface)); }
-.notice--warm .icon { color: var(--accent-warm); }
+.notice--warm > .icon { color: var(--accent-warm); }
 
 .cta-box {
   background: var(--surface);
@@ -2589,7 +2598,7 @@ html:not(.js) .header__item--group:focus-within > .header__sub { display: block;
 
 /* ---------- Дрібниці ---------- */
 .notice--block { display: block; }
-.notice--block .icon { color: var(--brand-strong); }
+.notice--block > .icon { color: var(--brand-strong); }
 .notice__title { font-size: var(--fs-h3); margin-block: var(--space-2) var(--space-3); }
 .notice--block .btn { margin-top: var(--space-4); }
 
