@@ -1,34 +1,9 @@
 {
-  "name": "Андріївська різнопрофільна гімназія",
-  "shortName": "Андріївська гімназія",
-  "fullName": "Андріївська різнопрофільна гімназія Андріївської селищної ради Бердянського району Запорізької області",
-  "type": "Гімназія з початковою школою · ступені I–III · комунальна форма власності",
-  "tagline": "Продовжуємо навчати — попри все.",
-  "url": "https://new.andriivka-school.zp.ua",
   "oldSiteUrl": "https://old.andriivka-school.zp.ua",
-  "relocatedSince": 2022,
-  "language": "українська",
-  "founder": "Андріївська селищна територіальна громада",
-  "address": {
-    "origin": "селища Андріївка, Бердянського району, Запорізької області",
-    "region": "Запорізька область",
-    "postal": "69107, Запорізька область, м. Запоріжжя, просп. Соборний, 164",
-    "postalCode": "69107",
-    "locality": "м. Запоріжжя",
-    "street": "просп. Соборний, 164",
-    "mode": "Заклад релоковано. Навчання відбувається дистанційно."
-  },
-  "phone": "+38 (06153) 9-11-39",
-  "phoneHref": "+380615391139",
-  "email": "andreevka.school@meta.ua",
-  "admissionEmail": "andreevka.school@meta.ua",
-  "hours": "Пн–Пт, 09:00–18:00 (онлайн)",
-  "director": "Малієнко Олександр Миколайович",
-  "edrpou": "26292307",
-  "formspreeId": "xdaqpnoa",
+  "bellsNote": "Кожен урок триває 45 хвилин, перерва між уроками — 15 хвилин.",
   "metrics": [
     {
-      "value": "168",
+      "value": "169",
       "label": "учнів навчається",
       "icon": "users"
     },
@@ -48,6 +23,48 @@
       "icon": "graduation-cap"
     }
   ],
+  "nav": [
+    {
+      "label": "Про нас",
+      "url": "/pro-gimnaziyu/"
+    },
+    {
+      "label": "Вступ",
+      "url": "/vstup/"
+    },
+    {
+      "label": "Новини",
+      "url": "/novyny/"
+    },
+    {
+      "label": "Прозорість",
+      "url": "/prozorist/",
+      "submenu": "transparency",
+      "overviewLabel": "Огляд і основні документи"
+    }
+  ],
+  "edrpou": "26292307",
+  "shortName": "Андріївська гімназія",
+  "name": "Андріївська різнопрофільна гімназія",
+  "director": "Малієнко Олександр Миколайович",
+  "formspreeId": "xdaqpnoa",
+  "social": [
+    {
+      "name": "Facebook-група гімназії",
+      "url": "https://www.facebook.com/groups/andriivkaschool",
+      "icon": "facebook"
+    },
+    {
+      "name": "YouTube-канал гімназії",
+      "url": "https://www.youtube.com/channel/UCCvFaBAdYh6pJ5KaVHK_Y7w",
+      "icon": "youtube"
+    }
+  ],
+  "phone": "+38 (06153) 9-11-39",
+  "tagline": "Продовжуємо навчати — попри все.",
+  "url": "https://new.andriivka-school.zp.ua",
+  "hours": "Пн–Пт, 09:00–18:00 (онлайн)",
+  "founder": "Андріївська селищна територіальна громада",
   "support": [
     {
       "icon": "heart",
@@ -78,39 +95,6 @@
       "external": false
     }
   ],
-  "social": [
-    {
-      "name": "Facebook-група гімназії",
-      "url": "https://www.facebook.com/groups/andriivkaschool",
-      "icon": "facebook"
-    },
-    {
-      "name": "YouTube-канал гімназії",
-      "url": "https://www.youtube.com/channel/UCCvFaBAdYh6pJ5KaVHK_Y7w",
-      "icon": "youtube"
-    }
-  ],
-  "nav": [
-    {
-      "label": "Про нас",
-      "url": "/pro-gimnaziyu/"
-    },
-    {
-      "label": "Вступ",
-      "url": "/vstup/"
-    },
-    {
-      "label": "Новини",
-      "url": "/novyny/"
-    },
-    {
-      "label": "Прозорість",
-      "url": "/prozorist/",
-      "submenu": "transparency",
-      "overviewLabel": "Огляд і основні документи"
-    }
-  ],
-  "bellsNote": "Кожен урок триває 45 хвилин, перерва між уроками — 15 хвилин.",
   "bells": [
     {
       "n": 1,
@@ -144,5 +128,21 @@
       "n": 8,
       "time": "17:00 – 17:45"
     }
-  ]
+  ],
+  "admissionEmail": "andreevka.school@meta.ua",
+  "address": {
+    "origin": "селища Андріївка, Бердянського району, Запорізької області",
+    "region": "Запорізька область",
+    "postal": "69107, Запорізька область, м. Запоріжжя, просп. Соборний, 164",
+    "postalCode": "69107",
+    "locality": "м. Запоріжжя",
+    "street": "просп. Соборний, 164",
+    "mode": "Заклад релоковано. Навчання відбувається дистанційно."
+  },
+  "language": "українська",
+  "phoneHref": "+380615391139",
+  "fullName": "Андріївська різнопрофільна гімназія Андріївської селищної ради Бердянського району Запорізької області",
+  "type": "Гімназія з початковою школою · ступені I–III · комунальна форма власності",
+  "relocatedSince": 2022,
+  "email": "andreevka.school@meta.ua"
 }
