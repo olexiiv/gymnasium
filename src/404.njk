@@ -10,5 +10,41 @@ permalink: /404.html
     <h1 class="section__title">Такої сторінки немає</h1>
     <p>Можливо, її перенесли або в адресі є одрук. Спробуйте почати з головної.</p>
     <p><a class="btn btn--brand" href="/">На головну {{ icon("arrow-right", 18) }}</a></p>
+
+    {#
+      Підказка для адрес зі старої версії сайту. До серпня 2026 року на цьому
+      домені працювала Joomla, і в пошуку та в збережених посиланнях лишилися
+      сотні адрес виду /index.php/616-vstup-… Статичний хостинг 301-редиректів
+      не вміє, тож ловимо такі адреси тут і пропонуємо ту саму сторінку на
+      архівному субдомені. Блок ховаємо інлайновим стилем, а не атрибутом
+      hidden: .notice має display:flex, який перебив би [hidden].
+    #}
+    <div class="notice notice--block" id="old-site-hint" style="display: none; text-align: left">
+      {{ icon("compass", 22) }}
+      <p class="notice__title">Схоже, це адреса зі старої версії сайту</p>
+      <p>Сайт гімназії переїхав на нову платформу, але стара версія нікуди не зникла — вона працює за адресою <strong>old.andriivka-school.zp.ua</strong>. Сторінка, яку ви шукали, найімовірніше там.</p>
+      <p><a class="btn btn--ghost" id="old-site-link" href="{{ site.oldSiteUrl }}" rel="nofollow">Відкрити на старому сайті {{ icon("external-link", 18) }}</a></p>
+    </div>
   </div>
 </section>
+
+<script>
+  (function () {
+    var hint = document.getElementById("old-site-hint");
+    var link = document.getElementById("old-site-link");
+    if (!hint || !link) return;
+
+    var path = location.pathname + location.search;
+
+    /* Ознаки старого сайту: SEF-адреси Joomla (/index.php/…), прямі виклики
+       .php, а також теки її движка й медіа. */
+    var looksOld = /^\/index\.php/i.test(path)
+      || /\.php(\/|\?|$)/i.test(path)
+      || /^\/(images|templates|media|components?|modules|plugins|administrator|cache)\//i.test(path);
+
+    if (!looksOld) return;
+
+    link.href = {{ site.oldSiteUrl | dump | safe }} + path;
+    hint.style.display = "";
+  })();
+</script>

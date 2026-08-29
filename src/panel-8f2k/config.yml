@@ -31,8 +31,8 @@ backend:
 publish_mode: editorial_workflow
 
 locale: uk
-site_url: https://new.andriivka-school.zp.ua
-display_url: https://new.andriivka-school.zp.ua
+site_url: https://andriivka-school.zp.ua
+display_url: https://andriivka-school.zp.ua
 logo_url: /assets/img/emblema-320.png
 
 media_folder: "src/assets/img/uploads"

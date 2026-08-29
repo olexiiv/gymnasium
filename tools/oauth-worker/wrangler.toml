@@ -20,4 +20,4 @@ GITHUB_CLIENT_ID = "Ov23liDaPCemrJaopFpp"
 
 # Кому воркер має право віддати токен. Зірочку тут ставити не можна:
 # будь-який сайт зміг би відкрити наш /auth і отримати доступ до репозиторію.
-ALLOWED_ORIGIN = "https://new.andriivka-school.zp.ua"
+ALLOWED_ORIGIN = "https://andriivka-school.zp.ua"

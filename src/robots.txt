@@ -7,4 +7,4 @@ Allow: /
 # тож пошуковики її не індексують, а без доступу до репозиторію
 # зайти в неї однаково неможливо.
 
-Sitemap: https://new.andriivka-school.zp.ua/sitemap.xml
+Sitemap: https://andriivka-school.zp.ua/sitemap.xml
