@@ -8,7 +8,7 @@ permalink: /404.html
   <div class="container container--narrow" style="text-align: center">
     <p class="section__eyebrow">Помилка 404</p>
     <h1 class="section__title">Такої сторінки немає</h1>
-    <p>Можливо, її перенесли або в адресі є одрук. Спробуйте почати з головної.</p>
+    <p>Можливо, її перенесли або в адресі є помилка. Спробуйте почати з головної.</p>
     <p><a class="btn btn--brand" href="/">На головну {{ icon("arrow-right", 18) }}</a></p>
 
     {#
@@ -23,7 +23,7 @@ permalink: /404.html
       {{ icon("compass", 22) }}
       <p class="notice__title">Схоже, це адреса зі старої версії сайту</p>
       <p>Сайт гімназії переїхав на нову платформу, але стара версія нікуди не зникла — вона працює за адресою <strong>old.andriivka-school.zp.ua</strong>. Сторінка, яку ви шукали, найімовірніше там.</p>
-      <p><a class="btn btn--ghost" id="old-site-link" href="{{ site.oldSiteUrl }}" rel="nofollow">Відкрити на старому сайті {{ icon("external-link", 18) }}</a></p>
+      <p><a class="btn btn--ghost" id="old-site-link" href="{{ site.oldSiteUrl }}" rel="nofollow noopener" target="_blank">Відкрити на старому сайті {{ icon("external-link", 18) }}</a></p>
     </div>
   </div>
 </section>

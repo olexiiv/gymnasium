@@ -719,7 +719,8 @@ collections:
           - { name: type, label: "Тип закладу", widget: string }
           - { name: tagline, label: "Гасло", widget: string }
           - { name: url, label: "Адреса сайту", widget: string }
-          - { name: oldSiteUrl, label: "Адреса старої версії сайту", widget: string }
+          - { name: oldSiteUrl, label: "Адреса старої версії сайту", widget: string,
+              hint: "Поки на архівному хостингу немає сертифіката, протокол має бути http:// — з https:// браузер покаже попередження про небезпеку. Після підключення сертифіката змініть на https://." }
           - { name: relocatedSince, label: "Рік релокації", widget: number, value_type: int }
           - { name: language, label: "Мова навчання", widget: string }
           - { name: founder, label: "Засновник", widget: string }

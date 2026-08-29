@@ -13,7 +13,8 @@
           <li><a href="{{ s.url }}" aria-label="{{ s.name }}" rel="noopener noreferrer" target="_blank">{{ icon(s.icon, 20) }}</a></li>
           {% endfor %}
         </ul>
-        <a class="footer__old" href="{{ site.oldSiteUrl }}" rel="noopener">
+        <a class="footer__old" href="{{ site.oldSiteUrl }}" rel="noopener" target="_blank"
+           aria-label="Стара версія сайту (відкриється в новій вкладці)">
           {{ icon("external-link", 18) }} Стара версія сайту
         </a>
       </div>
