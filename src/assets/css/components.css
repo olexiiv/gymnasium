@@ -596,14 +596,6 @@ button.btn .icon { color: inherit; }
 
 .article__title { margin-top: var(--space-4); letter-spacing: -0.015em; }
 
-.article__lead {
-  margin-top: var(--space-4);
-  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.3125rem);
-  line-height: 1.5;
-  color: var(--ink-muted);
-  max-width: 38rem;
-}
-
 /* Роздільник із листком: короткий градієнтний штрих → листок → волосінь */
 .article__rule {
   display: flex;

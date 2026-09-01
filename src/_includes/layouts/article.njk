@@ -24,7 +24,10 @@ layout: layouts/base.njk
 
       <h1 class="article__title">{{ title }}</h1>
 
-      {% if excerpt %}<p class="article__lead">{{ excerpt }}</p>{% endif %}
+      {# excerpt свідомо не виводиться: він коротко переказує перші абзаци,
+         і в статті це дубль. Своє місце в нього є — картка новини
+         (macros/card-news.njk), <meta name="description">, og:description,
+         поле description у JSON-LD і <summary> у RSS-стрічці. #}
 
       <span class="article__rule" aria-hidden="true">
         {{ icon("leaf", 18) }}
