@@ -1,6 +1,6 @@
 {
   "name": "andriivska-gymnasium",
-  "version": "1.0.0",
+  "version": "1.44.0",
   "description": "Сайт Андріївської різнопрофільної гімназії — статичний сайт на Eleventy (11ty)",
   "private": true,
   "scripts": {

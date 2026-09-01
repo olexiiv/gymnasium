@@ -1,7 +1,7 @@
 ---
 title: 'Наш сайт оновився: сучасний, зручний і завжди під рукою'
 slug: novyi-sait
-date: 2026-08-31
+date: 2026-08-29
 category: 'Оголошення'
 cover: '/assets/img/news/novyi-sait.webp'
 coverSrcset: '/assets/img/news/novyi-sait-480.webp 480w, /assets/img/news/novyi-sait-800.webp 800w, /assets/img/news/novyi-sait.webp 1376w'
