@@ -1236,7 +1236,12 @@ html:not(.js) .topicsfilter:focus-within > .topicsfilter__panel { display: block
 }
 .pagenav__step:hover { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-strong); }
 .pagenav__step:hover .icon { transform: translateX(2px); }
-.pagenav__step--prev:hover .icon { transform: translateX(-2px); }
+/* Стрілка «Новіші» вже дзеркальна: .icon--flip — це transform: scaleX(-1).
+   transform — одна властивість, не набір, тому зсув на наведенні мусить
+   нести дзеркалення з собою — інакше він його просто витирає і стрілка
+   розвертається вправо. Після scaleX(-1) локальна вісь X дивиться вліво,
+   тож translateX(2px) — це ті самі 2 px назовні, тільки візуально вліво. */
+.pagenav__step:hover .icon--flip { transform: scaleX(-1) translateX(2px); }
 .pagenav__step .icon { transition: transform var(--t-fast); }
 /* Крайні сторінки: кнопку лишаємо на місці, щоб ряд не «стрибав», але гасимо. */
 .pagenav__step.is-off { opacity: 0.35; pointer-events: none; }
