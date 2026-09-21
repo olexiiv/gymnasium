@@ -52,22 +52,33 @@ layout: layouts/base.njk
   </figure>
   {% endif %}
 
-  {# Відео. Спершу це звичайне посилання на YouTube — воно працює й без JS,
+  {# Відео. Спершу це звичайне посилання — воно працює й без JS,
      і поки на нього не натиснули, сторінка не звертається до чужих серверів.
-     Скрипт у main.js підміняє його плеєром прямо на місці. #}
+     Скрипт у main.js підміняє його плеєром прямо на місці (адреса плеєра —
+     у data-video-src). Джерело — YouTube або Google Диск. #}
   {% set videoId = video | youtubeId %}
+  {% set driveVideoId = "" if videoId else (video | driveId) %}
+  {% if videoId or driveVideoId %}
   {% if videoId %}
+    {% set videoHref = "https://www.youtube.com/watch?v=" + videoId %}
+    {% set videoSrc = "https://www.youtube-nocookie.com/embed/" + videoId + "?autoplay=1&rel=0" %}
+    {% set videoNote = "Відео на YouTube — натисніть, щоб переглянути" %}
+  {% else %}
+    {% set videoHref = "https://drive.google.com/file/d/" + driveVideoId + "/view" %}
+    {% set videoSrc = "https://drive.google.com/file/d/" + driveVideoId + "/preview" %}
+    {% set videoNote = "Відео на Google Диску — натисніть, щоб переглянути" %}
+  {% endif %}
   <div class="container container--narrow">
     <figure class="videobox">
       <a class="videobox__frame"
-         href="https://www.youtube.com/watch?v={{ videoId }}"
+         href="{{ videoHref }}"
          target="_blank" rel="noopener noreferrer"
-         data-video="{{ videoId }}"
+         data-video-src="{{ videoSrc }}"
          data-video-title="{{ videoTitle or title }}">
         <span class="videobox__play" aria-hidden="true">{{ icon("play", 34) }}</span>
         <span class="videobox__label">
           <span class="videobox__title">{{ videoTitle or title }}</span>
-          <span class="videobox__note">Відео на YouTube — натисніть, щоб переглянути</span>
+          <span class="videobox__note">{{ videoNote }}</span>
         </span>
       </a>
       {% if videoCaption %}

@@ -618,26 +618,26 @@
     newsSearchInput.addEventListener("focus", newsLoadIndex, { once: true });
   }
 
-  /* ---------- 10. Відео з YouTube ----------
+  /* ---------- 10. Відео (YouTube, Google Диск) ----------
      У розмітці лежить звичайне посилання: без JS воно просто відкриє ролик
-     на YouTube, і — головне — до кліку сторінка взагалі не звертається до
-     чужих серверів (ні скриптів, ні кук, ні мініатюр). Після кліку
-     підставляємо плеєр на місце посилання. Домен youtube-nocookie: той
-     самий плеєр, але без рекламного відстеження до початку перегляду. */
-  var videoFrames = document.querySelectorAll("[data-video]");
+     у новій вкладці, і — головне — до кліку сторінка взагалі не звертається
+     до чужих серверів (ні скриптів, ні кук, ні мініатюр). Після кліку
+     підставляємо плеєр на місце посилання. Адресу плеєра готує шаблон
+     (data-video-src): для YouTube це домен youtube-nocookie — той самий
+     плеєр, але без рекламного відстеження до початку перегляду; для
+     Google Диска — сторінка /preview. */
+  var videoFrames = document.querySelectorAll("[data-video-src]");
 
   videoFrames.forEach(function (frame) {
     frame.addEventListener("click", function (e) {
-      var id = frame.getAttribute("data-video");
-      if (!id) return; // без ідентифікатора лишаємо посилання як є
+      var src = frame.getAttribute("data-video-src");
+      if (!src) return; // без адреси плеєра лишаємо посилання як є
       if (frame.classList.contains("is-playing")) return;
 
       e.preventDefault();
 
       var iframe = document.createElement("iframe");
-      iframe.src =
-        "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) +
-        "?autoplay=1&rel=0";
+      iframe.src = src;
       iframe.title = frame.getAttribute("data-video-title") || "Відео";
       iframe.allow =
         "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";

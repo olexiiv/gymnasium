@@ -102,8 +102,8 @@ collections:
       - { name: coverWidth, label: "Ширина обкладинки, px", widget: number, required: false, value_type: int }
       - { name: coverHeight, label: "Висота обкладинки, px", widget: number, required: false, value_type: int }
 
-      - { name: video, label: "Відео з YouTube", widget: string, required: false,
-          hint: "Вставте посилання так, як скопіювали: youtu.be/…, watch?v=… або Shorts. Плеєр зʼявиться під обкладинкою." }
+      - { name: video, label: "Відео (YouTube або Google Диск)", widget: string, required: false,
+          hint: "Вставте посилання так, як скопіювали: youtu.be/…, watch?v=…, Shorts або drive.google.com/file/d/…. Для Google Диска доступ до файлу має бути «Усі, хто має посилання». Плеєр зʼявиться під обкладинкою." }
       - { name: videoTitle, label: "Назва відео", widget: string, required: false,
           hint: "Показується на кнопці плеєра. Якщо не заповнити — візьметься заголовок новини." }
       - { name: videoCaption, label: "Підпис під відео", widget: string, required: false }
