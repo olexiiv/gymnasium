@@ -506,6 +506,20 @@ collections:
               - { name: email, label: "Пошта для подання документів", widget: string, required: false }
               - { name: submitNote, label: "Строк подання документів", widget: string, required: false,
                   hint: "Напр.: до 14 листопада 2026 року, PDF, кожен документ окремим файлом" }
+              - { name: secondOrderTitle, label: "Підпис рядка з другим наказом", widget: string, required: false,
+                  hint: "Напр.: Наказ про проведення атестації" }
+              - { name: secondOrder, label: "Номер наказу про проведення атестації", widget: string, required: false }
+              - { name: secondOrderDate, label: "Дата цього наказу", widget: datetime, format: "YYYY-MM-DD", time_format: false, required: false }
+              - name: deadlines
+                label: "Строки (з наказів)"
+                widget: list
+                required: false
+                summary: "до {{fields.date}} — {{fields.text}}"
+                fields:
+                  - { name: date, label: "До якої дати", widget: datetime, format: "YYYY-MM-DD", time_format: false }
+                  - { name: text, label: "Що зробити", widget: string }
+              - { name: annexNote, label: "Примітка, поки немає списку чергової атестації", widget: text, required: false,
+                  hint: "Показується, лише поки «Список чергової атестації» порожній" }
               - name: members
                 label: "Персональний склад"
                 widget: list

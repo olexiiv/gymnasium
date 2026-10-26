@@ -39,6 +39,12 @@ parent:
         <dd class="facts__value">№ {{ c.order }}{% if c.orderDate %} від {{ c.orderDate | dateUA }}{% endif %}</dd>
       </div>
       {% endif %}
+      {% if c.secondOrder %}
+      <div class="facts__row">
+        <dt class="facts__term">{{ c.secondOrderTitle }}</dt>
+        <dd class="facts__value">№ {{ c.secondOrder }}{% if c.secondOrderDate %} від {{ c.secondOrderDate | dateUA }}{% endif %}</dd>
+      </div>
+      {% endif %}
       <div class="facts__row">
         <dt class="facts__term">Рівень комісії</dt>
         <dd class="facts__value">{{ c.level }} рівня — створена в закладі освіти</dd>
@@ -60,6 +66,18 @@ parent:
       <li class="peoplelist__item">
         <span class="peoplelist__name">{{ m.name }}</span>
         <span class="peoplelist__role">{{ m.role }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if c.deadlines.length %}
+    <h3 class="subhead">Строки</h3>
+    <ul class="peoplelist reveal">
+      {% for dl in c.deadlines %}
+      <li class="peoplelist__item">
+        <span class="peoplelist__name">до {{ dl.date | dateUA }}</span>
+        <span class="peoplelist__role">{{ dl.text }}</span>
       </li>
       {% endfor %}
     </ul>
@@ -108,6 +126,13 @@ parent:
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
+
+    {% if c.annexNote and not c.listRegular.length %}
+    <div class="notice reveal">
+      {{ icon("clock", 22) }}
+      <p>{{ c.annexNote }}</p>
+    </div>
     {% endif %}
 
     {% else %}
